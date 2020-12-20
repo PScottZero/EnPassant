@@ -1,5 +1,5 @@
-import 'package:en_passant/views/components/ai_difficulty_picker.dart';
-import 'package:en_passant/views/components/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu/ai_difficulty_picker.dart';
+import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'game_themes.dart';
 

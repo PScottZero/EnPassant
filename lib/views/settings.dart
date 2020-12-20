@@ -1,7 +1,7 @@
-import 'package:en_passant/views/components/rounded_button.dart';
+import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'components/theme_picker.dart';
+import 'components/settings/theme_picker.dart';
 
 class Settings extends StatelessWidget {
   @override

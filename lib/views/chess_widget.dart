@@ -1,5 +1,5 @@
 import 'package:en_passant/settings/game_settings.dart';
-import 'package:en_passant/views/components/rounded_button.dart';
+import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 

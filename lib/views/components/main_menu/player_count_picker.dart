@@ -1,4 +1,4 @@
-import 'package:en_passant/views/components/picker.dart';
+import 'package:en_passant/views/components/shared/picker.dart';
 import 'package:flutter/cupertino.dart';
 
 class PlayerCountPicker extends StatelessWidget {

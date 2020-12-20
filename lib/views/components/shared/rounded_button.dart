@@ -12,6 +12,7 @@ class RoundedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: CupertinoButton(
+        padding: EdgeInsets.zero,
         color: color,
         child: Text(
           label, 

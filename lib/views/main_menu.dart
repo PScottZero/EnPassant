@@ -1,13 +1,12 @@
 import 'package:en_passant/settings/game_settings.dart';
-import 'package:en_passant/views/chess_widget.dart';
-import 'package:en_passant/views/components/piece_color_picker.dart';
-import 'package:en_passant/views/components/rounded_button.dart';
-import 'package:en_passant/views/components/player_count_picker.dart';
-import 'package:en_passant/views/components/ai_difficulty_picker.dart';
-import 'package:en_passant/views/components/time_limit_picker.dart';
-import 'package:en_passant/views/settings.dart';
+import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu/player_count_picker.dart';
+import 'package:en_passant/views/components/main_menu/ai_difficulty_picker.dart';
+import 'package:en_passant/views/components/main_menu/time_limit_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+
+import 'components/main_menu/main_menu_buttons.dart';
 
 class MainMenu extends StatefulWidget {
   @override
@@ -37,28 +36,7 @@ class _MainMenuState extends State<MainMenu> {
                   ])
                 : TimeLimitPicker(setTime: gameSettings.setTimeLimit),
             Spacer(),
-            RoundedButton(
-              label: "Start",
-              onPressed: () {
-                Navigator.push(context,
-                  CupertinoPageRoute(builder: (context) => ChessWidget())
-                );
-              },
-            ),
-            SizedBox(height: 10),
-            Row(children: [
-              Expanded(
-                child: RoundedButton(label: "Load Game", onPressed: () {}),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: RoundedButton(label: "Settings", onPressed: () {
-                  Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => Settings())
-                  );
-                }),
-              )
-            ]),
+            MainMenuButtons(),
             SizedBox(height: 30)
           ],
         ),
