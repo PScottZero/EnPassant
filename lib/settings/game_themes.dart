@@ -10,6 +10,31 @@ class GameTheme {
 class GameThemes {
   static var themeList = <GameTheme>[
     GameTheme(
+      name: "Green (Default)",
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xff25804f),
+          const Color(0xff00584f),
+        ]
+      )
+    ),
+    GameTheme(
+      name: "Bismuth",
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xff2560a5),
+          const Color(0xff2f6e72),
+          const Color(0xff4faa55),
+          const Color(0xffe6de50),
+          const Color(0xffdb70eb),
+        ]
+      )
+    ),
+    GameTheme(
       name: "Blue",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -21,13 +46,13 @@ class GameThemes {
       )
     ),
     GameTheme(
-      name: "Green",
+      name: "Candy",
       background: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          const Color(0xff25804f),
-          const Color(0xff00584f),
+          const Color(0xff8934eb),
+          const Color(0xff004f80),
         ]
       )
     ),
@@ -73,4 +98,3 @@ class GameThemes {
     )
   ];
 }
-

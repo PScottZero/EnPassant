@@ -18,7 +18,7 @@ class RoundedButton extends StatelessWidget {
           label, 
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20
+            fontSize: 24
           )
         ),
         borderRadius: BorderRadius.all(Radius.circular(15)),

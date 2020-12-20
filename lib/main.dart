@@ -1,5 +1,5 @@
 import 'package:en_passant/settings/game_settings.dart';
-import 'package:en_passant/views/main_menu.dart';
+import 'package:en_passant/views/main_menu_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -24,10 +24,11 @@ class MyApp extends StatelessWidget {
       theme: CupertinoThemeData(
         brightness: Brightness.dark,
         textTheme: CupertinoTextThemeData(
-          textStyle: TextStyle(fontFamily: 'Bungee')
+          textStyle: TextStyle(fontFamily: 'Jura', fontSize: 16),
+          pickerTextStyle: TextStyle(fontFamily: 'Jura'),
         )
       ),
-      home: MainMenu(),
+      home: MainMenuView(),
     );
   }
 }

@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^3.0.0
+  flame: ^0.28.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -46,9 +47,9 @@ flutter_icons:
 # The following section is specific to Flutter.
 flutter:
   fonts:
-    - family: Bungee
+    - family: Jura
       fonts:
-        - asset: assets/font/Bungee-Regular.ttf
+        - asset: assets/font/Jura-VariableFont_wght.ttf
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'components/settings/theme_picker.dart';
 
-class Settings extends StatelessWidget {
+class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

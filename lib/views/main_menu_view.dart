@@ -8,12 +8,12 @@ import 'package:provider/provider.dart';
 
 import 'components/main_menu/main_menu_buttons.dart';
 
-class MainMenu extends StatefulWidget {
+class MainMenuView extends StatefulWidget {
   @override
-  _MainMenuState createState() => _MainMenuState();
+  _MainMenuViewState createState() => _MainMenuViewState();
 }
 
-class _MainMenuState extends State<MainMenu> {
+class _MainMenuViewState extends State<MainMenuView> {
   @override
   Widget build(BuildContext context) {
     return Consumer<GameSettings>(

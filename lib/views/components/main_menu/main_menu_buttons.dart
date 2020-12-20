@@ -1,8 +1,8 @@
 import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../chess_widget.dart';
-import '../../settings.dart';
+import '../../chess_view.dart';
+import '../../settings_view.dart';
 
 class MainMenuButtons extends StatelessWidget {
   @override
@@ -15,7 +15,7 @@ class MainMenuButtons extends StatelessWidget {
             label: "Start",
             onPressed: () {
               Navigator.push(context,
-                CupertinoPageRoute(builder: (context) => ChessWidget())
+                CupertinoPageRoute(builder: (context) => ChessView())
               );
             },
           ),
@@ -29,7 +29,7 @@ class MainMenuButtons extends StatelessWidget {
               Expanded(
                 child: RoundedButton(label: "Settings", onPressed: () {
                   Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => Settings())
+                    CupertinoPageRoute(builder: (context) => SettingsView())
                   );
                 }),
               )

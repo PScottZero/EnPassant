@@ -22,10 +22,12 @@ class ThemePicker extends StatelessWidget {
               scrollController: FixedExtentScrollController(
                 initialItem: gameSettings.themeIndex
               ),
-              itemExtent: 30,
+              itemExtent: 50,
               onSelectedItemChanged: gameSettings.setGameTheme,
-              children: GameThemes.themeList.map((theme) => 
-                Text(theme.name, style: TextStyle(fontSize: 24))).toList()
+              children: GameThemes.themeList.map((theme) => Container(
+                padding: EdgeInsets.all(10),
+                child:Text(theme.name, style: TextStyle(fontSize: 24))
+              )).toList()
             ),
           ],
         ),
