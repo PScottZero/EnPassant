@@ -24,10 +24,31 @@ class ChessBoard {
   List<ChessPiece> player2Rooks = [];
   ChessPiece enPassantPiece;
 
-  ChessBoard() {
+  ChessBoard({bool initPieces = true}) {
     this.board = List.generate(8, (index) => List.generate(8, (index) => null));
-    addPiecesFor(player: PlayerID.player1);
-    addPiecesFor(player: PlayerID.player2);
+    if (initPieces) {
+      addPiecesFor(player: PlayerID.player1);
+      addPiecesFor(player: PlayerID.player2);
+    }
+  }
+
+  ChessBoard copy() {
+    var boardCopy = ChessBoard(initPieces: false);
+    for (var piece in player1Pieces + player2Pieces) {
+      var pieceCopy = ChessPiece.fromPiece(existingPiece: piece);
+      boardCopy.addPiece(piece: pieceCopy, tile: pieceCopy.tile);
+      if (pieceCopy.type == ChessPieceType.king) {
+        pieceCopy.player == PlayerID.player1 ?
+          boardCopy.player1King = pieceCopy : boardCopy.player2King = pieceCopy;
+      } else if (pieceCopy.type == ChessPieceType.rook) {
+        pieceCopy.player == PlayerID.player1 ?
+          boardCopy.player1Rooks.add(pieceCopy) : boardCopy.player2Rooks.add(pieceCopy);
+      }
+      if (enPassantPiece != null && enPassantPiece == pieceCopy) {
+        boardCopy.enPassantPiece = enPassantPiece;
+      }
+    }
+    return boardCopy;
   }
 
   void addPiecesFor({PlayerID player}) {
@@ -58,5 +79,17 @@ class ChessBoard {
     board[tile.row][tile.col] = piece;
     piece.player == PlayerID.player1 ?
       player1Pieces.add(piece) : player2Pieces.add(piece);
+  }
+
+  ChessPiece pieceAtTile(Tile tile) {
+    return board[tile.row][tile.col];
+  }
+
+  List<ChessPiece> piecesForPlayer(PlayerID player) {
+    return player == PlayerID.player1 ? player1Pieces : player2Pieces;
+  }
+
+  ChessPiece kingForPlayer(PlayerID player) {
+    return player == PlayerID.player1 ? player1King : player2King;
   }
 }

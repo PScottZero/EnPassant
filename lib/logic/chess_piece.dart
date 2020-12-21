@@ -20,6 +20,15 @@ class ChessPiece {
     initSprite();
   }
 
+  ChessPiece.fromPiece({ChessPiece existingPiece}) {
+    this.type = existingPiece.type;
+    this.player = existingPiece.player;
+    this.value = existingPiece.value;
+    this.moveCount = existingPiece.moveCount;
+    this.tile = existingPiece.tile.copy();
+    this.sprite = existingPiece.sprite;
+  }
+
   void initSprite() {
     String color = player == PlayerID.player1 ? 'white' : 'black';
     String pieceName = type.toString().substring(type.toString().indexOf('.') + 1);
@@ -37,4 +46,12 @@ class ChessPiece {
       default: { return 0; }
     }
   }
+  
+  @override
+  bool operator == (obj) {
+    return obj is ChessPiece && obj.sprite == sprite;
+  }
+
+  @override
+  int get hashCode => sprite.hashCode;
 }

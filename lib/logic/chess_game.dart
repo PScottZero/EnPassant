@@ -1,21 +1,44 @@
 import 'dart:ui';
 
+import 'package:en_passant/logic/tile.dart';
 import 'package:en_passant/settings/game_settings.dart';
 import 'package:flame/game/game.dart';
+import 'package:flame/gestures.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'chess_board.dart';
 
-class ChessGame extends Game {
+class ChessGame extends Game with TapDetector {
   double width;
   double tileSize;
   GameSettings gameSettings;
   ChessBoard board = ChessBoard();
 
+  @override
+  void onTapDown(TapDownDetails details) {
+    var tile = offsetToTile(details.localPosition);
+    print("${tile.row} - ${tile.col}");
+  }
+
+  @override
+  void render(Canvas canvas) {
+    drawBoard(canvas);
+    drawPieces(canvas);
+  }
+
+  @override
+  void update(double t) {
+    // TODO: implement update
+  }
+
+  Tile offsetToTile(Offset offset) {
+    return Tile(row: 7 - (offset.dy / tileSize).floor(), col: (offset.dx / tileSize).floor());
+  }
+
   void setSize(Size screenSize) {
     width = screenSize.width - 68;
     tileSize = width / 8;
     resize(Size(width, width));
-    print(tileSize);
   }
 
   void setGameSettings(GameSettings gameSettings) {
@@ -44,16 +67,5 @@ class ChessGame extends Game {
         tileSize - 10, tileSize - 10
       ));
     }
-  }
-  
-  @override
-  void render(Canvas canvas) {
-    drawBoard(canvas);
-    drawPieces(canvas);
-  }
-  
-  @override
-  void update(double t) {
-  // TODO: implement update
   }
 }
