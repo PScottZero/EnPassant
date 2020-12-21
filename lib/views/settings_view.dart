@@ -12,7 +12,7 @@ class SettingsView extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: MediaQuery.of(context).padding.top),
           Text(
             "Settings",
             style: TextStyle(fontSize: 36)

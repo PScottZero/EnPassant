@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 class GameTheme {
   String name;
   LinearGradient background;
+  Color lightTile;
+  Color darkTile;
 
-  GameTheme({this.name, this.background});
+  GameTheme({
+    this.name,
+    this.background,
+    this.lightTile = const Color(0xFFC9B28F),
+    this.darkTile = const Color(0xFF857050)
+  });
 }
 
 class GameThemes {
@@ -32,7 +39,9 @@ class GameThemes {
           const Color(0xffe6de50),
           const Color(0xffdb70eb),
         ]
-      )
+      ),
+      lightTile: Color(0xff4faa55),
+      darkTile: Color(0xff2560a5)
     ),
     GameTheme(
       name: "Blue",
@@ -54,7 +63,9 @@ class GameThemes {
           const Color(0xff8934eb),
           const Color(0xff004f80),
         ]
-      )
+      ),
+      lightTile: Color(0xff0088ff),
+      darkTile: Color(0xff8800aa)
     ),
     GameTheme(
       name: "Iridescent",
@@ -68,7 +79,9 @@ class GameThemes {
           const Color(0xff004db2),
           const Color(0xff4d4d4d)
         ]
-      )
+      ),
+      lightTile: Color(0xffabc0d1),
+      darkTile: Color(0xff7991a6)
     ),
     GameTheme(
       name: "Opal",
@@ -83,7 +96,9 @@ class GameThemes {
           const Color(0xff6a81df),
           const Color(0xff507fc2)
         ]
-      )
+      ),
+      lightTile: Color(0xffd1d7e0),
+      darkTile: Color(0xff6494d6)
     ),
     GameTheme(
       name: "Red",

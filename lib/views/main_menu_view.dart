@@ -21,23 +21,36 @@ class _MainMenuViewState extends State<MainMenuView> {
         decoration: BoxDecoration(
           gradient: gameSettings.theme.background
         ),
-        padding: EdgeInsets.fromLTRB(30, 80, 30, 0),
+        padding: EdgeInsets.all(30),
         child: Column(
           children: [
-            Image(image: AssetImage('assets/images/logo.png')),
+            Container(
+              padding: EdgeInsets.fromLTRB(
+                10, MediaQuery.of(context).padding.top, 10, 0
+              ),
+              child: Image(image: AssetImage('assets/images/logo.png')),
+            ),
             SizedBox(height: 30),
-            PlayerCountPicker(gameSettings.playerCount, gameSettings.setPlayerCount),
+            PlayerCountPicker(
+              gameSettings.playerCount,
+              gameSettings.setPlayerCount
+            ),
             SizedBox(height: 30),
               gameSettings.playerCount == 1
                 ? Column(children: [
-                    AIDifficultyPicker(gameSettings.aiDifficulty, gameSettings.setAIDifficulty),
+                    AIDifficultyPicker(
+                      gameSettings.aiDifficulty,
+                      gameSettings.setAIDifficulty
+                    ),
                     SizedBox(height: 30),
-                    PieceColorPicker(gameSettings.playerSide, gameSettings.setPlayerSize)
+                    PieceColorPicker(
+                      gameSettings.playerSide,
+                      gameSettings.setPlayerSize
+                    )
                   ])
                 : TimeLimitPicker(setTime: gameSettings.setTimeLimit),
             Spacer(),
-            MainMenuButtons(),
-            SizedBox(height: 30)
+            MainMenuButtons()
           ],
         ),
       )
