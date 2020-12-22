@@ -7,7 +7,6 @@ import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
 import 'package:flame/game/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 
 import 'chess_board.dart';
 import 'chess_piece.dart';
@@ -52,14 +51,14 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   void update(double t) {}
 
   void selectPiece(ChessPiece piece) {
-    selectedPiece = piece;
-    if (selectedPiece != null) {
-      validMoves = MoveCalculation.movesFor(piece: piece, board: board);
-    }
-    if (validMoves.isEmpty) {
-      selectedPiece = null;
-    } else {
-      // update(0.01);
+    if (piece.player == turn) {
+      selectedPiece = piece;
+      if (selectedPiece != null) {
+        validMoves = MoveCalculation.movesFor(piece: piece, board: board);
+      }
+      if (validMoves.isEmpty) {
+        selectedPiece = null;
+      }
     }
   }
 
@@ -109,7 +108,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
           (7 - move.row) * tileSize,
           tileSize, tileSize
         ),
-        Paint()..color = Color(0xAA0000FF)
+        Paint()..color = gameSettings.theme.moveHint
       );
     }
   }

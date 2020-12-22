@@ -5,12 +5,16 @@ class GameTheme {
   LinearGradient background;
   Color lightTile;
   Color darkTile;
+  Color moveHint;
+  Color checkHint;
 
   GameTheme({
     this.name,
     this.background,
     this.lightTile = const Color(0xFFC9B28F),
-    this.darkTile = const Color(0xFF857050)
+    this.darkTile = const Color(0xFF857050),
+    this.moveHint = const Color(0x550000FF),
+    this.checkHint = const Color(0x55FF0000)
   });
 }
 
@@ -41,7 +45,8 @@ class GameThemes {
         ]
       ),
       lightTile: Color(0xff4faa55),
-      darkTile: Color(0xff2560a5)
+      darkTile: Color(0xff2560a5),
+      moveHint: Color(0x88ffff00)
     ),
     GameTheme(
       name: "Blue",
@@ -65,7 +70,8 @@ class GameThemes {
         ]
       ),
       lightTile: Color(0xff0088ff),
-      darkTile: Color(0xff8800aa)
+      darkTile: Color(0xff8800aa),
+      moveHint: Color(0x88ffff00)
     ),
     GameTheme(
       name: "Iridescent",
@@ -98,7 +104,8 @@ class GameThemes {
         ]
       ),
       lightTile: Color(0xffd1d7e0),
-      darkTile: Color(0xff6494d6)
+      darkTile: Color(0xff6494d6),
+      moveHint: Color(0x88aae39e)
     ),
     GameTheme(
       name: "Red",

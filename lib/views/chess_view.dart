@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/settings/game_settings.dart';
 import 'package:en_passant/views/components/shared/rounded_button.dart';
@@ -54,7 +56,10 @@ class _ChessViewState extends State<ChessView> {
                   Navigator.pop(context);
                 }
               ),
-              SizedBox(height: MediaQuery.of(context).padding.bottom)
+              SizedBox(
+              height: Platform.isAndroid ?
+                MediaQuery.of(context).viewInsets.bottom : 0
+              )
             ],
           )
         );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -27,7 +29,10 @@ class SettingsView extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
-          SizedBox(height: MediaQuery.of(context).padding.bottom)
+          SizedBox(
+            height: Platform.isAndroid ?
+              MediaQuery.of(context).viewInsets.bottom : 0
+          )
         ],
       ),
       padding: EdgeInsets.all(30),

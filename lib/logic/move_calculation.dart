@@ -52,10 +52,12 @@ class MoveCalculation {
         row: pawn.tile.row + diagonal.row,
         col: pawn.tile.col + diagonal.col
       );
-      var takenPiece = board.pieceAtTile(possibleMove);
-      if ((takenPiece != null && takenPiece.player != takenPiece.player) ||
-        canTakeEnPassant(pawnPlayer: pawn.player, diagonal: possibleMove, board: board)) {
-        validMoves.add(possibleMove);
+      if (SharedFunctions.tileInBounds(possibleMove)) {
+        var takenPiece = board.pieceAtTile(possibleMove);
+        if ((takenPiece != null && takenPiece.player != takenPiece.player) ||
+          canTakeEnPassant(pawnPlayer: pawn.player, diagonal: possibleMove, board: board)) {
+          validMoves.add(possibleMove);
+        }
       }
     }
     return validMoves;
