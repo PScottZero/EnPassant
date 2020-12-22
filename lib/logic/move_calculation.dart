@@ -6,21 +6,36 @@ import 'shared_functions.dart';
 import 'tile.dart';
 
 class MoveCalculation {
-  static List<Tile> movesFor({ChessPiece piece, ChessBoard board, bool skipCheck = false}) {
+  static List<Tile> movesFor({ChessPiece piece, ChessBoard board, bool skipSafetyCheck = false}) {
     switch (piece.type) {
-      case ChessPieceType.pawn: {
-        return pawnMoves(pawn: piece, board: board, skipCheck: skipCheck);
+      case ChessPieceType.pawn:{
+        return pawnMoves(pawn: piece, board: board, skipSafetyCheck: skipSafetyCheck);
+      }
+      case ChessPieceType.bishop: {
+        return bishopMoves(bishop: piece, board: board, skipSafetyCheck: skipSafetyCheck);
+      }
+      case ChessPieceType.knight: {
+        return knightMoves(knight: piece, board: board, skipSafetyCheck: skipSafetyCheck);
+      }
+      case ChessPieceType.rook: {
+        return rookMoves(rook: piece, board: board, skipSafetyCheck: skipSafetyCheck);
+      }
+      case ChessPieceType.queen: {
+        return queenMoves(queen: piece, board: board, skipSafetyCheck: skipSafetyCheck);
+      }
+      case ChessPieceType.king: {
+        return kingMoves(king: piece, board: board, skipSafetyCheck: skipSafetyCheck);
       }
       default: { return []; }
     }
   }
 
-  static List<Tile> pawnMoves({ChessPiece pawn, ChessBoard board, bool skipCheck}) {
+  static List<Tile> pawnMoves({ChessPiece pawn, ChessBoard board, bool skipSafetyCheck}) {
     var validMoves = kingKnightPawnMoveHelper(
       piece: pawn,
       board: board,
       relativeMoves: pawnStandardMoves(pawn: pawn),
-      skipCheck: skipCheck
+      skipSafetyCheck: skipSafetyCheck
     );
     if (validMoves.length == 1) {
       if ((validMoves[0].row - pawn.tile.row).abs() > 1) {
@@ -28,7 +43,12 @@ class MoveCalculation {
       }
     }
     validMoves += MoveCalculation.pawnDiagonalAttack(pawn: pawn, board: board);
-    return validMoves;
+    return MoveCalculation.filterSafeMoves(
+      piece: pawn,
+      board: board,
+      possibleMoves: validMoves,
+      skipSafetyCheck: skipSafetyCheck
+    );
   }
 
   static List<Tile> pawnStandardMoves({ChessPiece pawn}) {
@@ -46,7 +66,7 @@ class MoveCalculation {
     List<Tile> validMoves = [];
     var diagonals = pawn.player == PlayerID.player1 ?
       [Tile(row: 1, col: -1), Tile(row: 1, col: 1)] :
-      [Tile(row: -1, col: -1), Tile(row: -1, col: -1)];
+      [Tile(row: -1, col: -1), Tile(row: -1, col: 1)];
     for (var diagonal in diagonals) {
       var possibleMove = Tile(
         row: pawn.tile.row + diagonal.row,
@@ -54,7 +74,7 @@ class MoveCalculation {
       );
       if (SharedFunctions.tileInBounds(possibleMove)) {
         var takenPiece = board.pieceAtTile(possibleMove);
-        if ((takenPiece != null && takenPiece.player != takenPiece.player) ||
+        if ((takenPiece != null && takenPiece.player != pawn.player) ||
           canTakeEnPassant(pawnPlayer: pawn.player, diagonal: possibleMove, board: board)) {
           validMoves.add(possibleMove);
         }
@@ -71,11 +91,123 @@ class MoveCalculation {
     return takenPiece != null && takenPiece == board.enPassantPiece;
   }
 
+  static List<Tile> bishopMoves({ChessPiece bishop, ChessBoard board, bool skipSafetyCheck}) {
+    return MoveCalculation.bishopQueenRookMoveHelper(
+      piece: bishop,
+      board: board,
+      directions: [
+        Tile(row: 1, col: 1), Tile(row: 1, col: -1),
+        Tile(row: -1, col: 1), Tile(row: -1, col: -1)
+      ],
+      skipSafetyCheck: skipSafetyCheck
+    );
+  }
+  
+  static List<Tile> knightMoves({ChessPiece knight, ChessBoard board, bool skipSafetyCheck}) {
+    return MoveCalculation.kingKnightPawnMoveHelper(
+      piece: knight,
+      board: board,
+      relativeMoves: [
+        Tile(row: 1, col: 2), Tile(row: 1, col: -2),
+        Tile(row: -1, col: 2), Tile(row: -1, col: -2),
+        Tile(row: 2, col: 1), Tile(row: 2, col: -1),
+        Tile(row: -2, col: 1), Tile(row: -2, col: -1)
+      ],
+      skipSafetyCheck: skipSafetyCheck
+    );
+  }
+
+  static List<Tile> rookMoves({ChessPiece rook, ChessBoard board, bool skipSafetyCheck}) {
+    return MoveCalculation.bishopQueenRookMoveHelper(
+      piece: rook,
+      board: board,
+      directions: [
+        Tile(row: 1, col: 0), Tile(row: -1, col: 0),
+        Tile(row: 0, col: 1), Tile(row: 0, col: -1)
+      ],
+      skipSafetyCheck: skipSafetyCheck
+    ) + rookCastling(rook: rook, board: board, skipSafetyCheck: skipSafetyCheck);
+  }
+
+  static List<Tile> rookCastling({ChessPiece rook, ChessBoard board, bool skipSafetyCheck}) {
+    var king = board.kingForPlayer(rook.player);
+    if (canCastle(king: king, rook: rook, board: board)) {
+      return MoveCalculation.filterSafeMoves(
+        piece: rook,
+        board: board,
+        possibleMoves: [king.tile],
+        skipSafetyCheck: skipSafetyCheck
+      );
+    }
+    return [];
+  }
+
+  static List<Tile> queenMoves({ChessPiece queen, ChessBoard board, bool skipSafetyCheck}) {
+    return MoveCalculation.bishopQueenRookMoveHelper(
+      piece: queen,
+      board: board,
+      directions: [
+        Tile(row: 1, col: 0), Tile(row: -1, col: 0),
+        Tile(row: 0, col: 1), Tile(row: 0, col: -1),
+        Tile(row: 1, col: 1), Tile(row: 1, col: -1),
+        Tile(row: -1, col: 1), Tile(row: -1, col: -1)
+      ],
+      skipSafetyCheck: skipSafetyCheck
+    );
+  }
+
+  static List<Tile> kingMoves({ChessPiece king, ChessBoard board, bool skipSafetyCheck}) {
+    return MoveCalculation.kingKnightPawnMoveHelper(
+      piece: king,
+      board: board,
+      relativeMoves: [
+        Tile(row: 1, col: 0), Tile(row: -1, col: 0),
+        Tile(row: 0, col: 1), Tile(row: 0, col: -1),
+        Tile(row: 1, col: 1), Tile(row: 1, col: -1),
+        Tile(row: -1, col: 1), Tile(row: -1, col: -1)
+      ],
+      skipSafetyCheck: skipSafetyCheck
+    ) + kingCastling(king: king, board: board, skipSafetyCheck: skipSafetyCheck);
+  }
+
+  static List<Tile> kingCastling({ChessPiece king, ChessBoard board, bool skipSafetyCheck}) {
+    List<Tile> castleMoves = [];
+    for (var rook in board.rooksForPlayer(king.player)) {
+      if (canCastle(king: king, rook: rook, board: board)) {
+        castleMoves.add(rook.tile);
+      }
+    }
+    return MoveCalculation.filterSafeMoves(
+      piece: king,
+      board: board,
+      possibleMoves: castleMoves,
+      skipSafetyCheck: skipSafetyCheck
+    );
+  }
+
+  static bool canCastle({ChessPiece king, ChessPiece rook, ChessBoard board}) {
+    if (rook.moveCount == 0 && king.moveCount == 0) {
+      var range = (king.tile.col - rook.tile.col).abs();
+      var offset = king.tile.col - rook.tile.col > 0 ? 1 : -1;
+      var tileToCheck = rook.tile;
+      for (var index = 0; index < range; index++) {
+        tileToCheck = Tile(row: tileToCheck.row, col: tileToCheck.col + offset);
+        if (tileToCheck == king.tile) {
+          return true;
+        }
+        if (board.pieceAtTile(tileToCheck) != null) {
+          break;
+        }
+      }
+    }
+    return false;
+  }
+
   static List<Tile> kingKnightPawnMoveHelper({
     ChessPiece piece,
     ChessBoard board,
     List<Tile> relativeMoves,
-    bool skipCheck
+    bool skipSafetyCheck
   }) {
     List<Tile> validMoves = [];
     for (var move in relativeMoves) {
@@ -90,34 +222,102 @@ class MoveCalculation {
         }
       }
     }
+    return MoveCalculation.filterSafeMoves(
+        piece: piece,
+        board: board,
+        possibleMoves: validMoves,
+        skipSafetyCheck: skipSafetyCheck
+    );
+  }
+
+  static List<Tile> bishopQueenRookMoveHelper({
+    ChessPiece piece,
+    ChessBoard board,
+    List<Tile> directions,
+    bool skipSafetyCheck
+  }) {
+    List<Tile> validMoves = [];
+    for (var direction in directions) {
+      var possibleMove = piece.tile;
+      while (SharedFunctions.tileInBounds(possibleMove)) {
+        possibleMove = Tile(
+          row: possibleMove.row + direction.row,
+          col: possibleMove.col + direction.col
+        );
+        if (SharedFunctions.tileInBounds(possibleMove)) {
+          var takenPiece = board.pieceAtTile(possibleMove);
+          if (takenPiece == null) {
+            validMoves.add(possibleMove);
+          } else {
+            if (takenPiece.player != piece.player) {
+              validMoves.add(possibleMove);
+            }
+            break;
+          }
+        }
+      }
+    }
+    return MoveCalculation.filterSafeMoves(
+      piece: piece,
+      board: board,
+      possibleMoves: validMoves,
+      skipSafetyCheck: skipSafetyCheck
+    );
+  }
+
+  static List<Tile> filterSafeMoves({
+    ChessPiece piece,
+    ChessBoard board,
+    List<Tile> possibleMoves,
+    bool skipSafetyCheck
+  }) {
+    List<Tile> validMoves = [];
+    for (var move in possibleMoves) {
+      if (!MoveCalculation.movePutsKingInCheck(
+        piece: piece,
+        to: move,
+        board: board,
+        skipSafetyCheck: skipSafetyCheck
+      )) {
+        validMoves.add(move);
+      }
+    }
     return validMoves;
   }
 
   static bool movePutsKingInCheck({
-    Tile from,
+    ChessPiece piece,
     Tile to,
-    PlayerID player,
     ChessBoard board,
-    bool skipCheck
+    bool skipSafetyCheck
   }) {
-    if (!skipCheck) {
+    if (!skipSafetyCheck) {
       var boardCopy = board.copy();
-      // boardCopy.movePiece(from: from, to: to);
-      return MoveCalculation.kingIsInCheck(player: player, board: boardCopy, skipCheck: true);
+      boardCopy.movePiece(from: piece.tile, to: to);
+      return MoveCalculation.kingIsInCheck(player: piece.player, board: boardCopy, skipSafetyCheck: true);
     }
     return false;
   }
 
-  static bool kingIsInCheck({PlayerID player, ChessBoard board, bool skipCheck = false}) {
+  static bool kingIsInCheck({PlayerID player, ChessBoard board, bool skipSafetyCheck = false}) {
     var enemyPieces = board.piecesForPlayer(SharedFunctions.oppositePlayer(player));
     for (var piece in enemyPieces) {
       if (SharedFunctions.tileIsInTileList(
         tile: board.kingForPlayer(player).tile,
-        tileList: MoveCalculation.movesFor(piece: piece, board: board, skipCheck: skipCheck)
+        tileList: MoveCalculation.movesFor(piece: piece, board: board, skipSafetyCheck: skipSafetyCheck)
       )) {
         return true;
       }
     }
     return false;
+  }
+
+  static bool kingIsInCheckmate({PlayerID player, ChessBoard board}) {
+    for (var piece in board.piecesForPlayer(player)) {
+      if (MoveCalculation.movesFor(piece: piece, board: board).isNotEmpty) {
+        return false;
+      }
+    }
+    return true;
   }
 }

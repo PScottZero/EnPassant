@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:en_passant/logic/move_calculation.dart';
+import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/logic/tile.dart';
 import 'package:en_passant/settings/game_settings.dart';
 import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
@@ -20,45 +21,79 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   PlayerID turn = PlayerID.player1;
   bool gameOver = false;
   bool isFirstMove = true;
+  bool boardIsDrawn = false;
 
   List<Tile> validMoves = [];
-  bool movingPiece = false;
   ChessPiece selectedPiece;
 
   @override
   void onTapDown(TapDownDetails details) {
-    if (!gameOver && !movingPiece) {
+    if (!gameOver) {
       var tile = offsetToTile(details.localPosition);
       var touchedPiece = board.pieceAtTile(tile);
       if (selectedPiece != null && touchedPiece != null &&
         touchedPiece.player == selectedPiece.player) {
-        validMoves = [];
-        selectPiece(touchedPiece);
+        if (SharedFunctions.tileIsInTileList(tile: tile, tileList: validMoves)) {
+          movePiece(tile);
+        } else {
+          validMoves = [];
+          selectPiece(touchedPiece);
+        }
       } else if (selectedPiece == null) {
         selectPiece(touchedPiece);
+      } else {
+        movePiece(tile);
       }
     }
   }
 
   @override
   void render(Canvas canvas) {
-    drawBoard(canvas);
+    if (!boardIsDrawn) {
+      drawBoard(canvas);
+    }
     drawPieces(canvas);
     drawMoveHints(canvas);
   }
 
   @override
-  void update(double t) {}
+  void update(double t) {
+    for (var piece in board.player1Pieces + board.player2Pieces) {
+      piece.update(tileSize: tileSize);
+    }
+  }
+
+  void initSpritePositions() {
+    for (var piece in board.player1Pieces + board.player2Pieces) {
+      piece.initSpritePosition(tileSize);
+    }
+  }
 
   void selectPiece(ChessPiece piece) {
-    if (piece.player == turn) {
-      selectedPiece = piece;
-      if (selectedPiece != null) {
-        validMoves = MoveCalculation.movesFor(piece: piece, board: board);
+    if (piece != null) {
+      if (piece.player == turn) {
+        selectedPiece = piece;
+        if (selectedPiece != null) {
+          validMoves = MoveCalculation.movesFor(piece: piece, board: board);
+        }
+        if (validMoves.isEmpty) {
+          selectedPiece = null;
+        }
       }
-      if (validMoves.isEmpty) {
-        selectedPiece = null;
+    }
+  }
+
+  void movePiece(Tile toTile) {
+    if (SharedFunctions.tileIsInTileList(tile: toTile, tileList: validMoves)) {
+      validMoves = [];
+      board.movePiece(from: selectedPiece.tile, to: toTile);
+      if (MoveCalculation.kingIsInCheck(player: SharedFunctions.oppositePlayer(turn), board: board)) {
+        if (MoveCalculation.kingIsInCheckmate(player: SharedFunctions.oppositePlayer(turn), board: board)) {
+          gameOver = true;
+        }
       }
+      turn = SharedFunctions.oppositePlayer(turn);
+      selectedPiece = null;
     }
   }
 
@@ -93,8 +128,8 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   void drawPieces(Canvas canvas) {
     for (var piece in board.player1Pieces + board.player2Pieces) {
       piece.sprite.renderRect(canvas, Rect.fromLTWH(
-        piece.tile.col * tileSize + 5,
-        (7 - piece.tile.row) * tileSize + 5,
+        piece.spriteX + 5,
+        piece.spriteY + 5,
         tileSize - 10, tileSize - 10
       ));
     }

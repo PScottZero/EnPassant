@@ -3,9 +3,9 @@ import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
 import 'package:en_passant/views/components/main_menu/player_count_picker.dart';
 import 'package:en_passant/views/components/main_menu/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu/time_limit_picker.dart';
+import 'package:en_passant/views/components/shared/bottom_padding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
 
 import 'components/main_menu/main_menu_buttons.dart';
 
@@ -52,10 +52,7 @@ class _MainMenuViewState extends State<MainMenuView> {
                 : TimeLimitPicker(setTime: gameSettings.setTimeLimit),
             Spacer(),
             MainMenuButtons(),
-            SizedBox(
-              height: Platform.isAndroid ?
-                MediaQuery.of(context).viewInsets.bottom : 0
-            )
+            BottomPadding()
           ],
         ),
       )

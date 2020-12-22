@@ -26,7 +26,7 @@ class ThemePicker extends StatelessWidget {
               onSelectedItemChanged: gameSettings.setGameTheme,
               children: GameThemes.themeList.map((theme) => Container(
                 padding: EdgeInsets.all(10),
-                child:Text(theme.name, style: TextStyle(fontSize: 24))
+                child: Text(theme.name, style: TextStyle(fontSize: 24))
               )).toList()
             ),
           ],
@@ -34,7 +34,7 @@ class ThemePicker extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          gradient: gameSettings.theme.background
+          color: Color(0x20000000)
         ),
       ),
     );

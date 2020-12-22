@@ -1,7 +1,8 @@
 import 'package:en_passant/logic/tile.dart';
 import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-import 'chess_game.dart';
 import 'chess_piece.dart';
 
 const KING_ROW_PIECES = [
@@ -52,7 +53,7 @@ class ChessBoard {
     return boardCopy;
   }
 
-  void addPiecesFor({PlayerID player}) {
+  void addPiecesFor({@required PlayerID player}) {
     for (var index = 0; index < 8; index++) {
       var pawn = ChessPiece(
         type: ChessPieceType.pawn,
@@ -69,39 +70,87 @@ class ChessBoard {
       if (piece.type == ChessPieceType.king) {
         piece.player == PlayerID.player1 ?
           player1King = piece : player2King = piece;
-      } else if (piece.type == ChessPieceType.rook) {
-        piece.player == PlayerID.player1 ?
-          player1Rooks.add(piece) : player2Rooks.add(piece);
       }
     }
   }
 
-  void addPiece({ChessPiece piece, Tile tile}) {
+  void addPiece({@required ChessPiece piece, @required Tile tile}) {
     board[tile.row][tile.col] = piece;
     piece.player == PlayerID.player1 ?
       player1Pieces.add(piece) : player2Pieces.add(piece);
+    if (piece.type == ChessPieceType.rook) {
+      piece.player == PlayerID.player1 ?
+        player1Rooks.add(piece) : player2Rooks.add(piece);
+    }
   }
 
-  void movePiece({Tile from, Tile to, ChessGame chessGame}) {
+  void removePiece({@required Tile tile}) {
+    var possiblePiece = pieceAtTile(tile);
+    if (possiblePiece != null) {
+      piecesForPlayer(possiblePiece.player).remove(possiblePiece);
+      if (possiblePiece.type == ChessPieceType.rook) {
+        rooksForPlayer(possiblePiece.player).remove(possiblePiece);
+      }
+    }
+  }
+
+  void movePiece({@required Tile from, @required Tile to}) {
     var movedPiece = board[from.row][from.col];
     var takenPiece = board[to.row][to.col];
     movedPiece.moveCount++;
     if (takenPiece != null && takenPiece.player == movedPiece.player) {
       takenPiece.moveCount++;
       movedPiece.type == ChessPieceType.king ?
-          castling(king: movedPiece, rook: takenPiece, chessGame: chessGame) :
-          castling(king: takenPiece, rook: movedPiece, chessGame: chessGame);
+          castling(king: movedPiece, rook: takenPiece) :
+          castling(king: takenPiece, rook: movedPiece);
+    } else {
+      board[from.row][from.col] = null;
+      removePiece(tile: to);
+      board[to.row][to.col] = movedPiece;
+      movedPiece.tile = to;
+      if (movedPiece.type == ChessPieceType.pawn) {
+        if (to.row == 7 || to.row == 0) {
+          pawnToQueen(pawn: movedPiece);
+        }
+        checkEnPassant(pawn: movedPiece);
+        if ((from.row - to.row).abs() == 2) {
+          enPassantPiece = movedPiece;
+        }
+      }
     }
   }
 
-  void castling({ChessPiece king, ChessPiece rook, ChessGame chessGame}) {
+  void castling({@required ChessPiece king, @required ChessPiece rook}) {
     board[king.tile.row][king.tile.col] = null;
     board[rook.tile.row][rook.tile.col] = null;
-    if (rook.tile.col == 0) {
+    var rookCol = rook.tile.col == 0 ? 3 : 5;
+    var kingCol = rook.tile.col == 0 ? 2 : 6;
+    board[rook.tile.row][rook.tile.col == 0 ? 3 : 5] = rook;
+    board[rook.tile.row][rook.tile.col == 0 ? 2 : 6] = king;
+    rook.tile = Tile(row: rook.tile.row, col: rookCol);
+    king.tile = Tile(row: rook.tile.row, col: kingCol);
+  }
 
-    } else {
+  void pawnToQueen({@required ChessPiece pawn}) {
+    removePiece(tile: pawn.tile);
+    var queen = ChessPiece(
+      belongsTo: pawn.player,
+      type: ChessPieceType.queen,
+      tile: pawn.tile
+    );
+    addPiece(piece: queen, tile: pawn.tile);
+    queen.spriteX = pawn.spriteX;
+    queen.spriteY = pawn.spriteY;
+  }
 
+  void checkEnPassant({@required ChessPiece pawn}) {
+    var offset = pawn.player == PlayerID.player1 ? -1 : 1;
+    var tile = Tile(row: pawn.tile.row + offset, col: pawn.tile.col);
+    var takenPiece = pieceAtTile(tile);
+    if (takenPiece != null && takenPiece == enPassantPiece) {
+      removePiece(tile: tile);
     }
+    enPassantPiece = null;
   }
 
   ChessPiece pieceAtTile(Tile tile) {
@@ -114,5 +163,9 @@ class ChessBoard {
 
   ChessPiece kingForPlayer(PlayerID player) {
     return player == PlayerID.player1 ? player1King : player2King;
+  }
+
+  List<ChessPiece> rooksForPlayer(PlayerID player) {
+    return player == PlayerID.player1 ? player1Rooks : player2Rooks;
   }
 }
