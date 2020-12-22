@@ -28,6 +28,7 @@ class MoveCalculation {
       }
     }
     validMoves += MoveCalculation.pawnDiagonalAttack(pawn: pawn, board: board);
+    return validMoves;
   }
 
   static List<Tile> pawnStandardMoves({ChessPiece pawn}) {
@@ -99,9 +100,10 @@ class MoveCalculation {
   }) {
     if (!skipCheck) {
       var boardCopy = board.copy();
-      boardCopy.movePiece(from: from, to: to);
+      // boardCopy.movePiece(from: from, to: to);
       return MoveCalculation.kingIsInCheck(player: player, board: boardCopy, skipCheck: true);
     }
+    return false;
   }
 
   static bool kingIsInCheck({PlayerID player, ChessBoard board, bool skipCheck = false}) {

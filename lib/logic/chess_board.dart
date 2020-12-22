@@ -1,6 +1,7 @@
 import 'package:en_passant/logic/tile.dart';
 import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
 
+import 'chess_game.dart';
 import 'chess_piece.dart';
 
 const KING_ROW_PIECES = [
@@ -79,6 +80,28 @@ class ChessBoard {
     board[tile.row][tile.col] = piece;
     piece.player == PlayerID.player1 ?
       player1Pieces.add(piece) : player2Pieces.add(piece);
+  }
+
+  void movePiece({Tile from, Tile to, ChessGame chessGame}) {
+    var movedPiece = board[from.row][from.col];
+    var takenPiece = board[to.row][to.col];
+    movedPiece.moveCount++;
+    if (takenPiece != null && takenPiece.player == movedPiece.player) {
+      takenPiece.moveCount++;
+      movedPiece.type == ChessPieceType.king ?
+          castling(king: movedPiece, rook: takenPiece, chessGame: chessGame) :
+          castling(king: takenPiece, rook: movedPiece, chessGame: chessGame);
+    }
+  }
+
+  void castling({ChessPiece king, ChessPiece rook, ChessGame chessGame}) {
+    board[king.tile.row][king.tile.col] = null;
+    board[rook.tile.row][rook.tile.col] = null;
+    if (rook.tile.col == 0) {
+
+    } else {
+
+    }
   }
 
   ChessPiece pieceAtTile(Tile tile) {

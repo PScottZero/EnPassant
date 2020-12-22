@@ -50,7 +50,8 @@ class _MainMenuViewState extends State<MainMenuView> {
                   ])
                 : TimeLimitPicker(setTime: gameSettings.setTimeLimit),
             Spacer(),
-            MainMenuButtons()
+            MainMenuButtons(),
+            SizedBox(height: MediaQuery.of(context).padding.bottom)
           ],
         ),
       )

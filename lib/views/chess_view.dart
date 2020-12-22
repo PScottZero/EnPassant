@@ -53,7 +53,8 @@ class _ChessViewState extends State<ChessView> {
                 onPressed: () {
                   Navigator.pop(context);
                 }
-              )
+              ),
+              SizedBox(height: MediaQuery.of(context).padding.bottom)
             ],
           )
         );

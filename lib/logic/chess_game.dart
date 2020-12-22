@@ -1,34 +1,66 @@
 import 'dart:ui';
 
+import 'package:en_passant/logic/move_calculation.dart';
 import 'package:en_passant/logic/tile.dart';
 import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
 import 'package:flame/game/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 import 'chess_board.dart';
+import 'chess_piece.dart';
 
-class ChessGame extends Game with TapDetector {
+class ChessGame extends Game with TapDetector, ChangeNotifier {
   double width;
   double tileSize;
   GameSettings gameSettings;
   ChessBoard board = ChessBoard();
 
+  PlayerID turn = PlayerID.player1;
+  bool gameOver = false;
+  bool isFirstMove = true;
+
+  List<Tile> validMoves = [];
+  bool movingPiece = false;
+  ChessPiece selectedPiece;
+
   @override
   void onTapDown(TapDownDetails details) {
-    var tile = offsetToTile(details.localPosition);
-    print("${tile.row} - ${tile.col}");
+    if (!gameOver && !movingPiece) {
+      var tile = offsetToTile(details.localPosition);
+      var touchedPiece = board.pieceAtTile(tile);
+      if (selectedPiece != null && touchedPiece != null &&
+        touchedPiece.player == selectedPiece.player) {
+        validMoves = [];
+        selectPiece(touchedPiece);
+      } else if (selectedPiece == null) {
+        selectPiece(touchedPiece);
+      }
+    }
   }
 
   @override
   void render(Canvas canvas) {
     drawBoard(canvas);
     drawPieces(canvas);
+    drawMoveHints(canvas);
   }
 
   @override
-  void update(double t) {
-    // TODO: implement update
+  void update(double t) {}
+
+  void selectPiece(ChessPiece piece) {
+    selectedPiece = piece;
+    if (selectedPiece != null) {
+      validMoves = MoveCalculation.movesFor(piece: piece, board: board);
+    }
+    if (validMoves.isEmpty) {
+      selectedPiece = null;
+    } else {
+      // update(0.01);
+    }
   }
 
   Tile offsetToTile(Offset offset) {
@@ -66,6 +98,19 @@ class ChessGame extends Game with TapDetector {
         (7 - piece.tile.row) * tileSize + 5,
         tileSize - 10, tileSize - 10
       ));
+    }
+  }
+
+  void drawMoveHints(Canvas canvas) {
+    for (var move in validMoves) {
+      canvas.drawRect(
+        Rect.fromLTWH(
+          move.col * tileSize,
+          (7 - move.row) * tileSize,
+          tileSize, tileSize
+        ),
+        Paint()..color = Color(0xAA0000FF)
+      );
     }
   }
 }

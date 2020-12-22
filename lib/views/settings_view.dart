@@ -26,7 +26,8 @@ class SettingsView extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
-          )
+          ),
+          SizedBox(height: MediaQuery.of(context).padding.bottom)
         ],
       ),
       padding: EdgeInsets.all(30),
