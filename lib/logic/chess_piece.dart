@@ -1,5 +1,5 @@
 import 'package:en_passant/logic/tile.dart';
-import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -8,7 +8,6 @@ enum ChessPieceType { pawn, rook, knight, bishop, king, queen }
 class ChessPiece {
   ChessPieceType type;
   PlayerID player;
-  double value;
   int moveCount = 0;
   Tile tile;
   Sprite sprite;
@@ -18,19 +17,38 @@ class ChessPiece {
   double spriteY;
   double offsetX = 0;
   double offsetY = 0;
+  bool isMoving = false;
+  
+  int get value {
+    int value = 0;
+    switch (type) {
+      case ChessPieceType.pawn: { value = 1; }
+      break;
+      case ChessPieceType.bishop: { value = 3; }
+      break;
+      case ChessPieceType.knight: { value = 3; }
+      break;
+      case ChessPieceType.rook: { value = 5; }
+      break;
+      case ChessPieceType.queen: { value = 9; }
+      break;
+      case ChessPieceType.king: { value = 10000; }
+      break;
+      default: { value = 0 ;}
+    }
+    return (player == PlayerID.player1) ? value : -value;
+  }
 
   ChessPiece({ChessPieceType type, PlayerID belongsTo, Tile tile}) {
     this.type = type;
     this.tile = tile;
     player = belongsTo;
-    value = belongsTo == PlayerID.player1 ? getValue() : -getValue();
     initSprite();
   }
 
   ChessPiece.fromPiece({@required ChessPiece existingPiece}) {
     this.type = existingPiece.type;
     this.player = existingPiece.player;
-    this.value = existingPiece.value;
     this.moveCount = existingPiece.moveCount;
     this.tile = existingPiece.tile.copy();
     this.sprite = existingPiece.sprite;
@@ -42,20 +60,24 @@ class ChessPiece {
     if ((currX - spriteX).abs() <= 0.1) {
       spriteX = currX;
       offsetX = 0;
+      isMoving = false;
     } else {
       if (offsetX == 0) {
         offsetX = (currX - spriteX) / 10;
       }
       spriteX += offsetX;
+      isMoving = true;
     }
     if ((currY - spriteY).abs() <= 0.1) {
       spriteY = currY;
       offsetY = 0;
+      isMoving = false;
     } else {
       if (offsetY == 0) {
         offsetY = (currY - spriteY) / 10;
       }
       spriteY += offsetY;
+      isMoving = true;
     }
   }
 
@@ -68,18 +90,6 @@ class ChessPiece {
   void initSpritePosition(double tileSize) {
     spriteX = tile.col * tileSize;
     spriteY = (7 - tile.row) * tileSize;
-  }
-
-  double getValue() {
-    switch (type) {
-      case ChessPieceType.pawn: { return 1; }
-      case ChessPieceType.bishop: { return 3; }
-      case ChessPieceType.knight: { return 3; }
-      case ChessPieceType.rook: { return 5; }
-      case ChessPieceType.queen: { return 9; }
-      case ChessPieceType.king: { return double.infinity; }
-      default: { return 0; }
-    }
   }
   
   @override

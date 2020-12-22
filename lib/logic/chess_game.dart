@@ -1,10 +1,10 @@
 import 'dart:ui';
 
+import 'package:en_passant/logic/ai_move_calculation.dart';
 import 'package:en_passant/logic/move_calculation.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/logic/tile.dart';
 import 'package:en_passant/settings/game_settings.dart';
-import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
 import 'package:flame/game/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,17 +18,12 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   GameSettings gameSettings;
   ChessBoard board = ChessBoard();
 
-  PlayerID turn = PlayerID.player1;
-  bool gameOver = false;
-  bool isFirstMove = true;
-  bool boardIsDrawn = false;
-
   List<Tile> validMoves = [];
   ChessPiece selectedPiece;
 
   @override
   void onTapDown(TapDownDetails details) {
-    if (!gameOver) {
+    if (gameSettings.gameOver || !(gameSettings.isAIsTurn)) {
       var tile = offsetToTile(details.localPosition);
       var touchedPiece = board.pieceAtTile(tile);
       if (selectedPiece != null && touchedPiece != null &&
@@ -49,9 +44,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   @override
   void render(Canvas canvas) {
-    if (!boardIsDrawn) {
-      drawBoard(canvas);
-    }
+    drawBoard(canvas);
     drawPieces(canvas);
     drawMoveHints(canvas);
   }
@@ -71,7 +64,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   void selectPiece(ChessPiece piece) {
     if (piece != null) {
-      if (piece.player == turn) {
+      if (piece.player == gameSettings.turn) {
         selectedPiece = piece;
         if (selectedPiece != null) {
           validMoves = MoveCalculation.movesFor(piece: piece, board: board);
@@ -87,13 +80,42 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
     if (SharedFunctions.tileIsInTileList(tile: toTile, tileList: validMoves)) {
       validMoves = [];
       board.movePiece(from: selectedPiece.tile, to: toTile);
-      if (MoveCalculation.kingIsInCheck(player: SharedFunctions.oppositePlayer(turn), board: board)) {
-        if (MoveCalculation.kingIsInCheckmate(player: SharedFunctions.oppositePlayer(turn), board: board)) {
-          gameOver = true;
-        }
+      moveCompletion();
+    }
+  }
+
+  void aiMove() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    var move = await AIMoveCalculation.move(
+      aiPlayer: gameSettings.aiTurn,
+      aiDifficulty: gameSettings.aiDifficulty,
+      board: board
+    );
+    if (move.to.row == -1) {
+      gameSettings.endGame();
+    } else {
+      validMoves = [];
+      board.movePiece(from: move.from, to: move.to);
+      moveCompletion();
+    }
+  }
+
+  void moveCompletion() {
+    if (MoveCalculation.kingIsInCheck(
+      player: SharedFunctions.oppositePlayer(gameSettings.turn), 
+      board: board)
+    ) {
+      if (MoveCalculation.kingIsInCheckmate(
+        player: SharedFunctions.oppositePlayer(gameSettings.turn),
+        board: board)
+      ) {
+        gameSettings.endGame();
       }
-      turn = SharedFunctions.oppositePlayer(turn);
-      selectedPiece = null;
+    }
+    gameSettings.changeTurn();
+    selectedPiece = null;
+    if (gameSettings.isAIsTurn) {
+      aiMove();
     }
   }
 

@@ -1,5 +1,5 @@
 import 'package:en_passant/logic/chess_board.dart';
-import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 
 import 'chess_piece.dart';
 import 'shared_functions.dart';

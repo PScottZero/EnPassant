@@ -1,4 +1,4 @@
-import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 
 import 'tile.dart';
 

@@ -1,13 +1,13 @@
 import 'package:en_passant/settings/game_settings.dart';
-import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
-import 'package:en_passant/views/components/main_menu/player_count_picker.dart';
-import 'package:en_passant/views/components/main_menu/ai_difficulty_picker.dart';
-import 'package:en_passant/views/components/main_menu/time_limit_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/player_count_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/time_limit_picker.dart';
 import 'package:en_passant/views/components/shared/bottom_padding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import 'components/main_menu/main_menu_buttons.dart';
+import 'components/main_menu_view/main_menu_buttons.dart';
 
 class MainMenuView extends StatefulWidget {
   @override

@@ -8,12 +8,12 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => GameSettings(),
-      child: MyApp(),
+      child: EnPassantApp()
     )
   );
 }
 
-class MyApp extends StatelessWidget {
+class EnPassantApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

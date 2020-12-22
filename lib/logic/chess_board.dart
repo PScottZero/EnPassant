@@ -1,5 +1,5 @@
 import 'package:en_passant/logic/tile.dart';
-import 'package:en_passant/views/components/main_menu/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +25,14 @@ class ChessBoard {
   List<ChessPiece> player1Rooks = [];
   List<ChessPiece> player2Rooks = [];
   ChessPiece enPassantPiece;
+
+  int get value {
+    int value = 0;
+    for (var piece in player1Pieces + player2Pieces) {
+      value += piece.value;
+    }
+    return value;
+  }
 
   ChessBoard({bool initPieces = true}) {
     this.board = List.generate(8, (index) => List.generate(8, (index) => null));

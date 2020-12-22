@@ -1,23 +1,23 @@
 import 'package:en_passant/views/components/shared/picker.dart';
 import 'package:flutter/cupertino.dart';
 
-enum AIDifficulty { easy, normal, hard }
-
 class AIDifficultyPicker extends StatelessWidget {
-  final Map<AIDifficulty, Text> difficultyOptions = const <AIDifficulty, Text>{
-    AIDifficulty.easy: Text('Easy'),
-    AIDifficulty.normal: Text('Normal'),
-    AIDifficulty.hard: Text('Hard')
-  };
+  Map<int, Text> get difficultyOptions {
+    var options = Map<int, Text>();
+    for (int index = 1; index <= 5; index++) {
+      options.putIfAbsent(index, () => Text('$index'));
+    }
+    return options;
+  }
 
-  final AIDifficulty aiDifficulty;
+  final int aiDifficulty;
   final Function setFunc;
 
   AIDifficultyPicker(this.aiDifficulty, this.setFunc);
 
   @override
   Widget build(BuildContext context) {
-    return Picker<AIDifficulty>(
+    return Picker<int>(
       label: "AI Difficulty",
       options: difficultyOptions,
       selection: aiDifficulty,
