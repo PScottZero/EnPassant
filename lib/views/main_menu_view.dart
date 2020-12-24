@@ -27,7 +27,7 @@ class _MainMenuViewState extends State<MainMenuView> {
           children: [
             Container(
               padding: EdgeInsets.fromLTRB(
-                10, MediaQuery.of(context).padding.top, 10, 0
+                10, MediaQuery.of(context).padding.top + 10, 10, 0
               ),
               child: Image(image: AssetImage('assets/images/logo.png')),
             ),
