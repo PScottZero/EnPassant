@@ -1,4 +1,4 @@
-import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -94,6 +94,7 @@ class ChessBoard {
 
   void removePiece({@required Tile tile}) {
     var possiblePiece = pieceAtTile(tile);
+    board[tile.row][tile.col] = null;
     if (possiblePiece != null) {
       piecesForPlayer(possiblePiece.player).remove(possiblePiece);
       if (possiblePiece.type == ChessPieceType.rook) {
@@ -106,6 +107,7 @@ class ChessBoard {
     var move = Move(from: from, to: to);
     var movedPiece = board[from.row][from.col];
     var takenPiece = board[to.row][to.col];
+    board[from.row][from.col] = null;
     movedPiece.moveCount++;
     move.player = movedPiece.player;
     move.type = movedPiece.type;
@@ -123,7 +125,6 @@ class ChessBoard {
       if (takenPiece != null) {
         move.took = true;
       }
-      board[from.row][from.col] = null;
       removePiece(tile: to);
       board[to.row][to.col] = movedPiece;
       movedPiece.tile = to;

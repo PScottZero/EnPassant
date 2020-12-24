@@ -12,9 +12,9 @@ class MoveList extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
     return Consumer<GameSettings>(
       builder: (context, gameSettings, child) => Container(
-        height: 128,
+        height: 160,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(15)),
           color: Color(0x20000000)
         ),
           child: ListView(
@@ -22,7 +22,10 @@ class MoveList extends StatelessWidget {
             controller: scrollController,
             children: [
               Container(
-                child: Text(allMoves(gameSettings), style: TextStyle(fontSize: 20))
+                child: Text(
+                  allMoves(gameSettings),
+                  style: TextStyle(fontSize: 20)
+                )
               )
             ],
           )
@@ -58,7 +61,7 @@ class MoveList extends StatelessWidget {
       String takeString = move.took ? 'x' : '';
       String promotion = move.promotion ? '=Q' : '';
       String check = move.isCheck ? '+' : '';
-      String checkmate = move.isCheckmate ? '+': '';
+      String checkmate = move.isCheckmate ? '++': '';
       return '${pieceToChar(move.type)}$takeString' +
         '${colToChar(move.to.col)}${move.to.row + 1}$promotion$check$checkmate';
     }

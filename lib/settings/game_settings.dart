@@ -1,7 +1,7 @@
 import 'package:en_passant/logic/move_classes.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
-import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'game_themes.dart';

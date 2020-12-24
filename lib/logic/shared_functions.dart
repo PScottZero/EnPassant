@@ -1,4 +1,5 @@
-import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
+import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
 import 'move_classes.dart';
 
@@ -18,5 +19,15 @@ class SharedFunctions {
       }
     }
     return false;
+  }
+
+  static double getXFromCol(int col, double tileSize, GameSettings gameSettings) {
+    return gameSettings.playingWithAI && gameSettings.playerSide == PlayerID.player2 ? 
+      (7 - col) * tileSize : col * tileSize;
+  }
+
+  static double getYFromRow(int row, double tileSize, GameSettings gameSettings) {
+    return gameSettings.playingWithAI && gameSettings.playerSide == PlayerID.player2 ? 
+      row * tileSize : (7 - row) * tileSize;
   }
 }

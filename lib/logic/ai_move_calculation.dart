@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
-import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'chess_board.dart';

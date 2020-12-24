@@ -1,4 +1,6 @@
-import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
+import 'package:en_passant/logic/shared_functions.dart';
+import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -55,9 +57,9 @@ class ChessPiece {
     this.sprite = existingPiece.sprite;
   }
 
-  void update({@required double tileSize}) {
-    var currX = tile.col * tileSize;
-    var currY = (7 - tile.row) * tileSize;
+  void update({@required double tileSize, @required GameSettings gameSettings}) {
+    var currX = SharedFunctions.getXFromCol(tile.col, tileSize, gameSettings);
+    var currY = SharedFunctions.getYFromRow(tile.row, tileSize, gameSettings);
     if ((currX - spriteX).abs() <= 0.1) {
       spriteX = currX;
       offsetX = 0;
@@ -88,9 +90,9 @@ class ChessPiece {
     sprite = Sprite('pieces/' + pieceName + '_' + color + '.png');
   }
 
-  void initSpritePosition(double tileSize) {
-    spriteX = tile.col * tileSize;
-    spriteY = (7 - tile.row) * tileSize;
+  void initSpritePosition(double tileSize, GameSettings gameSettings) {
+    spriteX = SharedFunctions.getXFromCol(tile.col, tileSize, gameSettings);
+    spriteY = SharedFunctions.getYFromRow(tile.row, tileSize, gameSettings);
   }
   
   @override

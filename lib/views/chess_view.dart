@@ -15,59 +15,69 @@ class ChessView extends StatefulWidget {
 
 class _ChessViewState extends State<ChessView> {
   var game = ChessGame();
+  GameSettings gameSettings;
 
   @override
   Widget build(BuildContext context) {  
     return Consumer<GameSettings>(
       builder: (context, gameSettings, child) {
         initGame(context, gameSettings);
-        return Container(
-          decoration: BoxDecoration(gradient: gameSettings.theme.background),
-          padding: EdgeInsets.all(30),
-          child: Column(
-            children: [
-              Spacer(),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: CupertinoColors.white,
-                    width: 4
+        return WillPopScope(
+          child: Container(
+            decoration: BoxDecoration(gradient: gameSettings.theme.background),
+            padding: EdgeInsets.all(30),
+            child: Column(
+              children: [
+                Spacer(),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: CupertinoColors.white,
+                      width: 4
+                    ),
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 10,
+                        color: Color(0x88000000)
+                      )
+                    ]
                   ),
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 10,
-                      color: Color(0x88000000)
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      child: game.widget,
+                      width: MediaQuery.of(context).size.width - 68,
+                      height: MediaQuery.of(context).size.width - 68
                     )
-                  ]
+                  ),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    child: game.widget,
-                    width: MediaQuery.of(context).size.width - 68,
-                    height: MediaQuery.of(context).size.width - 68
-                  )
-                ),
-              ),
-              SizedBox(height: 30),
-              GameStatus(),
-              Spacer(),
-              gameSettings.showMoveHistory ?
-                Column(children: [
-                  MoveList(),
-                  SizedBox(height: 10)
-                ]) : Container(),
-              SaveExitButtons(),
-              BottomPadding()
-            ],
-          )
+                SizedBox(height: 30),
+                GameStatus(),
+                Spacer(),
+                gameSettings.showMoveHistory ?
+                  Column(children: [
+                    MoveList(),
+                    SizedBox(height: 10)
+                  ]) : Container(),
+                SaveExitButtons(),
+                BottomPadding()
+              ],
+            )
+          ),
+          onWillPop: _willPopCallback
         );
       }
     );
   }
 
+  Future<bool> _willPopCallback() async {
+    gameSettings.resetGame();
+    return true;
+  }
+
   void initGame(BuildContext context, GameSettings gameSettings) {
+    this.gameSettings = gameSettings;
     if (gameSettings.initGame) {
       game.setSize(MediaQuery.of(context).size);
       game.setGameSettings(gameSettings);

@@ -1,5 +1,5 @@
 import 'package:en_passant/settings/game_settings.dart';
-import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/player_count_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/time_limit_picker.dart';
@@ -44,7 +44,7 @@ class _MainMenuViewState extends State<MainMenuView> {
                       gameSettings.setAIDifficulty
                     ),
                     SizedBox(height: 30),
-                    PieceColorPicker(
+                    SidePicker(
                       gameSettings.playerSide,
                       gameSettings.setPlayerSize
                     )
