@@ -1,7 +1,8 @@
-import 'package:en_passant/logic/tile.dart';
 import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'move_classes.dart';
 
 enum ChessPieceType { pawn, rook, knight, bishop, king, queen }
 

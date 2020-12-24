@@ -1,9 +1,9 @@
-import 'package:en_passant/logic/tile.dart';
 import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'chess_piece.dart';
+import 'move_classes.dart';
 
 const KING_ROW_PIECES = [
   ChessPieceType.rook,

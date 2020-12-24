@@ -3,10 +3,9 @@ import 'dart:math';
 import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 
 import 'chess_board.dart';
-import 'move.dart';
 import 'move_calculation.dart';
 import 'shared_functions.dart';
-import 'tile.dart';
+import 'move_classes.dart';
 
 const INITIAL_ALPHA = -10000;
 const INITIAL_BETA = 10000;
@@ -18,7 +17,7 @@ class AIMoveCalculation {
   static Future<Move> move({PlayerID aiPlayer, int aiDifficulty, ChessBoard board}) async {
     AIMoveCalculation.aiPlayer = aiPlayer;
     AIMoveCalculation.aiDifficulty = aiDifficulty;
-    return await minMaxStart(aiPlayer: aiPlayer, board: board);
+    return minMaxStart(aiPlayer: aiPlayer, board: board);
   }
 
   static Future<Move> minMaxStart({PlayerID aiPlayer, ChessBoard board}) async {

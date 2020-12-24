@@ -3,7 +3,7 @@ import 'package:en_passant/views/components/main_menu_view/piece_color_picker.da
 
 import 'chess_piece.dart';
 import 'shared_functions.dart';
-import 'tile.dart';
+import 'move_classes.dart';
 
 class MoveCalculation {
   static List<Tile> movesFor({ChessPiece piece, ChessBoard board, bool skipSafetyCheck = false}) {

@@ -1,6 +1,6 @@
 import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 
-import 'tile.dart';
+import 'move_classes.dart';
 
 class SharedFunctions {
   static bool tileInBounds(Tile tile) {

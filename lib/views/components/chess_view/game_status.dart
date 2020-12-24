@@ -10,7 +10,7 @@ class GameStatus extends StatelessWidget {
     return Consumer<GameSettings>(
       builder: (context, gameSettings, child) => Container(
         height: 60,
-        child: Text(getStatus(gameSettings), style: TextStyle(fontSize: 32))
+        child: Text(getStatus(gameSettings), style: TextStyle(fontSize: 24))
       )
     );
   }

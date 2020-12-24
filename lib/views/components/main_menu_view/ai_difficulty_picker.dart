@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 class AIDifficultyPicker extends StatelessWidget {
   Map<int, Text> get difficultyOptions {
     var options = Map<int, Text>();
-    for (int index = 1; index <= 5; index++) {
+    for (int index = 1; index <= 4; index++) {
       options.putIfAbsent(index, () => Text('$index'));
     }
     return options;
