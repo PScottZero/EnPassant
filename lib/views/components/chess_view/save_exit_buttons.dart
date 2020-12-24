@@ -12,8 +12,7 @@ class SaveExitButtons extends StatelessWidget {
           Expanded(
             child: RoundedButton(
               label: "Save Game",
-              onPressed: () {},
-              disabled: gameSettings.isAIsTurn
+              onPressed: () {}
             ),
           ),
           SizedBox(width: 10),
@@ -23,8 +22,7 @@ class SaveExitButtons extends StatelessWidget {
               onPressed: () {
                 gameSettings.resetGame();
                 Navigator.pop(context);
-              },
-              disabled: gameSettings.isAIsTurn
+              }
             ),
           )
         ],
