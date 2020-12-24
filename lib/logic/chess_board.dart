@@ -102,16 +102,27 @@ class ChessBoard {
     }
   }
 
-  void movePiece({@required Tile from, @required Tile to}) {
+  Move movePiece({@required Tile from, @required Tile to}) {
+    var move = Move(from: from, to: to);
     var movedPiece = board[from.row][from.col];
     var takenPiece = board[to.row][to.col];
     movedPiece.moveCount++;
+    move.player = movedPiece.player;
+    move.type = movedPiece.type;
     if (takenPiece != null && takenPiece.player == movedPiece.player) {
       takenPiece.moveCount++;
       movedPiece.type == ChessPieceType.king ?
           castling(king: movedPiece, rook: takenPiece) :
           castling(king: takenPiece, rook: movedPiece);
+      if (movedPiece.tile.col == 2 || movedPiece.tile.col == 3) {
+        move.queenCastle = true;
+      } else {
+        move.kingCastle = true;
+      }
     } else {
+      if (takenPiece != null) {
+        move.took = true;
+      }
       board[from.row][from.col] = null;
       removePiece(tile: to);
       board[to.row][to.col] = movedPiece;
@@ -119,6 +130,7 @@ class ChessBoard {
       if (movedPiece.type == ChessPieceType.pawn) {
         if (to.row == 7 || to.row == 0) {
           pawnToQueen(pawn: movedPiece);
+          move.promotion = true;
         }
         checkEnPassant(pawn: movedPiece);
         if ((from.row - to.row).abs() == 2) {
@@ -126,6 +138,7 @@ class ChessBoard {
         }
       }
     }
+    return move;
   }
 
   void castling({@required ChessPiece king, @required ChessPiece rook}) {

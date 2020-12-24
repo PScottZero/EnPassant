@@ -1,3 +1,6 @@
+import 'package:en_passant/logic/chess_piece.dart';
+import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
+
 class Tile {
   int row;
   int col;
@@ -18,6 +21,14 @@ class Tile {
 class Move {
   Tile from;
   Tile to;
+  PlayerID player;
+  ChessPieceType type;
+  bool took = false;
+  bool kingCastle = false;
+  bool queenCastle = false;
+  bool promotion = false;
+  bool isCheck = false;
+  bool isCheckmate = false;
   Move({this.from, this.to});
 }
 

@@ -7,6 +7,7 @@ import 'package:en_passant/settings/game_settings.dart';
 import 'package:flame/game/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 import 'chess_board.dart';
 import 'chess_piece.dart';
@@ -79,8 +80,8 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   void movePiece(Tile toTile) {
     if (SharedFunctions.tileIsInTileList(tile: toTile, tileList: validMoves)) {
       validMoves = [];
-      board.movePiece(from: selectedPiece.tile, to: toTile);
-      moveCompletion();
+      var move = board.movePiece(from: selectedPiece.tile, to: toTile);
+      moveCompletion(move);
     }
   }
 
@@ -95,23 +96,29 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
       gameSettings.endGame();
     } else {
       validMoves = [];
-      board.movePiece(from: move.from, to: move.to);
-      moveCompletion();
+      var finishedMove = board.movePiece(from: move.from, to: move.to);
+      moveCompletion(finishedMove);
     }
   }
 
-  void moveCompletion() {
+  void moveCompletion(Move move) {
     if (MoveCalculation.kingIsInCheck(
       player: SharedFunctions.oppositePlayer(gameSettings.turn), 
       board: board)
     ) {
-      if (MoveCalculation.kingIsInCheckmate(
-        player: SharedFunctions.oppositePlayer(gameSettings.turn),
-        board: board)
-      ) {
-        gameSettings.endGame();
-      }
+      move.isCheck = true;
     }
+
+    if (MoveCalculation.kingIsInCheckmate(
+      player: SharedFunctions.oppositePlayer(gameSettings.turn),
+      board: board)
+    ) {
+      move.isCheckmate = true;
+      gameSettings.endGame();
+    }
+
+    gameSettings.addMove(move);
+
     gameSettings.changeTurn();
     selectedPiece = null;
     if (gameSettings.isAIsTurn) {

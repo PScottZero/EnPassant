@@ -1,4 +1,6 @@
+import 'package:en_passant/logic/move_classes.dart';
 import 'package:en_passant/logic/shared_functions.dart';
+import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,15 +8,17 @@ import 'game_themes.dart';
 
 class GameSettings extends ChangeNotifier {
   int playerCount = 1;
-  int aiDifficulty = 2;
+  AIDifficulty aiDifficulty = AIDifficulty.normal;
   PlayerID playerSide = PlayerID.player1;
   Duration timeLimit = Duration.zero;
   int themeIndex = 0;
   GameTheme get theme { return GameThemes.themeList[themeIndex]; }
+  bool showMoveHistory = false;
 
   bool gameOver = false;
   PlayerID turn = PlayerID.player1;
   bool initGame = true;
+  List<Move> moves = [];
 
   PlayerID get aiTurn {
     return SharedFunctions.oppositePlayer(playerSide);
@@ -28,7 +32,15 @@ class GameSettings extends ChangeNotifier {
     return playerCount == 1;
   }
 
-  GameSettings() { getTheme(); }
+  GameSettings() { 
+    loadTheme();
+    loadShouldShowMoveHistory();
+  }
+
+  void addMove(Move move) {
+    moves.add(move);
+    notifyListeners();
+  }
 
   void endGame() {
     gameOver = true;
@@ -44,12 +56,7 @@ class GameSettings extends ChangeNotifier {
     gameOver = false;
     turn = PlayerID.player1;
     initGame = true;
-  }
-
-  void getTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    themeIndex = prefs.getInt("theme") ?? 0;
-    notifyListeners();
+    moves = [];
   }
 
   void setPlayerCount(int count) {
@@ -57,7 +64,7 @@ class GameSettings extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setAIDifficulty(int difficulty) {
+  void setAIDifficulty(AIDifficulty difficulty) {
     aiDifficulty = difficulty;
     notifyListeners();
   }
@@ -75,7 +82,26 @@ class GameSettings extends ChangeNotifier {
   void setGameTheme(int index) async {
     themeIndex = index;
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt("theme", themeIndex);
+    prefs.setInt('theme', themeIndex);
+    notifyListeners();
+  }
+
+  void loadShouldShowMoveHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    showMoveHistory = prefs.getBool('showMoveHistory') ?? false;
+    notifyListeners();
+  }
+
+  void shouldShowMoveHistory(bool show) async {
+    final prefs = await SharedPreferences.getInstance();
+    showMoveHistory = show;
+    prefs.setBool('showMoveHistory', show);
+    notifyListeners();
+  }
+
+  void loadTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    themeIndex = prefs.getInt('theme') ?? 0;
     notifyListeners();
   }
 }

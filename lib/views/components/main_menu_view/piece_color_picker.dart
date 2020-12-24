@@ -1,4 +1,4 @@
-import 'package:en_passant/views/components/shared/picker.dart';
+import 'package:en_passant/views/components/main_menu_view/picker.dart';
 import 'package:flutter/cupertino.dart';
 
 enum PlayerID { player1, player2 }

@@ -1,4 +1,5 @@
 import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/piece_color_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,8 @@ class GameStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<GameSettings>(
-      builder: (context, gameSettings, child) => Container(
-        height: 60,
-        child: Text(getStatus(gameSettings), style: TextStyle(fontSize: 24))
-      )
+      builder: (context, gameSettings, child) => 
+        Text(getStatus(gameSettings), style: TextStyle(fontSize: 24))
     );
   }
 
@@ -19,7 +18,7 @@ class GameStatus extends StatelessWidget {
     if (!gameSettings.gameOver) {
       if (gameSettings.playerCount == 1) {
         if (gameSettings.isAIsTurn) {
-          return "AI (Level ${gameSettings.aiDifficulty}) is thinking...";
+          return "AI [${getAIDifficulty(gameSettings)}] is thinking...";
         } else {
           return "Your turn";
         }
@@ -44,6 +43,16 @@ class GameStatus extends StatelessWidget {
           return "White wins!";
         }
       }
+    }
+  }
+
+  String getAIDifficulty(GameSettings gameSettings) {
+    switch (gameSettings.aiDifficulty) {
+      case AIDifficulty.easy: { return 'Easy'; }
+      case AIDifficulty.normal: { return 'Normal'; }
+      case AIDifficulty.hard: { return 'Hard'; }
+      case AIDifficulty.deepblue: { return 'Deep Blue'; }
+      default: { return ''; }
     }
   }
 }

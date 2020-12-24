@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'components/chess_view/game_status.dart';
+import 'components/chess_view/move_list.dart';
 import 'components/shared/bottom_padding.dart';
 
 class ChessView extends StatefulWidget {
@@ -52,6 +53,11 @@ class _ChessViewState extends State<ChessView> {
               SizedBox(height: 30),
               GameStatus(),
               Spacer(),
+              gameSettings.showMoveHistory ?
+                Column(children: [
+                  MoveList(),
+                  SizedBox(height: 10)
+                ]) : Container(),
               SaveExitButtons(),
               BottomPadding()
             ],
