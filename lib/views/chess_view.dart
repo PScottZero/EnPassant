@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/settings/game_settings.dart';
 import 'package:en_passant/views/components/chess_view/save_exit_buttons.dart';
@@ -6,6 +8,8 @@ import 'package:provider/provider.dart';
 
 import 'components/chess_view/game_status.dart';
 import 'components/chess_view/move_list.dart';
+import 'components/chess_view/timers.dart';
+import 'components/main_menu_view/side_picker.dart';
 import 'components/shared/bottom_padding.dart';
 
 class ChessView extends StatefulWidget {
@@ -16,6 +20,24 @@ class ChessView extends StatefulWidget {
 class _ChessViewState extends State<ChessView> {
   var game = ChessGame();
   GameSettings gameSettings;
+  Timer timer;
+
+  _ChessViewState() {
+    timer = Timer.periodic(
+      Duration(seconds: 1), 
+      (timer) {
+        if (gameSettings != null && gameSettings.timeLimit != Duration.zero) {
+          gameSettings.turn == PlayerID.player1 ?
+            gameSettings.decrementPlayer1Timer() :
+            gameSettings.decrementPlayer2Timer();
+          if (gameSettings.player1TimeLeft == Duration.zero ||
+            gameSettings.player2TimeLeft == Duration.zero) {
+            gameSettings.endGame();
+          }
+        }
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {  
@@ -55,12 +77,21 @@ class _ChessViewState extends State<ChessView> {
                 SizedBox(height: 30),
                 GameStatus(),
                 Spacer(),
+                gameSettings.playerCount == 2 && 
+                  gameSettings.timeLimit != Duration.zero ?
+                  Column(children: [
+                    Timers(
+                      player1TimeLeft: gameSettings.player1TimeLeft,
+                      player2TimeLeft: gameSettings.player2TimeLeft,
+                    ),
+                    SizedBox(height: 14)
+                  ]) : Container(),
                 gameSettings.showMoveHistory ?
                   Column(children: [
                     MoveList(),
                     SizedBox(height: 10)
                   ]) : Container(),
-                SaveExitButtons(),
+                SaveExitButtons(timer: timer),
                 BottomPadding()
               ],
             )
@@ -73,6 +104,7 @@ class _ChessViewState extends State<ChessView> {
 
   Future<bool> _willPopCallback() async {
     gameSettings.resetGame();
+    timer.cancel();
     return true;
   }
 

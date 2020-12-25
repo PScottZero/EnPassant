@@ -13,12 +13,24 @@ class GameSettings extends ChangeNotifier {
   Duration timeLimit = Duration.zero;
   int themeIndex = 0;
   GameTheme get theme { return GameThemes.themeList[themeIndex]; }
-  bool showMoveHistory = false;
+  bool showMoveHistory = true;
 
   bool gameOver = false;
   PlayerID turn = PlayerID.player1;
   bool initGame = true;
   List<Move> moves = [];
+  Duration player1TimeLeft = Duration.zero;
+  Duration player2TimeLeft = Duration.zero;
+
+  int get defaultThemeIndex {
+    var defaultIndex = 0;
+    GameThemes.themeList.asMap().forEach((index, theme) {
+      if (theme.name == "Classic Green") {
+        defaultIndex = index;
+      }
+    });
+    return defaultIndex;
+  }
 
   PlayerID get aiTurn {
     return SharedFunctions.oppositePlayer(playerSide);
@@ -57,6 +69,8 @@ class GameSettings extends ChangeNotifier {
     turn = PlayerID.player1;
     initGame = true;
     moves = [];
+    player1TimeLeft = timeLimit;
+    player2TimeLeft = timeLimit;
   }
 
   void setPlayerCount(int count) {
@@ -76,6 +90,8 @@ class GameSettings extends ChangeNotifier {
 
   void setTimeLimit(Duration duration) {
     timeLimit = duration;
+    player1TimeLeft = duration;
+    player2TimeLeft = duration;
     notifyListeners();
   }
 
@@ -86,9 +102,23 @@ class GameSettings extends ChangeNotifier {
     notifyListeners();
   }
 
+  void decrementPlayer1Timer() async {
+    if (player1TimeLeft.inSeconds > 0) {
+      player1TimeLeft = Duration(seconds: player1TimeLeft.inSeconds - 1);
+      notifyListeners();
+    }
+  }
+
+  void decrementPlayer2Timer() async {
+    if (player2TimeLeft.inSeconds > 0) {
+      player2TimeLeft = Duration(seconds: player2TimeLeft.inSeconds - 1);
+      notifyListeners();
+    }
+  }
+
   void loadShouldShowMoveHistory() async {
     final prefs = await SharedPreferences.getInstance();
-    showMoveHistory = prefs.getBool('showMoveHistory') ?? false;
+    showMoveHistory = prefs.getBool('showMoveHistory') ?? true;
     notifyListeners();
   }
 
@@ -101,7 +131,7 @@ class GameSettings extends ChangeNotifier {
 
   void loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
-    themeIndex = prefs.getInt('theme') ?? 0;
+    themeIndex = prefs.getInt('theme') ?? defaultThemeIndex;
     notifyListeners();
   }
 }

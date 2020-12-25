@@ -83,7 +83,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   void movePiece(Tile toTile) {
     if (SharedFunctions.tileIsInTileList(tile: toTile, tileList: validMoves)) {
       validMoves = [];
-      var move = board.movePiece(from: selectedPiece.tile, to: toTile);
+      var move = board.movePiece(from: selectedPiece.tile, to: toTile, getMoveMeta: true);
       moveCompletion(move);
     }
   }
@@ -99,7 +99,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
       gameSettings.endGame();
     } else {
       validMoves = [];
-      var finishedMove = board.movePiece(from: move.from, to: move.to);
+      var finishedMove = board.movePiece(from: move.from, to: move.to, getMoveMeta: true);
       moveCompletion(finishedMove);
     }
   }
@@ -111,7 +111,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
       player: oppositeTurn, 
       board: board)
     ) {
-      move.isCheck = true;
+      move.meta.isCheck = true;
       checkHintTile = board.kingForPlayer(oppositeTurn).tile;
     }
 
@@ -119,8 +119,8 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
       player: oppositeTurn,
       board: board)
     ) {
-      move.isCheck = false;
-      move.isCheckmate = true;
+      move.meta.isCheck = false;
+      move.meta.isCheckmate = true;
       gameSettings.endGame();
     }
 

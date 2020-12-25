@@ -1,3 +1,5 @@
+import 'package:en_passant/logic/move_calculation.dart';
+import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,27 +105,34 @@ class ChessBoard {
     }
   }
 
-  Move movePiece({@required Tile from, @required Tile to}) {
+  Move movePiece({
+    @required Tile from,
+    @required Tile to,
+    bool getMoveMeta = false
+  }) {
     var move = Move(from: from, to: to);
     var movedPiece = board[from.row][from.col];
     var takenPiece = board[to.row][to.col];
+    if (getMoveMeta) {
+      checkMoveAmbiguity(from: from, to: to, moveMeta: move.meta);
+    }
     board[from.row][from.col] = null;
     movedPiece.moveCount++;
-    move.player = movedPiece.player;
-    move.type = movedPiece.type;
+    move.meta.player = movedPiece.player;
+    move.meta.type = movedPiece.type;
     if (takenPiece != null && takenPiece.player == movedPiece.player) {
       takenPiece.moveCount++;
       movedPiece.type == ChessPieceType.king ?
           castling(king: movedPiece, rook: takenPiece) :
           castling(king: takenPiece, rook: movedPiece);
       if (movedPiece.tile.col == 2 || movedPiece.tile.col == 3) {
-        move.queenCastle = true;
+        move.meta.queenCastle = true;
       } else {
-        move.kingCastle = true;
+        move.meta.kingCastle = true;
       }
     } else {
       if (takenPiece != null) {
-        move.took = true;
+        move.meta.took = true;
       }
       removePiece(tile: to);
       board[to.row][to.col] = movedPiece;
@@ -131,7 +140,7 @@ class ChessBoard {
       if (movedPiece.type == ChessPieceType.pawn) {
         if (to.row == 7 || to.row == 0) {
           pawnToQueen(pawn: movedPiece);
-          move.promotion = true;
+          move.meta.promotion = true;
         }
         checkEnPassant(pawn: movedPiece);
         if ((from.row - to.row).abs() == 2) {
@@ -140,6 +149,28 @@ class ChessBoard {
       }
     }
     return move;
+  }
+
+  void checkMoveAmbiguity({
+    @required Tile from,
+    @required Tile to,
+    @required MoveMeta moveMeta
+  }) {
+    var piece = board[from.row][from.col];
+    for (var otherPiece in piecesOfTypeForPlayer(type: piece.type, player: piece.player)) {
+      if (piece != otherPiece) {
+        if (SharedFunctions.tileIsInTileList(
+          tile: to,
+          tileList: MoveCalculation.movesFor(piece: otherPiece, board: this)
+        )) {
+          if (otherPiece.tile.col == piece.tile.col) {
+            moveMeta.colIsAmbiguous = true;
+          } else {
+            moveMeta.rowIsAmbiguous = true;
+          }
+        }
+      }
+    }
   }
 
   void castling({@required ChessPiece king, @required ChessPiece rook}) {
@@ -181,6 +212,20 @@ class ChessBoard {
 
   List<ChessPiece> piecesForPlayer(PlayerID player) {
     return player == PlayerID.player1 ? player1Pieces : player2Pieces;
+  }
+
+  List<ChessPiece> piecesOfTypeForPlayer({
+    @required ChessPieceType type,
+    @required PlayerID player
+  }) {
+    var pieces = piecesForPlayer(player);
+    List<ChessPiece> piecesOfType = [];
+    for (var piece in pieces) {
+      if (piece.type == type) {
+        piecesOfType.add(piece);
+      }
+    }
+    return piecesOfType;
   }
 
   ChessPiece kingForPlayer(PlayerID player) {

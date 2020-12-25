@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
 class TimeLimitPicker extends StatelessWidget {
+  final Duration selectedTime;
   final Function setTime;
 
-  TimeLimitPicker({this.setTime});
+  TimeLimitPicker({this.selectedTime, this.setTime});
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +13,7 @@ class TimeLimitPicker extends StatelessWidget {
       SizedBox(height: 10),
       Container(
         child: CupertinoTimerPicker(
+          initialTimerDuration: selectedTime,
           mode: CupertinoTimerPickerMode.hm,
           onTimerDurationChanged: setTime
         ),

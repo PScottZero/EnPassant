@@ -21,6 +21,11 @@ class Tile {
 class Move {
   Tile from;
   Tile to;
+  MoveMeta meta = MoveMeta();
+  Move({this.from, this.to});
+}
+
+class MoveMeta {
   PlayerID player;
   ChessPieceType type;
   bool took = false;
@@ -29,7 +34,8 @@ class Move {
   bool promotion = false;
   bool isCheck = false;
   bool isCheckmate = false;
-  Move({this.from, this.to});
+  bool rowIsAmbiguous = false;
+  bool colIsAmbiguous = false;
 }
 
 class MoveAndValue {

@@ -12,19 +12,20 @@ class MoveList extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
     return Consumer<GameSettings>(
       builder: (context, gameSettings, child) => Container(
-        height: 160,
+        height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
           color: Color(0x20000000)
         ),
           child: ListView(
-            padding: EdgeInsets.all(20),
+            scrollDirection: Axis.horizontal,
             controller: scrollController,
+            padding: EdgeInsets.only(left: 15, right: 15),
             children: [
-              Container(
+              Center(
                 child: Text(
                   allMoves(gameSettings),
-                  style: TextStyle(fontSize: 20)
+                  style: TextStyle(fontSize: 24)
                 )
               )
             ],
@@ -42,7 +43,7 @@ class MoveList extends StatelessWidget {
     gameSettings.moves.asMap().forEach((index, move) {
       var turnNumber = ((index + 1) / 2).ceil();
       if (index % 2 == 0) {
-        moveString += index == 0 ? '$turnNumber. ' : '  $turnNumber. ';
+        moveString += index == 0 ? '$turnNumber. ' : '   $turnNumber. ';
       }
       moveString += moveToString(move);
       if (index % 2 == 0) {
@@ -53,17 +54,24 @@ class MoveList extends StatelessWidget {
   }
 
   String moveToString(Move move) {
-    if (move.kingCastle) {
+    if (move.meta.kingCastle) {
       return 'O-O';
-    } else if (move.queenCastle) {
+    } else if (move.meta.queenCastle) {
       return 'O-O-O';
     } else {
-      String takeString = move.took ? 'x' : '';
-      String promotion = move.promotion ? '=Q' : '';
-      String check = move.isCheck ? '+' : '';
-      String checkmate = move.isCheckmate ? '++': '';
-      return '${pieceToChar(move.type)}$takeString' +
-        '${colToChar(move.to.col)}${move.to.row + 1}$promotion$check$checkmate';
+      String takeString = move.meta.took ? 'x' : '';
+      String promotion = move.meta.promotion ? '=Q' : '';
+      String check = move.meta.isCheck ? '+' : '';
+      String checkmate = move.meta.isCheckmate ? '++': '';
+      String row = '${move.to.row + 1}';
+      String col = '${colToChar(move.to.col)}';
+      if (move.meta.colIsAmbiguous) {
+        row += '${move.from.row + 1}';
+      } else if (move.meta.rowIsAmbiguous) {
+        col += '${colToChar(move.from.col)}';
+      }
+      return '${pieceToChar(move.meta.type)}$takeString' +
+        '$col$row$promotion$check$checkmate';
     }
   }
 

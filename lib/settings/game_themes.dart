@@ -21,17 +21,6 @@ class GameTheme {
 class GameThemes {
   static var themeList = <GameTheme>[
     GameTheme(
-      name: "Green (Default)",
-      background: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          const Color(0xff25804f),
-          const Color(0xff00584f),
-        ]
-      )
-    ),
-    GameTheme(
       name: "Bismuth",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -49,17 +38,6 @@ class GameThemes {
       moveHint: Color(0x88ffff00)
     ),
     GameTheme(
-      name: "Blue",
-      background: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          const Color(0xff236e91),
-          const Color(0xff0f4964),
-        ]
-      )
-    ),
-    GameTheme(
       name: "Candy",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -71,7 +49,41 @@ class GameThemes {
       ),
       lightTile: Color(0xff0088ff),
       darkTile: Color(0xff8800aa),
-      moveHint: Color(0x88ffff00)
+      moveHint: Color(0x88ffff00),
+      checkHint: Color(0x88ff0000),
+    ),
+    GameTheme(
+      name: "Classic Blue",
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xff236e91),
+          const Color(0xff0f4964),
+        ]
+      )
+    ),
+    GameTheme(
+      name: "Classic Green",
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xff25804f),
+          const Color(0xff00584f),
+        ]
+      )
+    ),
+    GameTheme(
+      name: "Classic Red",
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xfff54242),
+          const Color(0xff912323)
+        ]
+      )
     ),
     GameTheme(
       name: "Iridescent",
@@ -88,6 +100,19 @@ class GameThemes {
       ),
       lightTile: Color(0xffabc0d1),
       darkTile: Color(0xff7991a6)
+    ),
+    GameTheme(
+      name: "Metallic",
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xffb2b2b2),
+          const Color(0xff4e4e4e),
+        ]
+      ),
+      lightTile: Color(0xffb2b2b2),
+      darkTile: Color(0xff808080)
     ),
     GameTheme(
       name: "Opal",
@@ -108,15 +133,35 @@ class GameThemes {
       moveHint: Color(0x88aae39e)
     ),
     GameTheme(
-      name: "Red",
+      name: "Regal",
       background: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          const Color(0xfff54242),
-          const Color(0xff912323)
+          const Color(0xffac0000),
+          const Color(0xffa33367),
         ]
-      )
+      ),
+      lightTile: Color(0xfff0c76e),
+      darkTile: Color(0xffac0000),
+      moveHint: Color(0x800000ff),
+      checkHint: Color(0xffff0000)
+    ),
+    GameTheme(
+      name: "Vaporwave",
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          const Color(0xffff78ed),
+          //const Color(0xfff57f2a),
+          const Color(0xff602af5),
+        ]
+      ),
+      lightTile: Color(0xffff78ed),
+      darkTile: Color(0xff602af5),
+      moveHint: Color(0x80d1116b),
+      checkHint: Color(0x80ff0000)
     )
   ];
 }
