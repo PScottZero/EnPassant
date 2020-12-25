@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/settings/game_settings.dart';
-import 'package:en_passant/views/components/chess_view/save_exit_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +10,7 @@ import 'components/chess_view/move_list.dart';
 import 'components/chess_view/timers.dart';
 import 'components/main_menu_view/side_picker.dart';
 import 'components/shared/bottom_padding.dart';
+import 'components/shared/rounded_button.dart';
 
 class ChessView extends StatefulWidget {
   @override
@@ -91,7 +91,14 @@ class _ChessViewState extends State<ChessView> {
                     MoveList(),
                     SizedBox(height: 10)
                   ]) : Container(),
-                SaveExitButtons(timer: timer),
+                RoundedButton(
+                  label: "Exit",
+                  onPressed: () {
+                    gameSettings.resetGame();
+                    timer.cancel();
+                    Navigator.pop(context);
+                  }
+                ),
                 BottomPadding()
               ],
             )

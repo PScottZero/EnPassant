@@ -149,7 +149,7 @@ class AIMoveCalculation {
       case AIDifficulty.easy: { return 1; }
       case AIDifficulty.normal: { return 2; }
       case AIDifficulty.hard: { return 3; }
-      case AIDifficulty.deepblue: { return 4; }
+      case AIDifficulty.hardest: { return 4; }
       default: { return 0; }
     }
   }

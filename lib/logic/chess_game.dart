@@ -49,6 +49,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   void render(Canvas canvas) {
     drawBoard(canvas);
     drawCheckHint(canvas);
+    drawSelectedPieceHint(canvas);
     drawPieces(canvas);
     drawMoveHints(canvas);
   }
@@ -196,6 +197,19 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
           tileSize, tileSize
         ),
         Paint()..color = gameSettings.theme.checkHint
+      );
+    }
+  }
+
+  void drawSelectedPieceHint(Canvas canvas) {
+    if (selectedPiece != null) {
+      canvas.drawCircle(
+        Offset(
+          SharedFunctions.getXFromCol(selectedPiece.tile.col, tileSize, gameSettings) + (tileSize / 2),
+          SharedFunctions.getYFromRow(selectedPiece.tile.row, tileSize, gameSettings) + (tileSize / 2)
+        ),
+        tileSize / 2,
+        Paint()..color = gameSettings.theme.moveHint
       );
     }
   }

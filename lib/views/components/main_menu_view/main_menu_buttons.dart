@@ -20,21 +20,11 @@ class MainMenuButtons extends StatelessWidget {
             },
           ),
           SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: RoundedButton(label: "Load Game", onPressed: () {}),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: RoundedButton(label: "Settings", onPressed: () {
-                  Navigator.push(context,
-                    CupertinoPageRoute(builder: (context) => SettingsView())
-                  );
-                }),
-              )
-            ],
-          )
+          RoundedButton(label: "Settings", onPressed: () {
+            Navigator.push(context,
+              CupertinoPageRoute(builder: (context) => SettingsView())
+            );
+          })
         ],
       ),
     );

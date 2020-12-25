@@ -51,7 +51,7 @@ class GameStatus extends StatelessWidget {
       case AIDifficulty.easy: { return 'Easy'; }
       case AIDifficulty.normal: { return 'Normal'; }
       case AIDifficulty.hard: { return 'Hard'; }
-      case AIDifficulty.deepblue: { return 'Deep Blue'; }
+      case AIDifficulty.hardest: { return 'Deep Blue'; }
       default: { return ''; }
     }
   }
