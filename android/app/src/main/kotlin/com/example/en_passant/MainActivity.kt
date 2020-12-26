@@ -1,4 +1,4 @@
-package com.example.en_passant
+package com.pscottzero.en_passant
 
 import io.flutter.embedding.android.FlutterActivity
 
