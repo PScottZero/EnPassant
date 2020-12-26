@@ -1,6 +1,6 @@
 import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/logic/move_classes.dart';
-import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/model/game_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 

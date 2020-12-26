@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:en_passant/logic/chess_game.dart';
-import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/model/game_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -92,7 +92,7 @@ class _ChessViewState extends State<ChessView> {
                     SizedBox(height: 10)
                   ]) : Container(),
                 RoundedButton(
-                  label: "Exit",
+                  label: 'Exit',
                   onPressed: () {
                     gameSettings.resetGame();
                     timer.cancel();

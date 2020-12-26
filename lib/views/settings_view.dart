@@ -1,4 +1,4 @@
-import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/model/game_settings.dart';
 import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +18,7 @@ class SettingsView extends StatelessWidget {
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top),
             Text(
-              "Settings",
+              'Settings',
               style: TextStyle(fontSize: 36)
             ),
             SizedBox(height: 30),
@@ -30,7 +30,7 @@ class SettingsView extends StatelessWidget {
             ),
             Spacer(),
             RoundedButton(
-              label: "Back",
+              label: 'Back',
               onPressed: () {
                 Navigator.pop(context);
               },

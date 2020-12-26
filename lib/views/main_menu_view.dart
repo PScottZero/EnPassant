@@ -1,4 +1,4 @@
-import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/model/game_settings.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/player_count_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';

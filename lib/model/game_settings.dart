@@ -25,7 +25,7 @@ class GameSettings extends ChangeNotifier {
   int get defaultThemeIndex {
     var defaultIndex = 0;
     GameThemes.themeList.asMap().forEach((index, theme) {
-      if (theme.name == "Classic Green") {
+      if (theme.name == 'Classic Green') {
         defaultIndex = index;
       }
     });
@@ -103,14 +103,14 @@ class GameSettings extends ChangeNotifier {
   }
 
   void decrementPlayer1Timer() async {
-    if (player1TimeLeft.inSeconds > 0) {
+    if (player1TimeLeft.inSeconds > 0 && !gameOver) {
       player1TimeLeft = Duration(seconds: player1TimeLeft.inSeconds - 1);
       notifyListeners();
     }
   }
 
   void decrementPlayer2Timer() async {
-    if (player2TimeLeft.inSeconds > 0) {
+    if (player2TimeLeft.inSeconds > 0 && !gameOver) {
       player2TimeLeft = Duration(seconds: player2TimeLeft.inSeconds - 1);
       notifyListeners();
     }

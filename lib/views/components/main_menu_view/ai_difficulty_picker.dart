@@ -21,7 +21,7 @@ class AIDifficultyPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Picker<AIDifficulty>(
-      label: "AI Difficulty",
+      label: 'AI Difficulty',
       options: difficultyOptions,
       selection: aiDifficulty,
       setFunc: setFunc,

@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:en_passant/logic/ai_move_calculation.dart';
 import 'package:en_passant/logic/move_calculation.dart';
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/model/game_settings.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flame/game/game.dart';
 import 'package:flame/gestures.dart';

@@ -1,5 +1,5 @@
-import 'package:en_passant/settings/game_settings.dart';
-import 'package:en_passant/settings/game_themes.dart';
+import 'package:en_passant/model/game_settings.dart';
+import 'package:en_passant/model/game_themes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +13,7 @@ class ThemePicker extends StatelessWidget {
           children: [
             Container(
               child: Text(
-                "App Theme",
+                'App Theme',
                 style: TextStyle(fontSize: 24),
               ),
               padding: EdgeInsets.all(10),

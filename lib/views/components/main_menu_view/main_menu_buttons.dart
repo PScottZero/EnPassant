@@ -12,7 +12,7 @@ class MainMenuButtons extends StatelessWidget {
       child: Column(
         children: [
           RoundedButton(
-            label: "Start",
+            label: 'Start',
             onPressed: () {
               Navigator.push(context,
                 CupertinoPageRoute(builder: (context) => ChessView())
@@ -20,7 +20,7 @@ class MainMenuButtons extends StatelessWidget {
             },
           ),
           SizedBox(height: 10),
-          RoundedButton(label: "Settings", onPressed: () {
+          RoundedButton(label: 'Settings', onPressed: () {
             Navigator.push(context,
               CupertinoPageRoute(builder: (context) => SettingsView())
             );

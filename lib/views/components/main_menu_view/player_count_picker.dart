@@ -15,7 +15,7 @@ class PlayerCountPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Picker<int>(
-      label: "Player Count",
+      label: 'Player Count',
       options: playerCountOptions,
       selection: playerCount,
       setFunc: setFunc,

@@ -1,6 +1,7 @@
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/model/game_settings.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -20,7 +21,6 @@ class ChessPiece {
   double spriteY;
   double offsetX = 0;
   double offsetY = 0;
-  bool isMoving = false;
   
   int get value {
     int value = 0;
@@ -60,27 +60,23 @@ class ChessPiece {
   void update({@required double tileSize, @required GameSettings gameSettings}) {
     var currX = SharedFunctions.getXFromCol(tile.col, tileSize, gameSettings);
     var currY = SharedFunctions.getYFromRow(tile.row, tileSize, gameSettings);
-    if ((currX - spriteX).abs() <= 0.1) {
+    if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
       spriteX = currX;
+      spriteY = currY;
       offsetX = 0;
-      isMoving = false;
+      offsetY = 0;
     } else {
       if (offsetX == 0) {
         offsetX = (currX - spriteX) / 10;
       }
-      spriteX += offsetX;
-      isMoving = true;
-    }
-    if ((currY - spriteY).abs() <= 0.1) {
-      spriteY = currY;
-      offsetY = 0;
-      isMoving = false;
-    } else {
       if (offsetY == 0) {
         offsetY = (currY - spriteY) / 10;
       }
+      spriteX += offsetX;
       spriteY += offsetY;
-      isMoving = true;
+      if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
+        Flame.audio.play('piece_moved.mp3');
+      }
     }
   }
 

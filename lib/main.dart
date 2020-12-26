@@ -1,4 +1,4 @@
-import 'package:en_passant/settings/game_settings.dart';
+import 'package:en_passant/model/game_settings.dart';
 import 'package:en_passant/views/main_menu_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
