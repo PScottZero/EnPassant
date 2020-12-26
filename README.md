@@ -8,7 +8,7 @@ The chess AI I developed for this app uses the alpha-beta pruning algorithm to c
 
 ## Screenshots
 
-<img width="300" src="https://i.imgur.com/ELWcmJT.png"> <img width="300" src="https://i.imgur.com/BCZcnyX.png"> <img width="300" src="https://i.imgur.com/m0J0t9h.png"> <img width="300" src="https://i.imgur.com/cQTWNQ2.png"> <img width="300" src="https://i.imgur.com/cQTWNQ2.png">
+<img width="200" src="https://i.imgur.com/ELWcmJT.png"> <img width="200" src="https://i.imgur.com/BCZcnyX.png"> <img width="200" src="https://i.imgur.com/m0J0t9h.png"> <img width="200" src="https://i.imgur.com/cQTWNQ2.png"> <img width="200" src="https://i.imgur.com/cQTWNQ2.png">
 
 ## Themes
-<img width="300" src="https://i.imgur.com/zgzah0x.png"> <img width="300" src="https://i.imgur.com/x90Uefg.png"> <img width="300" src="https://i.imgur.com/u3mdJi1.png"> <img width="300" src="https://i.imgur.com/DhIxpDQ.png"> <img width="300" src="https://i.imgur.com/LzKc9Ve.png"> <img width="300" src="https://i.imgur.com/JBo5l07.png"> <img width="300" src="https://i.imgur.com/ggTaZLu.png"> <img width="300" src="https://i.imgur.com/gvCmMGR.png"> <img width="300" src="https://i.imgur.com/H6V4Nvg.png"> <img width="300" src="https://i.imgur.com/aJYI7rK.png">
+<img width="200" src="https://i.imgur.com/zgzah0x.png"> <img width="200" src="https://i.imgur.com/x90Uefg.png"> <img width="200" src="https://i.imgur.com/u3mdJi1.png"> <img width="200" src="https://i.imgur.com/DhIxpDQ.png"> <img width="200" src="https://i.imgur.com/LzKc9Ve.png"> <img width="200" src="https://i.imgur.com/JBo5l07.png"> <img width="200" src="https://i.imgur.com/ggTaZLu.png"> <img width="200" src="https://i.imgur.com/gvCmMGR.png"> <img width="200" src="https://i.imgur.com/H6V4Nvg.png"> <img width="200" src="https://i.imgur.com/aJYI7rK.png">
