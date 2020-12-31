@@ -2,6 +2,8 @@
 
 Chess app written in Flutter using Flame engine. Remake of my SwiftUI project [Checkmate](https://github.com/PScottZero/Checkmate).
 
+<a href='https://play.google.com/store/apps/details?id=com.pscottzero.en_passant&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='300'/></a>
+
 ## AI Description
 
 The chess AI I developed for this app uses the alpha-beta pruning algorithm to calculate which moves to make. To learn more about how this algorithm works, use the following link: https://en.wikipedia.org/wiki/Alpha–beta_pruning. This source is what helped me code the actual AI as it has a pseudo-code example of the algorithm which I adapted for my app. In easy mode, the AI will only look at all possible moves it can make for its next move (search depth of 1). In normal mode, the AI will not only look at all possible moves it can make, but all possible moves the other player can make after the AI makes its move (search depth of 2). In hard mode, the AI will also look at the next move it can make after its opponent has made their move in response to the AI's first move (search depth 3). Hardest mode then further increases the depth to 4.
