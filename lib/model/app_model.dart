@@ -11,7 +11,7 @@ class AppModel extends ChangeNotifier {
   AIDifficulty aiDifficulty = AIDifficulty.normal;
   PlayerID playerSide = PlayerID.player1;
   Duration timeLimit = Duration.zero;
-  int themeIndex = 0;
+  String themeName = 'Green';
   AppTheme get theme { return AppThemes.themeList[themeIndex]; }
   bool showMoveHistory = true;
   bool soundEnabled = true;
@@ -23,14 +23,14 @@ class AppModel extends ChangeNotifier {
   Duration player1TimeLeft = Duration.zero;
   Duration player2TimeLeft = Duration.zero;
 
-  int get defaultThemeIndex {
-    var defaultIndex = 0;
+  int get themeIndex {
+    var themeIndex = 0;
     AppThemes.themeList.asMap().forEach((index, theme) {
-      if (theme.name == 'Classic Green') {
-        defaultIndex = index;
+      if (theme.name == themeName) {
+        themeIndex = index;
       }
     });
-    return defaultIndex;
+    return themeIndex;
   }
 
   PlayerID get aiTurn { return SharedFunctions.oppositePlayer(playerSide); }
@@ -107,9 +107,9 @@ class AppModel extends ChangeNotifier {
   }
 
   void setTheme(int index) async {
-    themeIndex = index;
+    themeName = AppThemes.themeList[index].name;
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('theme', themeIndex);
+    prefs.setString('themeName', themeName);
     notifyListeners();
   }
 
@@ -129,7 +129,7 @@ class AppModel extends ChangeNotifier {
 
   void loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    themeIndex = prefs.getInt('theme') ?? defaultThemeIndex;
+    themeName = prefs.getString('themeName') ?? 'Green';
     showMoveHistory = prefs.getBool('showMoveHistory') ?? true;
     soundEnabled = prefs.getBool('soundEnabled') ?? true;
     notifyListeners();
