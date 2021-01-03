@@ -1,3 +1,4 @@
+import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 
 class Picker<T> extends StatelessWidget {
@@ -11,7 +12,7 @@ class Picker<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Text(label, style: TextStyle(fontSize: 20)),
+      TextSmall(label),
       SizedBox(height: 10),
       Container(
         child: CupertinoTheme(

@@ -1,6 +1,7 @@
 import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/logic/move_classes.dart';
-import 'package:en_passant/model/game_settings.dart';
+import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -10,8 +11,8 @@ class MoveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
-    return Consumer<GameSettings>(
-      builder: (context, gameSettings, child) => Container(
+    return Consumer<AppModel>(
+      builder: (context, appModel, child) => Container(
         height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -23,10 +24,7 @@ class MoveList extends StatelessWidget {
             padding: EdgeInsets.only(left: 15, right: 15),
             children: [
               Center(
-                child: Text(
-                  allMoves(gameSettings),
-                  style: TextStyle(fontSize: 24)
-                )
+                child: TextRegular(allMoves(appModel))
               )
             ],
           )
@@ -38,9 +36,9 @@ class MoveList extends StatelessWidget {
     scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
-  String allMoves(GameSettings gameSettings) {
+  String allMoves(AppModel appModel) {
     var moveString = '';
-    gameSettings.moves.asMap().forEach((index, move) {
+    appModel.moves.asMap().forEach((index, move) {
       var turnNumber = ((index + 1) / 2).ceil();
       if (index % 2 == 0) {
         moveString += index == 0 ? '$turnNumber. ' : '   $turnNumber. ';

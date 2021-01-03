@@ -4,16 +4,17 @@ import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'game_themes.dart';
+import 'app_themes.dart';
 
-class GameSettings extends ChangeNotifier {
+class AppModel extends ChangeNotifier {
   int playerCount = 1;
   AIDifficulty aiDifficulty = AIDifficulty.normal;
   PlayerID playerSide = PlayerID.player1;
   Duration timeLimit = Duration.zero;
   int themeIndex = 0;
-  GameTheme get theme { return GameThemes.themeList[themeIndex]; }
+  AppTheme get theme { return AppThemes.themeList[themeIndex]; }
   bool showMoveHistory = true;
+  bool soundEnabled = true;
 
   bool gameOver = false;
   PlayerID turn = PlayerID.player1;
@@ -24,7 +25,7 @@ class GameSettings extends ChangeNotifier {
 
   int get defaultThemeIndex {
     var defaultIndex = 0;
-    GameThemes.themeList.asMap().forEach((index, theme) {
+    AppThemes.themeList.asMap().forEach((index, theme) {
       if (theme.name == 'Classic Green') {
         defaultIndex = index;
       }
@@ -32,22 +33,13 @@ class GameSettings extends ChangeNotifier {
     return defaultIndex;
   }
 
-  PlayerID get aiTurn {
-    return SharedFunctions.oppositePlayer(playerSide);
-  }
+  PlayerID get aiTurn { return SharedFunctions.oppositePlayer(playerSide); }
 
-  bool get isAIsTurn {
-    return playingWithAI && (turn == aiTurn);
-  }
+  bool get isAIsTurn { return playingWithAI && (turn == aiTurn); }
 
-  bool get playingWithAI {
-    return playerCount == 1;
-  }
+  bool get playingWithAI { return playerCount == 1; }
 
-  GameSettings() { 
-    loadTheme();
-    loadShouldShowMoveHistory();
-  }
+  AppModel() { loadSharedPrefs(); }
 
   void addMove(Move move) {
     moves.add(move);
@@ -61,6 +53,11 @@ class GameSettings extends ChangeNotifier {
 
   void changeTurn() {
     turn = SharedFunctions.oppositePlayer(turn);
+    notifyListeners();
+  }
+
+  void finalizeGameInit() {
+    initGame = false;
     notifyListeners();
   }
 
@@ -95,13 +92,6 @@ class GameSettings extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setGameTheme(int index) async {
-    themeIndex = index;
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('theme', themeIndex);
-    notifyListeners();
-  }
-
   void decrementPlayer1Timer() async {
     if (player1TimeLeft.inSeconds > 0 && !gameOver) {
       player1TimeLeft = Duration(seconds: player1TimeLeft.inSeconds - 1);
@@ -116,22 +106,32 @@ class GameSettings extends ChangeNotifier {
     }
   }
 
-  void loadShouldShowMoveHistory() async {
+  void setTheme(int index) async {
+    themeIndex = index;
     final prefs = await SharedPreferences.getInstance();
-    showMoveHistory = prefs.getBool('showMoveHistory') ?? true;
+    prefs.setInt('theme', themeIndex);
     notifyListeners();
   }
 
-  void shouldShowMoveHistory(bool show) async {
+  void setShowMoveHistory(bool show) async {
     final prefs = await SharedPreferences.getInstance();
     showMoveHistory = show;
     prefs.setBool('showMoveHistory', show);
     notifyListeners();
   }
 
-  void loadTheme() async {
+  void setSoundEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    soundEnabled = enabled;
+    prefs.setBool('soundEnabled', enabled);
+    notifyListeners();
+  }
+
+  void loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     themeIndex = prefs.getInt('theme') ?? defaultThemeIndex;
+    showMoveHistory = prefs.getBool('showMoveHistory') ?? true;
+    soundEnabled = prefs.getBool('soundEnabled') ?? true;
     notifyListeners();
   }
 }

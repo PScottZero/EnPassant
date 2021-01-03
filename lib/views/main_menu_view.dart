@@ -1,4 +1,4 @@
-import 'package:en_passant/model/game_settings.dart';
+import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/player_count_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
@@ -17,10 +17,10 @@ class MainMenuView extends StatefulWidget {
 class _MainMenuViewState extends State<MainMenuView> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<GameSettings>(
-      builder: (context, gameSettings, child) => Container(
+    return Consumer<AppModel>(
+      builder: (context, appModel, child) => Container(
         decoration: BoxDecoration(
-          gradient: gameSettings.theme.background
+          gradient: appModel.theme.background
         ),
         padding: EdgeInsets.all(30),
         child: Column(
@@ -33,25 +33,25 @@ class _MainMenuViewState extends State<MainMenuView> {
             ),
             SizedBox(height: 30),
             PlayerCountPicker(
-              gameSettings.playerCount,
-              gameSettings.setPlayerCount
+              appModel.playerCount,
+              appModel.setPlayerCount
             ),
             SizedBox(height: 30),
-              gameSettings.playerCount == 1
+              appModel.playerCount == 1
                 ? Column(children: [
                     AIDifficultyPicker(
-                      gameSettings.aiDifficulty,
-                      gameSettings.setAIDifficulty
+                      appModel.aiDifficulty,
+                      appModel.setAIDifficulty
                     ),
                     SizedBox(height: 30),
                     SidePicker(
-                      gameSettings.playerSide,
-                      gameSettings.setPlayerSize
+                      appModel.playerSide,
+                      appModel.setPlayerSize
                     )
                   ])
                 : TimeLimitPicker(
-                    selectedTime: gameSettings.timeLimit,
-                    setTime: gameSettings.setTimeLimit,
+                    selectedTime: appModel.timeLimit,
+                    setTime: appModel.setTimeLimit,
                   ),
             Spacer(),
             MainMenuButtons(),

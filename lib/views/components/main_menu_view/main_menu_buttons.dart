@@ -12,24 +12,21 @@ class MainMenuButtons extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [
-          RoundedButton(
-            label: 'Start',
-            onPressed: () {
-              Navigator.push(context,
-                CupertinoPageRoute(builder: (context) => ChessView())
-              );
-            },
-          ),
+          RoundedButton('Start', onPressed: () {
+            Navigator.push(context,
+              CupertinoPageRoute(builder: (context) => ChessView())
+            );
+          }),
           SizedBox(height: 10),
           Row(children: [
             Expanded(
-              child: RoundedButton(label: 'GitHub', onPressed: () {
+              child: RoundedButton('GitHub', onPressed: () {
                 openGitHub();
               })
             ),
             SizedBox(width: 10),
             Expanded(
-              child: RoundedButton(label: 'Settings', onPressed: () {
+              child: RoundedButton('Settings', onPressed: () {
                 Navigator.push(context,
                   CupertinoPageRoute(builder: (context) => SettingsView())
                 );

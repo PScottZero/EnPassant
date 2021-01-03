@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:en_passant/logic/chess_game.dart';
-import 'package:en_passant/model/game_settings.dart';
+import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/components/chess_view/rounded_alert_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +11,6 @@ import 'components/chess_view/move_list.dart';
 import 'components/chess_view/timers.dart';
 import 'components/main_menu_view/side_picker.dart';
 import 'components/shared/bottom_padding.dart';
-import 'components/shared/rounded_button.dart';
 
 class ChessView extends StatefulWidget {
   @override
@@ -19,20 +19,20 @@ class ChessView extends StatefulWidget {
 
 class _ChessViewState extends State<ChessView> {
   var game = ChessGame();
-  GameSettings gameSettings;
+  AppModel appModel;
   Timer timer;
 
   _ChessViewState() {
     timer = Timer.periodic(
       Duration(seconds: 1), 
       (timer) {
-        if (gameSettings != null && gameSettings.timeLimit != Duration.zero) {
-          gameSettings.turn == PlayerID.player1 ?
-            gameSettings.decrementPlayer1Timer() :
-            gameSettings.decrementPlayer2Timer();
-          if (gameSettings.player1TimeLeft == Duration.zero ||
-            gameSettings.player2TimeLeft == Duration.zero) {
-            gameSettings.endGame();
+        if (appModel != null && appModel.timeLimit != Duration.zero) {
+          appModel.turn == PlayerID.player1 ?
+            appModel.decrementPlayer1Timer() :
+            appModel.decrementPlayer2Timer();
+          if (appModel.player1TimeLeft == Duration.zero ||
+            appModel.player2TimeLeft == Duration.zero) {
+            appModel.endGame();
           }
         }
       }
@@ -41,12 +41,12 @@ class _ChessViewState extends State<ChessView> {
 
   @override
   Widget build(BuildContext context) {  
-    return Consumer<GameSettings>(
-      builder: (context, gameSettings, child) {
-        initGame(context, gameSettings);
+    return Consumer<AppModel>(
+      builder: (context, appModel, child) {
+        initGame(context, appModel);
         return WillPopScope(
           child: Container(
-            decoration: BoxDecoration(gradient: gameSettings.theme.background),
+            decoration: BoxDecoration(gradient: appModel.theme.background),
             padding: EdgeInsets.all(30),
             child: Column(
               children: [
@@ -77,28 +77,37 @@ class _ChessViewState extends State<ChessView> {
                 SizedBox(height: 30),
                 GameStatus(),
                 Spacer(),
-                gameSettings.playerCount == 2 && 
-                  gameSettings.timeLimit != Duration.zero ?
+                appModel.playerCount == 2 && 
+                  appModel.timeLimit != Duration.zero ?
                   Column(children: [
                     Timers(
-                      player1TimeLeft: gameSettings.player1TimeLeft,
-                      player2TimeLeft: gameSettings.player2TimeLeft,
+                      player1TimeLeft: appModel.player1TimeLeft,
+                      player2TimeLeft: appModel.player2TimeLeft,
                     ),
                     SizedBox(height: 14)
                   ]) : Container(),
-                gameSettings.showMoveHistory ?
+                appModel.showMoveHistory ?
                   Column(children: [
                     MoveList(),
                     SizedBox(height: 10)
                   ]) : Container(),
-                RoundedButton(
-                  label: 'Exit',
-                  onPressed: () {
-                    gameSettings.resetGame();
-                    timer.cancel();
-                    Navigator.pop(context);
-                  }
-                ),
+                Row(children: [
+                  Expanded(
+                    child: RoundedAlertButton('Restart', onConfirm: () {
+                      appModel.resetGame();
+                      game = ChessGame();
+                      initGame(context, appModel);
+                    })
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: RoundedAlertButton('Exit', onConfirm: () {
+                      appModel.resetGame();
+                      timer.cancel();
+                      Navigator.pop(context);
+                    })
+                  )
+                ]),
                 BottomPadding()
               ],
             )
@@ -110,21 +119,23 @@ class _ChessViewState extends State<ChessView> {
   }
 
   Future<bool> _willPopCallback() async {
-    gameSettings.resetGame();
+    appModel.resetGame();
     timer.cancel();
     return true;
   }
 
-  void initGame(BuildContext context, GameSettings gameSettings) {
-    this.gameSettings = gameSettings;
-    if (gameSettings.initGame) {
+  void initGame(BuildContext context, AppModel appModel) {
+    this.appModel = appModel;
+    if (appModel.initGame) {
       game.setSize(MediaQuery.of(context).size);
-      game.setGameSettings(gameSettings);
+      game.setappModel(appModel);
       game.initSpritePositions();
-      if (gameSettings.isAIsTurn) {
+      if (appModel.isAIsTurn) {
         game.aiMove();
       }
-      gameSettings.initGame = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        appModel.finalizeGameInit();
+      });
     }
   }
 }

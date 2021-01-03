@@ -1,3 +1,4 @@
+import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 
 class TimeLimitPicker extends StatelessWidget {
@@ -9,7 +10,7 @@ class TimeLimitPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Text('Time Limit', style: TextStyle(fontSize: 20)),
+      TextSmall('Time Limit'),
       SizedBox(height: 10),
       Container(
         child: CupertinoTimerPicker(

@@ -1,24 +1,23 @@
+import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 
-class MoveHistoryToggle extends StatelessWidget {
-  final bool showMoveHistory;
+class Toggle extends StatelessWidget {
+  final String label;
+  final bool toggle;
   final Function setFunc;
 
-  MoveHistoryToggle({this.showMoveHistory, this.setFunc});
-
+  Toggle(this.label, {this.toggle, this.setFunc});
+  
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 60,
       child: Row(
         children: [
-          Text(
-            'Show Move History',
-            style: TextStyle(fontSize: 24)
-          ),
+          TextRegular(label),
           Spacer(),
           CupertinoSwitch(
-            value: showMoveHistory,
+            value: toggle,
             onChanged: setFunc,
           )
         ],

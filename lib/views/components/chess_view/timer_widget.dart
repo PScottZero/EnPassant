@@ -1,3 +1,4 @@
+import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 
 class TimerWidget extends StatelessWidget {
@@ -12,10 +13,7 @@ class TimerWidget extends StatelessWidget {
       child: Container(
         height: 60,
         child: Center(
-          child: Text(
-            durationToString(timeLeft),
-            style: TextStyle(fontSize: 24)
-          )
+          child: TextRegular(durationToString(timeLeft))
         ),
         decoration: BoxDecoration(
           border: Border.all(

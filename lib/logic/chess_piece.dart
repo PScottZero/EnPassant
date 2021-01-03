@@ -1,5 +1,5 @@
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/model/game_settings.dart';
+import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
@@ -57,9 +57,9 @@ class ChessPiece {
     this.sprite = existingPiece.sprite;
   }
 
-  void update({@required double tileSize, @required GameSettings gameSettings}) {
-    var currX = SharedFunctions.getXFromCol(tile.col, tileSize, gameSettings);
-    var currY = SharedFunctions.getYFromRow(tile.row, tileSize, gameSettings);
+  void update({@required double tileSize, @required AppModel appModel}) {
+    var currX = SharedFunctions.getXFromCol(tile.col, tileSize, appModel);
+    var currY = SharedFunctions.getYFromRow(tile.row, tileSize, appModel);
     if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
       spriteX = currX;
       spriteY = currY;
@@ -75,7 +75,9 @@ class ChessPiece {
       spriteX += offsetX;
       spriteY += offsetY;
       if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
-        Flame.audio.play('piece_moved.ogg');
+        if (appModel.soundEnabled) {
+          Flame.audio.play('piece_moved.ogg');
+        }
       }
     }
   }
@@ -86,9 +88,9 @@ class ChessPiece {
     sprite = Sprite('pieces/' + pieceName + '_' + color + '.png');
   }
 
-  void initSpritePosition(double tileSize, GameSettings gameSettings) {
-    spriteX = SharedFunctions.getXFromCol(tile.col, tileSize, gameSettings);
-    spriteY = SharedFunctions.getYFromRow(tile.row, tileSize, gameSettings);
+  void initSpritePosition(double tileSize, AppModel appModel) {
+    spriteX = SharedFunctions.getXFromCol(tile.col, tileSize, appModel);
+    spriteY = SharedFunctions.getYFromRow(tile.row, tileSize, appModel);
   }
   
   @override

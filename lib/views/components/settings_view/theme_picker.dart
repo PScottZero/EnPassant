@@ -1,32 +1,30 @@
-import 'package:en_passant/model/game_settings.dart';
-import 'package:en_passant/model/game_themes.dart';
+import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/app_themes.dart';
+import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 class ThemePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<GameSettings>(
-      builder: (context, gameSettings, child) => Container(
+    return Consumer<AppModel>(
+      builder: (context, appModel, child) => Container(
         child: Stack(
           alignment: AlignmentDirectional.topStart,
           children: [
             Container(
-              child: Text(
-                'App Theme',
-                style: TextStyle(fontSize: 24),
-              ),
+              child: TextRegular('App Theme'),
               padding: EdgeInsets.all(10),
             ),
             CupertinoPicker(
               scrollController: FixedExtentScrollController(
-                initialItem: gameSettings.themeIndex
+                initialItem: appModel.themeIndex
               ),
               itemExtent: 50,
-              onSelectedItemChanged: gameSettings.setGameTheme,
-              children: GameThemes.themeList.map((theme) => Container(
+              onSelectedItemChanged: appModel.setTheme,
+              children: AppThemes.themeList.map((theme) => Container(
                 padding: EdgeInsets.all(10),
-                child: Text(theme.name, style: TextStyle(fontSize: 24))
+                child: TextRegular(theme.name)
               )).toList()
             ),
           ],

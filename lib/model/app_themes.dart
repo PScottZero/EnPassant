@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class GameTheme {
+class AppTheme {
   String name;
   LinearGradient background;
   Color lightTile;
@@ -8,7 +8,7 @@ class GameTheme {
   Color moveHint;
   Color checkHint;
 
-  GameTheme({
+  AppTheme({
     this.name,
     this.background,
     this.lightTile = const Color(0xFFC9B28F),
@@ -18,9 +18,9 @@ class GameTheme {
   });
 }
 
-class GameThemes {
-  static var themeList = <GameTheme>[
-    GameTheme(
+class AppThemes {
+  static var themeList = <AppTheme>[
+    AppTheme(
       name: "Bismuth",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -37,7 +37,7 @@ class GameThemes {
       darkTile: Color(0xff2560a5),
       moveHint: Color(0x88ffff00)
     ),
-    GameTheme(
+    AppTheme(
       name: "Candy",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -52,7 +52,7 @@ class GameThemes {
       moveHint: Color(0x88ffff00),
       checkHint: Color(0x88ff0000),
     ),
-    GameTheme(
+    AppTheme(
       name: "Classic Blue",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -63,7 +63,7 @@ class GameThemes {
         ]
       )
     ),
-    GameTheme(
+    AppTheme(
       name: "Classic Green",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -74,7 +74,7 @@ class GameThemes {
         ]
       )
     ),
-    GameTheme(
+    AppTheme(
       name: "Classic Red",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -85,7 +85,7 @@ class GameThemes {
         ]
       )
     ),
-    GameTheme(
+    AppTheme(
       name: "Iridescent",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -101,7 +101,7 @@ class GameThemes {
       lightTile: Color(0xffabc0d1),
       darkTile: Color(0xff7991a6)
     ),
-    GameTheme(
+    AppTheme(
       name: "Metallic",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -114,7 +114,7 @@ class GameThemes {
       lightTile: Color(0xffb2b2b2),
       darkTile: Color(0xff808080)
     ),
-    GameTheme(
+    AppTheme(
       name: "Opal",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -132,7 +132,7 @@ class GameThemes {
       darkTile: Color(0xff6494d6),
       moveHint: Color(0x88aae39e)
     ),
-    GameTheme(
+    AppTheme(
       name: "Regal",
       background: LinearGradient(
         begin: Alignment.topCenter,
@@ -147,7 +147,7 @@ class GameThemes {
       moveHint: Color(0x800000ff),
       checkHint: Color(0xffff0000)
     ),
-    GameTheme(
+    AppTheme(
       name: "Vaporwave",
       background: LinearGradient(
         begin: Alignment.topCenter,

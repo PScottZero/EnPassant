@@ -1,4 +1,4 @@
-import 'package:en_passant/model/game_settings.dart';
+import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/main_menu_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => GameSettings(),
+      create: (context) => AppModel(),
       child: EnPassantApp()
     )
   );
