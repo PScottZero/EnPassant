@@ -75,7 +75,7 @@ class ChessPiece {
       spriteX += offsetX;
       spriteY += offsetY;
       if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
-        Flame.audio.play('piece_moved.mp3');
+        Flame.audio.play('piece_moved.ogg');
       }
     }
   }
