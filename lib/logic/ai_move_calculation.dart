@@ -9,8 +9,8 @@ import 'move_calculation.dart';
 import 'shared_functions.dart';
 import 'move_classes.dart';
 
-const INITIAL_ALPHA = -10000;
-const INITIAL_BETA = 10000;
+const INITIAL_ALPHA = -20000;
+const INITIAL_BETA = 20000;
 
 class AIMoveCalculation {
   static Future<Move> move({

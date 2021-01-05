@@ -25,17 +25,17 @@ class ChessPiece {
   int get value {
     int value = 0;
     switch (type) {
-      case ChessPieceType.pawn: { value = 10; }
+      case ChessPieceType.pawn: { value = 100; }
       break;
-      case ChessPieceType.bishop: { value = 30; }
+      case ChessPieceType.knight: { value = 320; }
       break;
-      case ChessPieceType.knight: { value = 30; }
+      case ChessPieceType.bishop: { value = 330; }
       break;
-      case ChessPieceType.rook: { value = 50; }
+      case ChessPieceType.rook: { value = 500; }
       break;
-      case ChessPieceType.queen: { value = 90; }
+      case ChessPieceType.queen: { value = 900; }
       break;
-      case ChessPieceType.king: { value = 10000; }
+      case ChessPieceType.king: { value = 20000; }
       break;
       default: { value = 0 ;}
     }

@@ -1,4 +1,5 @@
 import 'package:en_passant/logic/move_calculation.dart';
+import 'package:en_passant/logic/piece_square_tables.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,14 +27,23 @@ class ChessBoard {
   ChessPiece player2King;
   List<ChessPiece> player1Rooks = [];
   List<ChessPiece> player2Rooks = [];
+  List<ChessPiece> player1Queens = [];
+  List<ChessPiece> player2Queens = [];
   ChessPiece enPassantPiece;
 
   int get value {
     int value = 0;
     for (var piece in player1Pieces + player2Pieces) {
-      value += piece.value;
+      value += piece.value + squareValue(piece, inEndGame);
     }
     return value;
+  }
+
+  bool get inEndGame {
+    return (queensForPlayer(PlayerID.player1).isEmpty && 
+      queensForPlayer(PlayerID.player2).isEmpty) ||
+      piecesForPlayer(PlayerID.player1).length <= 3 ||
+      piecesForPlayer(PlayerID.player2).length <= 3;
   }
 
   ChessBoard({bool initPieces = true}) {
@@ -92,6 +102,10 @@ class ChessBoard {
       piece.player == PlayerID.player1 ?
         player1Rooks.add(piece) : player2Rooks.add(piece);
     }
+    if (piece.type == ChessPieceType.queen) {
+      piece.player == PlayerID.player1 ?
+        player1Queens.add(piece) : player2Queens.add(piece);
+    }
   }
 
   void removePiece({@required Tile tile}) {
@@ -101,6 +115,9 @@ class ChessBoard {
       piecesForPlayer(possiblePiece.player).remove(possiblePiece);
       if (possiblePiece.type == ChessPieceType.rook) {
         rooksForPlayer(possiblePiece.player).remove(possiblePiece);
+      }
+      if (possiblePiece.type == ChessPieceType.queen) {
+        queensForPlayer(possiblePiece.player).remove(possiblePiece);
       }
     }
   }
@@ -234,5 +251,9 @@ class ChessBoard {
 
   List<ChessPiece> rooksForPlayer(PlayerID player) {
     return player == PlayerID.player1 ? player1Rooks : player2Rooks;
+  }
+
+  List<ChessPiece> queensForPlayer(PlayerID player) {
+    return player == PlayerID.player1 ? player1Queens : player2Queens;
   }
 }
