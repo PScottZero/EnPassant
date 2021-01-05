@@ -12,7 +12,7 @@ class AppTheme {
     this.name,
     this.background,
     this.lightTile = const Color(0xFFC9B28F),
-    this.darkTile = const Color(0xff5b2e1b),
+    this.darkTile = const Color(0xFF69493b),
     this.moveHint = const Color(0x550000FF),
     this.checkHint = const Color(0x55FF0000)
   });
@@ -144,7 +144,7 @@ class AppThemes {
           ]
         ),
         lightTile: Color(0xfff0c76e),
-        darkTile: Color(0xff780000),
+        darkTile: Color(0xff942222),
         moveHint: Color(0x800000ff),
         checkHint: Color(0xffff0000)
       ),

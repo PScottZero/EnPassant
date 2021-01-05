@@ -1,12 +1,17 @@
 import 'package:en_passant/logic/chess_board.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'chess_piece.dart';
 import 'shared_functions.dart';
 import 'move_classes.dart';
 
 class MoveCalculation {
-  static List<Tile> movesFor({ChessPiece piece, ChessBoard board, bool skipSafetyCheck = false}) {
+  static List<Tile> movesFor({
+    ChessPiece piece,
+    ChessBoard board,
+    bool skipSafetyCheck = false
+  }) {
     switch (piece.type) {
       case ChessPieceType.pawn:{
         return pawnMoves(pawn: piece, board: board, skipSafetyCheck: skipSafetyCheck);
@@ -131,7 +136,7 @@ class MoveCalculation {
 
   static List<Tile> rookCastling({ChessPiece rook, ChessBoard board, bool skipSafetyCheck}) {
     var king = board.kingForPlayer(rook.player);
-    if (canCastle(king: king, rook: rook, board: board)) {
+    if (canCastle(king: king, rook: rook, board: board, skipSafetyCheck: skipSafetyCheck)) {
       return MoveCalculation.filterSafeMoves(
         piece: rook,
         board: board,
@@ -173,7 +178,7 @@ class MoveCalculation {
   static List<Tile> kingCastling({ChessPiece king, ChessBoard board, bool skipSafetyCheck}) {
     List<Tile> castleMoves = [];
     for (var rook in board.rooksForPlayer(king.player)) {
-      if (canCastle(king: king, rook: rook, board: board)) {
+      if (canCastle(king: king, rook: rook, board: board, skipSafetyCheck: skipSafetyCheck)) {
         castleMoves.add(rook.tile);
       }
     }
@@ -185,8 +190,19 @@ class MoveCalculation {
     );
   }
 
-  static bool canCastle({ChessPiece king, ChessPiece rook, ChessBoard board}) {
-    if (rook.moveCount == 0 && king.moveCount == 0) {
+  static bool canCastle({
+    @required ChessPiece king,
+    @required ChessPiece rook,
+    @required ChessBoard board,
+    @required bool skipSafetyCheck
+  }) {
+    bool kingInCheck;
+    if (skipSafetyCheck) {
+      kingInCheck = false;
+    } else {
+      kingInCheck = kingIsInCheck(player: king.player, board: board, skipSafetyCheck: true);
+    }
+    if (rook.moveCount == 0 && king.moveCount == 0 && !kingInCheck) {
       var range = (king.tile.col - rook.tile.col).abs();
       var offset = king.tile.col - rook.tile.col > 0 ? 1 : -1;
       var tileToCheck = rook.tile;
