@@ -49,14 +49,6 @@ class ChessPiece {
     initSprite();
   }
 
-  ChessPiece.fromPiece({@required ChessPiece existingPiece}) {
-    this.type = existingPiece.type;
-    this.player = existingPiece.player;
-    this.moveCount = existingPiece.moveCount;
-    this.tile = existingPiece.tile.copy();
-    this.sprite = existingPiece.sprite;
-  }
-
   void update({@required double tileSize, @required AppModel appModel}) {
     var currX = SharedFunctions.getXFromCol(tile.col, tileSize, appModel);
     var currY = SharedFunctions.getYFromRow(tile.row, tileSize, appModel);

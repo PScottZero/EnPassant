@@ -31,7 +31,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
       var touchedPiece = board.pieceAtTile(tile);
       if (selectedPiece != null && touchedPiece != null &&
         touchedPiece.player == selectedPiece.player) {
-        if (SharedFunctions.tileIsInTileList(tile: tile, tileList: validMoves)) {
+        if (SharedFunctions.tileIsInTileList(tile, validMoves)) {
           movePiece(tile);
         } else {
           validMoves = [];
@@ -72,7 +72,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
       if (piece.player == appModel.turn) {
         selectedPiece = piece;
         if (selectedPiece != null) {
-          validMoves = MoveCalculation.movesFor(piece: piece, board: board);
+          validMoves = MoveCalculation.movesForPiece(piece, board);
         }
         if (validMoves.isEmpty) {
           selectedPiece = null;
@@ -82,49 +82,39 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   }
 
   void movePiece(Tile toTile) {
-    if (SharedFunctions.tileIsInTileList(tile: toTile, tileList: validMoves)) {
+    if (SharedFunctions.tileIsInTileList(toTile, validMoves)) {
       validMoves = [];
-      var move = board.movePiece(from: selectedPiece.tile, to: toTile, getMoveMeta: true);
+      var move = Move(selectedPiece.tile, toTile);
+      board.push(move, getMoveMeta: true);
       moveCompletion(move);
     }
   }
 
   void aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
-    var move = await AIMoveCalculation.move(
-      aiPlayer: appModel.aiTurn,
-      aiDifficulty: appModel.aiDifficulty,
-      board: board
-    );
+    var move = AIMoveCalculation.move(appModel.aiTurn,
+      appModel.aiDifficulty, board);
     if (move.to.row == -1) {
       appModel.endGame();
     } else {
       validMoves = [];
-      var finishedMove = board.movePiece(from: move.from, to: move.to, getMoveMeta: true);
-      moveCompletion(finishedMove);
+      board.push(move, getMoveMeta: true);
+      moveCompletion(move);
     }
   }
 
   void moveCompletion(Move move) {
     checkHintTile = null;
     var oppositeTurn = SharedFunctions.oppositePlayer(appModel.turn);
-    if (MoveCalculation.kingIsInCheck(
-      player: oppositeTurn, 
-      board: board)
-    ) {
+    if (MoveCalculation.kingIsInCheck(oppositeTurn, board)) {
       move.meta.isCheck = true;
       checkHintTile = board.kingForPlayer(oppositeTurn).tile;
     }
-
-    if (MoveCalculation.kingIsInCheckmate(
-      player: oppositeTurn,
-      board: board)
-    ) {
+    if (MoveCalculation.kingIsInCheckmate(oppositeTurn, board)) {
       move.meta.isCheck = false;
       move.meta.isCheckmate = true;
       appModel.endGame();
     }
-
     appModel.addMove(move);
     appModel.changeTurn();
     selectedPiece = null;
@@ -135,9 +125,11 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   Tile offsetToTile(Offset offset) {
     if (appModel.playingWithAI && appModel.playerSide == PlayerID.player2) {
-      return Tile(row: (offset.dy / tileSize).floor(), col: 7 - (offset.dx / tileSize).floor());
+      return Tile((offset.dy / tileSize).floor(),
+        7 - (offset.dx / tileSize).floor());
     } else {
-      return Tile(row: 7 - (offset.dy / tileSize).floor(), col: (offset.dx / tileSize).floor());
+      return Tile(7 - (offset.dy / tileSize).floor(),
+        (offset.dx / tileSize).floor());
     }
   }
 
@@ -205,8 +197,10 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
     if (selectedPiece != null) {
       canvas.drawCircle(
         Offset(
-          SharedFunctions.getXFromCol(selectedPiece.tile.col, tileSize, appModel) + (tileSize / 2),
-          SharedFunctions.getYFromRow(selectedPiece.tile.row, tileSize, appModel) + (tileSize / 2)
+          SharedFunctions.getXFromCol(selectedPiece.tile.col, tileSize,
+            appModel) + (tileSize / 2),
+          SharedFunctions.getYFromRow(selectedPiece.tile.row, tileSize,
+            appModel) + (tileSize / 2)
         ),
         tileSize / 2,
         Paint()..color = appModel.theme.moveHint

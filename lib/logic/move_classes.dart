@@ -5,9 +5,17 @@ class Tile {
   int row;
   int col;
   
-  Tile({this.row, this.col});
+  Tile(this.row, this.col);
+  
+  Tile.invalid() {
+    this.row = -1;
+    this.col = -1;
+  }
 
-  Tile copy() { return Tile(row: row, col: col); }
+  Tile.copy(Tile existingTile) {
+    this.row = existingTile.row;
+    this.col = existingTile.col;
+  }
 
   @override
   bool operator == (obj) {
@@ -18,11 +26,25 @@ class Tile {
   int get hashCode => row.hashCode ^ col.hashCode;
 }
 
+class MoveStackObject {
+  Move move;
+  ChessPiece movedPiece;
+  ChessPiece takenPiece;
+  bool castling = false;
+  bool promotion = false;
+  bool enPassant = false;
+  MoveStackObject(this.move, this.movedPiece, this.takenPiece);
+}
+
 class Move {
   Tile from;
   Tile to;
   MoveMeta meta = MoveMeta();
-  Move({this.from, this.to});
+  Move(this.from, this.to);
+  Move.invalid() {
+    this.from = Tile.invalid();
+    this.to = Tile.invalid();
+  }
 }
 
 class MoveMeta {
@@ -41,5 +63,5 @@ class MoveMeta {
 class MoveAndValue {
   Move move;
   int value;
-  MoveAndValue({this.move, this.value});
+  MoveAndValue(this.move, this.value);
 }
