@@ -1,5 +1,5 @@
 import 'package:en_passant/logic/chess_piece.dart';
-import 'package:en_passant/logic/move_classes.dart';
+import 'package:en_passant/logic/move_calculation/move_classes/move.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';

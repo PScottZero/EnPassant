@@ -1,12 +1,14 @@
-import 'package:en_passant/logic/move_calculation.dart';
-import 'package:en_passant/logic/piece_square_tables.dart';
+import 'package:en_passant/logic/move_calculation/move_calculation.dart';
+import 'package:en_passant/logic/move_calculation/piece_square_tables.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'chess_piece.dart';
-import 'move_classes.dart';
+import 'move_calculation/move_classes/move.dart';
+import 'move_calculation/move_classes/move_stack_object.dart';
+import 'move_calculation/move_classes/tile.dart';
 
 const KING_ROW_PIECES = [
   ChessPieceType.rook,
@@ -100,7 +102,7 @@ class ChessBoard {
   void push(Move move, { bool getMoveMeta = false }) {
     var movedPiece = board[move.from.row][move.from.col];
     var takenPiece = board[move.to.row][move.to.col];
-    var moveStackObj = MoveStackObject(move, movedPiece, takenPiece);
+    var obj = MoveStackObject(move.from, movedPiece, takenPiece);
     movedPiece.moveCount++;
     move.meta.player = movedPiece.player;
     move.meta.type = movedPiece.type;
@@ -110,7 +112,7 @@ class ChessBoard {
       movedPiece.type == ChessPieceType.king ?
         castling(movedPiece, takenPiece) : castling(takenPiece, movedPiece);
       takenPiece.moveCount++;
-      moveStackObj.castling = true;
+      obj.castling = true;
       if (movedPiece.tile.col == 2 || movedPiece.tile.col == 3) {
         move.meta.queenCastle = true;
       } else {
@@ -125,46 +127,44 @@ class ChessBoard {
       movedPiece.tile = move.to;
       if (movedPiece.type == ChessPieceType.pawn) {
         if (move.to.row == 7 || move.to.row == 0) {
-          pawnToQueen(movedPiece);
-          moveStackObj.promotion = true;
+          movedPiece.promote();
+          queensForPlayer(movedPiece.player).add(movedPiece);
+          obj.promotion = true;
           move.meta.promotion = true;
         }
-        checkEnPassant(movedPiece, moveStackObj);
+        checkEnPassant(movedPiece, obj);
         if ((move.from.row - move.to.row).abs() == 2) {
           enPassantPiece = movedPiece;
         }
       }
     }
-    moveStack.add(moveStackObj);
+    moveStack.add(obj);
   }
 
   void pop() {
-    var moveStackObj = moveStack.last;
-    if (moveStackObj.castling) {
-      moveStackObj.movedPiece.type == ChessPieceType.rook ?
-        undoCastling(moveStackObj.takenPiece, moveStackObj.movedPiece) :
-        undoCastling(moveStackObj.movedPiece, moveStackObj.takenPiece);
-      moveStackObj.takenPiece.moveCount--;
+    var obj = moveStack.last;
+    if (obj.castling) {
+      obj.movedPiece.type == ChessPieceType.rook ?
+        undoCastling(obj.takenPiece, obj.movedPiece) :
+        undoCastling(obj.movedPiece, obj.takenPiece);
+      obj.takenPiece.moveCount--;
     } else {
-      board[moveStackObj.move.from.row][moveStackObj.move.from.col] =
-        moveStackObj.movedPiece;
-      if (moveStackObj.enPassant) {
-        board[moveStackObj.move.to.row][moveStackObj.move.to.col] = null;
+      board[obj.from.row][obj.from.col] = obj.movedPiece;
+      if (obj.enPassant) {
+        board[obj.movedPiece.tile.row][obj.movedPiece.tile.col] = null;
+        board[obj.takenPiece.tile.row][obj.takenPiece.tile.col] = obj.takenPiece;
+        enPassantPiece = obj.takenPiece;
       } else {
-        board[moveStackObj.move.to.row][moveStackObj.move.to.col] =
-          moveStackObj.takenPiece;
+        board[obj.movedPiece.tile.row][obj.movedPiece.tile.col] = obj.takenPiece;
       }
-      if (moveStackObj.takenPiece != null) {
-        addPiece(moveStackObj.takenPiece);
-      }
-      if (moveStackObj.enPassant) {
-        enPassantPiece = moveStackObj.takenPiece;
-      } else if (moveStackObj.promotion) {
-        queenToPawn(moveStackObj.movedPiece);
+      if (obj.takenPiece != null) { addPiece(obj.takenPiece); }
+      obj.movedPiece.tile = obj.from;
+      if (obj.promotion) {
+        queensForPlayer(obj.movedPiece.player).remove(obj.movedPiece);
+        obj.movedPiece.demote();
       }
     }
-    moveStackObj.movedPiece.moveCount--;
-    moveStackObj.movedPiece.tile = moveStackObj.move.from;
+    obj.movedPiece.moveCount--;
     moveStack.removeLast();
   }
 

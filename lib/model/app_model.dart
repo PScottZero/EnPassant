@@ -1,4 +1,4 @@
-import 'package:en_passant/logic/move_classes.dart';
+import 'package:en_passant/logic/move_calculation/move_classes/move.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';

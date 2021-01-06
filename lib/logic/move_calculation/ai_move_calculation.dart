@@ -3,10 +3,11 @@ import 'dart:math';
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
-import 'chess_board.dart';
+import '../chess_board.dart';
 import 'move_calculation.dart';
-import 'shared_functions.dart';
-import 'move_classes.dart';
+import '../shared_functions.dart';
+import 'move_classes/move.dart';
+import 'move_classes/move_and_value.dart';
 
 const INITIAL_ALPHA = -20000;
 const INITIAL_BETA = 20000;

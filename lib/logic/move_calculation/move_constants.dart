@@ -1,6 +1,6 @@
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
-import 'move_classes.dart';
+import 'move_classes/tile.dart';
 
 class MoveConstants {
   static List<Tile> pawnStandardMove(PlayerID player) {
