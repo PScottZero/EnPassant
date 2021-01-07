@@ -89,7 +89,6 @@ class ChessBoard {
   }
 
   void removePiece(ChessPiece piece) {
-    board[piece.tile.row][piece.tile.col] = null;
     piecesForPlayer(piece.player).remove(piece);
     if (piece.type == ChessPieceType.rook) {
       rooksForPlayer(piece.player).remove(piece);
@@ -103,39 +102,31 @@ class ChessBoard {
     var movedPiece = board[move.from.row][move.from.col];
     var takenPiece = board[move.to.row][move.to.col];
     var obj = MoveStackObject(move.from, movedPiece, takenPiece);
-    movedPiece.moveCount++;
     move.meta.player = movedPiece.player;
     move.meta.type = movedPiece.type;
     if (getMoveMeta) { checkMoveAmbiguity(move); }
-    board[move.from.row][move.from.col] = null;
+    movedPiece.moveCount++;
     if (castled(movedPiece, takenPiece)) {
       movedPiece.type == ChessPieceType.king ?
-        castling(movedPiece, takenPiece) : castling(takenPiece, movedPiece);
-      takenPiece.moveCount++;
+        castling(takenPiece, movedPiece, move) :
+        castling(movedPiece, takenPiece, move);
       obj.castling = true;
-      if (movedPiece.tile.col == 2 || movedPiece.tile.col == 3) {
-        move.meta.queenCastle = true;
-      } else {
-        move.meta.kingCastle = true;
-      }
     } else {
+      board[move.to.row][move.to.col] = movedPiece;
+      board[move.from.row][move.from.col] = null;
+      movedPiece.tile = move.to;
       if (takenPiece != null) {
         removePiece(takenPiece);
         move.meta.took = true;
       }
-      board[move.to.row][move.to.col] = movedPiece;
-      movedPiece.tile = move.to;
-      if (movedPiece.type == ChessPieceType.pawn) {
-        if (move.to.row == 7 || move.to.row == 0) {
-          movedPiece.promote();
-          queensForPlayer(movedPiece.player).add(movedPiece);
-          obj.promotion = true;
-          move.meta.promotion = true;
-        }
+      if (promotion(movedPiece)) {
+        movedPiece.promote();
+        queensForPlayer(movedPiece.player).add(movedPiece);
+        move.meta.promotion = true;
+        obj.promotion = true;
+      } else if (movedPiece.type == ChessPieceType.pawn) {
         checkEnPassant(movedPiece, obj);
-        if ((move.from.row - move.to.row).abs() == 2) {
-          enPassantPiece = movedPiece;
-        }
+        if (canTakeEnPassant(movedPiece)) { enPassantPiece = movedPiece; }
       }
     }
     moveStack.add(obj);
@@ -184,15 +175,17 @@ class ChessBoard {
     }
   }
 
-  void castling(ChessPiece king, ChessPiece rook) {
+  void castling(ChessPiece king, ChessPiece rook, Move move) {
     board[king.tile.row][king.tile.col] = null;
     board[rook.tile.row][rook.tile.col] = null;
     var rookCol = rook.tile.col == 0 ? 3 : 5;
     var kingCol = rook.tile.col == 0 ? 2 : 6;
+    rookCol == 3 ? move.meta.queenCastle = true : move.meta.kingCastle = true;
     board[rook.tile.row][rookCol] = rook;
     board[rook.tile.row][kingCol] = king;
     rook.tile = Tile(rook.tile.row, rookCol);
     king.tile = Tile(rook.tile.row, kingCol);
+    king.moveCount++;
   }
 
   void undoCastling(ChessPiece king, ChessPiece rook) {
@@ -205,40 +198,14 @@ class ChessBoard {
     king.tile = Tile(rook.tile.row, 4);
   }
 
-  void pawnToQueen(ChessPiece pawn) {
-    removePiece(pawn);
-    var queen = ChessPiece(
-      belongsTo: pawn.player,
-      type: ChessPieceType.queen,
-      tile: pawn.tile
-    );
-    queen.tile = pawn.tile;
-    addPiece(queen);
-    queen.spriteX = pawn.spriteX;
-    queen.spriteY = pawn.spriteY;
-  }
-
-  void queenToPawn(ChessPiece queen) {
-    removePiece(queen);
-    var pawn = ChessPiece(
-      belongsTo: queen.player,
-      type: ChessPieceType.pawn,
-      tile: queen.tile
-    );
-    pawn.tile = queen.tile;
-    addPiece(pawn);
-    pawn.spriteX = queen.spriteX;
-    pawn.spriteY = queen.spriteY;
-  }
-
-  void checkEnPassant(ChessPiece pawn, MoveStackObject moveStackObj) {
+  void checkEnPassant(ChessPiece pawn, MoveStackObject obj) {
     var offset = pawn.player == PlayerID.player1 ? -1 : 1;
     var tile = Tile(pawn.tile.row + offset, pawn.tile.col);
     var takenPiece = pieceAtTile(tile);
     if (takenPiece != null && takenPiece == enPassantPiece) {
       removePiece(takenPiece);
-      moveStackObj.takenPiece = takenPiece;
-      moveStackObj.enPassant = true;
+      obj.takenPiece = takenPiece;
+      obj.enPassant = true;
     }
     enPassantPiece = null;
   }
@@ -274,5 +241,15 @@ class ChessBoard {
 
   bool castled(ChessPiece movedPiece, ChessPiece takenPiece) {
     return takenPiece != null && takenPiece.player == movedPiece.player;
+  }
+
+  bool promotion(ChessPiece movedPiece) {
+    return movedPiece.type == ChessPieceType.pawn &&
+      (movedPiece.tile.row == 7 || movedPiece.tile.row == 0);
+  }
+
+  bool canTakeEnPassant(ChessPiece movedPiece) {
+    return movedPiece.moveCount == 1 &&
+      (movedPiece.tile.row == 3 || movedPiece.tile.col == 4);
   }
 }
