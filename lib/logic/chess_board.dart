@@ -112,8 +112,9 @@ class ChessBoard {
       if (obj.movedPiece.type == ChessPieceType.pawn) {
         if (promotion(obj.movedPiece)) {
           promote(obj);
+        } else {
+          checkEnPassant(obj);
         }
-        checkEnPassant(obj);
       }
     }
     moveStack.add(obj);
@@ -130,8 +131,8 @@ class ChessBoard {
         undoPromote(obj);
       }
       if (obj.enPassant) {
-        addPiece(obj.takenPiece);
-        setTile(obj.takenPiece.tile, obj.takenPiece);
+        addPiece(obj.enPassantPiece);
+        setTile(obj.enPassantPiece.tile, obj.enPassantPiece);
       }
     }
   }
@@ -166,7 +167,7 @@ class ChessBoard {
   void undoStandardMove(MoveStackObject obj) {
     setTile(obj.move.from, obj.movedPiece);
     setTile(obj.move.to, null);
-    if (obj.takenPiece != null && !obj.enPassant) {
+    if (obj.takenPiece != null) {
       addPiece(obj.takenPiece);
       setTile(obj.move.to, obj.takenPiece);
     }
@@ -179,16 +180,12 @@ class ChessBoard {
       obj.movedPiece : obj.takenPiece;
     var rook = obj.movedPiece.type == ChessPieceType.rook ?
       obj.movedPiece : obj.takenPiece;
-    board[king.tile.row][king.tile.col] = null;
-    board[rook.tile.row][rook.tile.col] = null;
-    var rookCol = rook.tile.col == 0 ? 3 : 5;
-    var kingCol = rook.tile.col == 0 ? 2 : 6;
-    rookCol == 3 ? obj.move.meta.queenCastle = true :
+    setTile(king.tile, null);
+    setTile(rook.tile, null);
+    setTile(Tile(king.tile.row, rook.tile.col == 0 ? 2 : 6), king);
+    setTile(Tile(rook.tile.row, rook.tile.col == 0 ? 3 : 5), rook);
+    rook.tile.col == 3 ? obj.move.meta.queenCastle = true :
       obj.move.meta.kingCastle = true;
-    board[rook.tile.row][rookCol] = rook;
-    board[rook.tile.row][kingCol] = king;
-    rook.tile = Tile(rook.tile.row, rookCol);
-    king.tile = Tile(rook.tile.row, kingCol);
     king.moveCount++;
     rook.moveCount++;
     obj.castled = true;
@@ -199,13 +196,10 @@ class ChessBoard {
       obj.movedPiece : obj.takenPiece;
     var rook = obj.movedPiece.type == ChessPieceType.rook ?
       obj.movedPiece : obj.takenPiece;
-    board[king.tile.row][king.tile.col] = null;
-    board[rook.tile.row][rook.tile.col] = null;
-    var rookCol = rook.tile.col == 3 ? 0 : 7;
-    board[rook.tile.row][rookCol] = rook;
-    board[rook.tile.row][4] = king;
-    rook.tile = Tile(rook.tile.row, rookCol);
-    king.tile = Tile(rook.tile.row, 4);
+    setTile(king.tile, null);
+    setTile(rook.tile, null);
+    setTile(Tile(king.tile.row, 4), king);
+    setTile(Tile(rook.tile.row, rook.tile.col == 3 ? 0 : 7), rook);
     king.moveCount--;
     rook.moveCount--;
   }
@@ -228,8 +222,7 @@ class ChessBoard {
     var takenPiece = pieceAtTile(tile);
     if (takenPiece != null && takenPiece == enPassantPiece) {
       removePiece(takenPiece);
-      setTile(takenPiece.tile, null);
-      obj.takenPiece = takenPiece;
+      setTile(tile, null);
       obj.enPassant = true;
     }
     if (canTakeEnPassant(obj.movedPiece)) {
@@ -241,6 +234,9 @@ class ChessBoard {
 
   void setTile(Tile tile, ChessPiece piece) {
     board[tile.row][tile.col] = piece;
+    if (piece != null) {
+      piece.tile = tile;
+    }
   }
 
   ChessPiece pieceAtTile(Tile tile) {

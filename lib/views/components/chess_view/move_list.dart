@@ -64,9 +64,9 @@ class MoveList extends StatelessWidget {
       String row = '${move.to.row + 1}';
       String col = '${colToChar(move.to.col)}';
       if (move.meta.colIsAmbiguous) {
-        row += '${move.from.row + 1}';
+        row = '${move.from.row + 1}' + row;
       } else if (move.meta.rowIsAmbiguous) {
-        col += '${colToChar(move.from.col)}';
+        col = '${colToChar(move.from.col)}' + col;
       }
       return '${pieceToChar(move.meta.type)}$takeString' +
         '$col$row$promotion$check$checkmate';
