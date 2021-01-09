@@ -1,11 +1,10 @@
 import 'package:en_passant/logic/chess_board.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
-import '../chess_piece.dart';
-import 'move_classes/move.dart';
-import 'move_classes/tile.dart';
+import 'chess_piece.dart';
 import 'move_constants.dart';
-import '../shared_functions.dart';
+import 'shared_functions.dart';
+import 'move_classes.dart';
 
 class MoveCalculation {
   static List<Move> allMoves(PlayerID player, ChessBoard board) {

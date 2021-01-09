@@ -5,7 +5,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'move_calculation/move_classes/tile.dart';
+import 'move_classes.dart';
 
 enum ChessPieceType { pawn, rook, knight, bishop, king, queen }
 
@@ -45,7 +45,7 @@ class ChessPiece {
   ChessPiece({ChessPieceType type, PlayerID belongsTo, Tile tile}) {
     this.type = type;
     this.tile = tile;
-    this.player = belongsTo;
+    player = belongsTo;
     initSprite();
   }
 
@@ -83,16 +83,6 @@ class ChessPiece {
   void initSpritePosition(double tileSize, AppModel appModel) {
     spriteX = SharedFunctions.getXFromCol(tile.col, tileSize, appModel);
     spriteY = SharedFunctions.getYFromRow(tile.row, tileSize, appModel);
-  }
-
-  void promote() {
-    this.type = ChessPieceType.queen;
-    this.initSprite();
-  }
-
-  void demote() {
-    this.type = ChessPieceType.pawn;
-    this.initSprite();
   }
   
   @override

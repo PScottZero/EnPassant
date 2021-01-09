@@ -1,7 +1,7 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
-import 'move_calculation/move_classes/tile.dart';
+import 'move_classes.dart';
 
 class SharedFunctions {
   static bool tileInBounds(Tile tile) {

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
-import 'package:en_passant/logic/move_calculation/move_calculation.dart';
+import 'package:en_passant/logic/ai_move_calculation.dart';
+import 'package:en_passant/logic/move_calculation.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
@@ -12,8 +12,7 @@ import 'package:flutter/foundation.dart';
 
 import 'chess_board.dart';
 import 'chess_piece.dart';
-import 'move_calculation/move_classes/move.dart';
-import 'move_calculation/move_classes/tile.dart';
+import 'move_classes.dart';
 
 class ChessGame extends Game with TapDetector, ChangeNotifier {
   double width;
