@@ -18,16 +18,16 @@ class MoveList extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(15)),
           color: Color(0x20000000)
         ),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            controller: scrollController,
-            padding: EdgeInsets.only(left: 15, right: 15),
-            children: [
-              Center(
-                child: TextRegular(allMoves(appModel))
-              )
-            ],
-          )
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          controller: scrollController,
+          padding: EdgeInsets.only(left: 15, right: 15),
+          children: [
+            Center(
+              child: TextRegular(allMoves(appModel))
+            )
+          ],
+        )
       )
     );
   }
