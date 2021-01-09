@@ -3,7 +3,9 @@ import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import '../../chess_piece.dart';
 
 class MoveMeta {
-  PlayerID player;
+  int from;
+  int to;
+  Player player;
   ChessPieceType type;
   bool took = false;
   bool kingCastle = false;
@@ -13,4 +15,6 @@ class MoveMeta {
   bool isCheckmate = false;
   bool rowIsAmbiguous = false;
   bool colIsAmbiguous = false;
+
+  MoveMeta(this.from, this.to, this.player, this.type);
 }

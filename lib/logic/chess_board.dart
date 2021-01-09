@@ -1,8 +1,11 @@
+import 'package:en_passant/logic/move_calculation/move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_stack_object.dart';
+import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
 import 'chess_piece.dart';
-import 'move_calculation/move_calculation.dart';
+import 'move_calculation/move_classes/move_meta.dart';
+import 'move_calculation/piece_square_tables.dart';
 
 const KING_ROW_PIECES = [
   ChessPieceType.rook,
@@ -51,4 +54,171 @@ class ChessBoard {
       }
     }
   }
+}
+
+int boardValue(ChessBoard board) {
+  int value = 0;
+  for (var piece in board.player1Pieces + board.player2Pieces) {
+    value += piece.value + squareValue(piece, false);
+  }
+  return value;
+}
+
+MoveMeta push(ChessPiece piece, int tile, ChessBoard board) {
+  var mso = MoveStackObject(piece.tile, tile, piece, board.tiles[tile]);
+  var meta = MoveMeta(piece.tile, tile, piece.player, piece.type);
+  if (castled(mso.movedPiece, mso.takenPiece)) {
+    castle(board, mso, meta);
+  } else {
+    standardMove(board, mso, meta);
+    if (mso.movedPiece.type == ChessPieceType.pawn) {
+      if (promotion(mso.movedPiece)) {
+        promote(board, mso, meta);
+      }
+    }
+  }
+  board.moveStack.add(mso);
+  enemyKingInCheck(piece.player, board);
+  return meta;
+}
+
+void pop(ChessBoard board) {
+  var mso = board.moveStack.removeLast();
+  if (mso.castled) {
+    undoCastle(board, mso);
+  } else {
+    undoStandardMove(board, mso);
+    if (mso.promotion) {
+      undoPromote(board, mso);
+    }
+  }
+}
+
+void standardMove(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
+  setTile(mso.to, mso.movedPiece, board);
+  setTile(mso.from, null, board);
+  mso.movedPiece.moveCount++;
+  if (mso.takenPiece != null) {
+    removePiece(mso.takenPiece, board);
+    meta.took = true;
+  }
+}
+
+void undoStandardMove(ChessBoard board, MoveStackObject mso) {
+  setTile(mso.from, mso.movedPiece, board);
+  setTile(mso.to, null, board);
+  if (mso.takenPiece != null) {
+    addPiece(mso.takenPiece, board);
+    setTile(mso.to, mso.takenPiece, board);
+  }
+  mso.movedPiece.moveCount--;
+}
+
+void castle(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
+  var king = mso.movedPiece.type == ChessPieceType.king ?
+    mso.movedPiece : mso.takenPiece;
+  var rook = mso.movedPiece.type == ChessPieceType.rook ?
+    mso.movedPiece : mso.takenPiece;
+  setTile(king.tile, null, board);
+  setTile(rook.tile, null, board);
+  var kingCol = tileToCol(rook.tile) == 0 ? 2 : 6;
+  var rookCol = tileToCol(rook.tile) == 0 ? 3 : 5;
+  setTile(tileToRow(king.tile) * 8 + kingCol, king, board);
+  setTile(tileToRow(rook.tile) * 8 + rookCol, rook, board);
+  tileToCol(rook.tile) == 3 ? meta.queenCastle = true :
+    meta.kingCastle = true;
+  king.moveCount++;
+  rook.moveCount++;
+  mso.castled = true;
+}
+
+void undoCastle(ChessBoard board, MoveStackObject mso) {
+  var king = mso.movedPiece.type == ChessPieceType.king ?
+    mso.movedPiece : mso.takenPiece;
+  var rook = mso.movedPiece.type == ChessPieceType.rook ?
+    mso.movedPiece : mso.takenPiece;
+  setTile(king.tile, null, board);
+  setTile(rook.tile, null, board);
+  var rookCol = tileToCol(rook.tile) == 3 ? 0 : 7;
+  setTile(tileToRow(king.tile) * 8 + 4, king, board);
+  setTile(tileToRow(rook.tile) * 8 + rookCol, rook, board);
+  king.moveCount--;
+  rook.moveCount--;
+}
+
+void promote(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
+  mso.movedPiece.type = ChessPieceType.queen;
+  initSprite(mso.movedPiece);
+  queensForPlayer(mso.movedPiece.player, board).add(mso.movedPiece);
+  meta.promotion = true;
+  mso.promotion = true;
+}
+
+void undoPromote(ChessBoard board, MoveStackObject mso) {
+  mso.movedPiece.type = ChessPieceType.pawn;
+  initSprite(mso.movedPiece);
+  queensForPlayer(mso.movedPiece.player, board).remove(mso.movedPiece);
+}
+
+void enemyKingInCheck(Player player, ChessBoard board) {
+  for (var piece in piecesForPlayer(player, board)) {
+    var moves = movesForPiece(piece, board, legal: false);
+    if (moves.contains(kingForPlayer(oppositePlayer(player), board).tile)) {
+      player == Player.player1 ?
+        board.player2KingInCheck = true : board.player1KingInCheck = true;
+      break;
+    }
+  }
+}
+
+void setTile(int tile, ChessPiece piece, ChessBoard board) {
+  board.tiles[tile] = piece;
+  if (piece != null) {
+    piece.tile = tile;
+  }
+}
+
+void addPiece(ChessPiece piece, ChessBoard board) {
+  piecesForPlayer(piece.player, board).add(piece);
+  if (piece.type == ChessPieceType.rook) {
+    rooksForPlayer(piece.player, board).add(piece);
+  }
+  if (piece.type == ChessPieceType.queen) {
+    queensForPlayer(piece.player, board).add(piece);
+  }
+}
+
+void removePiece(ChessPiece piece, ChessBoard board) {
+  piecesForPlayer(piece.player, board).remove(piece);
+  if (piece.type == ChessPieceType.rook) {
+    rooksForPlayer(piece.player, board).remove(piece);
+  }
+  if (piece.type == ChessPieceType.queen) {
+    queensForPlayer(piece.player, board).remove(piece);
+  }
+}
+
+List<ChessPiece> piecesForPlayer(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1Pieces : board.player2Pieces;
+}
+
+ChessPiece kingForPlayer(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1King : board.player2King;
+}
+
+List<ChessPiece> queensForPlayer(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1Queens : board.player2Queens;
+}
+
+List<ChessPiece> rooksForPlayer(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1Rooks : board.player2Rooks;
+}
+
+bool castled(ChessPiece movedPiece, ChessPiece takenPiece) {
+  return takenPiece != null && takenPiece.player == movedPiece.player;
+}
+
+bool promotion(ChessPiece movedPiece) {
+  return movedPiece.type == ChessPieceType.pawn &&
+    (tileToRow(movedPiece.tile) == 7 || tileToRow(movedPiece.tile) == 0);
 }

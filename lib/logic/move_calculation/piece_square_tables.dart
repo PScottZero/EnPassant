@@ -79,7 +79,7 @@ const PAWN_TABLE = [
 ];
 
 int squareValue(ChessPiece piece, bool inEndGame) {
-  var tile = piece.player == PlayerID.player1 ?
+  var tile = piece.player == Player.player1 ?
     piece.tile : piece.tile + 56 - 16 * (piece.tile / 8).floor();
   int value;
   switch (piece.type) {
@@ -101,5 +101,5 @@ int squareValue(ChessPiece piece, bool inEndGame) {
     default: { value = 0; }
     break;
   }
-  return piece.player == PlayerID.player1 ? value : -value;
+  return piece.player == Player.player1 ? value : -value;
 }

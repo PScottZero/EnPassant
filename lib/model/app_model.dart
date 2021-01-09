@@ -1,4 +1,4 @@
-import 'package:en_passant/logic/move_calculation/move_classes/move.dart';
+import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
@@ -9,7 +9,7 @@ import 'app_themes.dart';
 class AppModel extends ChangeNotifier {
   int playerCount = 1;
   AIDifficulty aiDifficulty = AIDifficulty.normal;
-  PlayerID playerSide = PlayerID.player1;
+  Player playerSide = Player.player1;
   Duration timeLimit = Duration.zero;
   String themeName = 'Green';
   AppTheme get theme { return AppThemes.themeList[themeIndex]; }
@@ -17,9 +17,9 @@ class AppModel extends ChangeNotifier {
   bool soundEnabled = true;
 
   bool gameOver = false;
-  PlayerID turn = PlayerID.player1;
+  Player turn = Player.player1;
   bool initGame = true;
-  List<Move> moves = [];
+  List<MoveMeta> moveMetaList = [];
   Duration player1TimeLeft = Duration.zero;
   Duration player2TimeLeft = Duration.zero;
 
@@ -33,7 +33,7 @@ class AppModel extends ChangeNotifier {
     return themeIndex;
   }
 
-  PlayerID get aiTurn { return SharedFunctions.oppositePlayer(playerSide); }
+  Player get aiTurn { return oppositePlayer(playerSide); }
 
   bool get isAIsTurn { return playingWithAI && (turn == aiTurn); }
 
@@ -41,8 +41,8 @@ class AppModel extends ChangeNotifier {
 
   AppModel() { loadSharedPrefs(); }
 
-  void addMove(Move move) {
-    moves.add(move);
+  void addMoveMeta(MoveMeta meta) {
+    moveMetaList.add(meta);
     notifyListeners();
   }
 
@@ -52,7 +52,7 @@ class AppModel extends ChangeNotifier {
   }
 
   void changeTurn() {
-    turn = SharedFunctions.oppositePlayer(turn);
+    turn = oppositePlayer(turn);
     notifyListeners();
   }
 
@@ -63,9 +63,9 @@ class AppModel extends ChangeNotifier {
 
   void resetGame() {
     gameOver = false;
-    turn = PlayerID.player1;
+    turn = Player.player1;
     initGame = true;
-    moves = [];
+    moveMetaList = [];
     player1TimeLeft = timeLimit;
     player2TimeLeft = timeLimit;
   }
@@ -80,7 +80,7 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPlayerSize(PlayerID side) {
+  void setPlayerSize(Player side) {
     playerSide = side;
     notifyListeners();
   }

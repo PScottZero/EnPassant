@@ -10,11 +10,9 @@ enum ChessPieceType { pawn, rook, knight, bishop, king, queen }
 class ChessPiece {
   ChessPieceType type;
   Player player;
-  bool hasMoved = false;
+  int moveCount = 0;
   int tile;
   Sprite sprite;
-
-  // for animations
   double spriteX;
   double spriteY;
   double offsetX = 0;
@@ -44,12 +42,12 @@ class ChessPiece {
     this.type = type;
     this.tile = tile;
     this.player = player;
-    initSprite();
+    initSprite(this);
   }
 
   void update({@required double tileSize, @required AppModel appModel}) {
-    var currX = getXFromCol(tile % 8, tileSize, appModel);
-    var currY = getYFromRow((tile / 8).floor(), tileSize, appModel);
+    var currX = getXFromTile(tile, tileSize, appModel);
+    var currY = getYFromTile(tile, tileSize, appModel);
     if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
       spriteX = currX;
       spriteY = currY;
@@ -72,24 +70,14 @@ class ChessPiece {
     }
   }
 
-  void initSprite() {
-    String color = player == Player.player1 ? 'white' : 'black';
-    String pieceName = type.toString().substring(type.toString().indexOf('.') + 1);
-    sprite = Sprite('pieces/' + pieceName + '_' + color + '.png');
-  }
-
   void initSpritePosition(double tileSize, AppModel appModel) {
-    spriteX = getXFromCol(tile % 8, tileSize, appModel);
-    spriteY = getYFromRow((tile / 8).floor(), tileSize, appModel);
+    spriteX = getXFromTile(tile, tileSize, appModel);
+    spriteY = getYFromTile(tile, tileSize, appModel);
   }
+}
 
-  void promote() {
-    this.type = ChessPieceType.queen;
-    this.initSprite();
-  }
-
-  void demote() {
-    this.type = ChessPieceType.pawn;
-    this.initSprite();
-  }
+void initSprite(ChessPiece piece) {
+  String color = piece.player == Player.player1 ? 'white' : 'black';
+  String pieceName = piece.type.toString().substring(piece.type.toString().indexOf('.') + 1);
+  piece.sprite = Sprite('pieces/' + pieceName + '_' + color + '.png');
 }
