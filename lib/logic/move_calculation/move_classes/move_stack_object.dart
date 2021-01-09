@@ -1,16 +1,12 @@
 import '../../chess_piece.dart';
-import 'move.dart';
+import 'tile.dart';
 
 class MoveStackObject {
-  Move move;
+  Tile from;
   ChessPiece movedPiece;
   ChessPiece takenPiece;
-  ChessPiece enPassantPiece;
-  bool castled = false;
+  bool castling = false;
   bool promotion = false;
   bool enPassant = false;
-  MoveStackObject(this.move, this.movedPiece, this.takenPiece, this.enPassantPiece) {
-    move.meta.player = movedPiece.player;
-    move.meta.type = movedPiece.type;
-  }
+  MoveStackObject(this.from, this.movedPiece, this.takenPiece);
 }

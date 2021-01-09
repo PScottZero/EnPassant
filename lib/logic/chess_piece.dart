@@ -94,4 +94,12 @@ class ChessPiece {
     this.type = ChessPieceType.pawn;
     this.initSprite();
   }
+  
+  @override
+  bool operator == (obj) {
+    return obj is ChessPiece && obj.sprite == sprite;
+  }
+
+  @override
+  int get hashCode => sprite.hashCode;
 }
