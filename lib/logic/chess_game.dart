@@ -135,9 +135,9 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   Tile offsetToTile(Offset offset) {
     if (appModel.playingWithAI && appModel.playerSide == PlayerID.player2) {
-      return Tile(row: (offset.dy / tileSize).floor(), col: 7 - (offset.dx / tileSize).floor());
+      return Tile((offset.dy / tileSize).floor(), 7 - (offset.dx / tileSize).floor());
     } else {
-      return Tile(row: 7 - (offset.dy / tileSize).floor(), col: (offset.dx / tileSize).floor());
+      return Tile(7 - (offset.dy / tileSize).floor(), (offset.dx / tileSize).floor());
     }
   }
 

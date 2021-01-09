@@ -5,9 +5,14 @@ class Tile {
   int row;
   int col;
   
-  Tile({this.row, this.col});
+  Tile(this.row, this.col);
 
-  Tile copy() { return Tile(row: row, col: col); }
+  Tile.invalid() {
+    this.row = -1;
+    this.col = -1;
+  }
+
+  Tile copy() { return Tile(this.row, this.col); }
 
   @override
   bool operator == (obj) {
@@ -22,7 +27,13 @@ class Move {
   Tile from;
   Tile to;
   MoveMeta meta = MoveMeta();
-  Move({this.from, this.to});
+  
+  Move(this.from, this.to);
+  
+  Move.invalid() {
+    this.from = Tile.invalid();
+    this.to = Tile.invalid();
+  }
 }
 
 class MoveMeta {
@@ -41,5 +52,5 @@ class MoveMeta {
 class MoveAndValue {
   Move move;
   int value;
-  MoveAndValue({this.move, this.value});
+  MoveAndValue(this.move, this.value);
 }

@@ -58,11 +58,11 @@ class MoveCalculation {
 
   static List<Tile> pawnStandardMoves({ChessPiece pawn}) {
     List<Tile> relativeMoves = pawn.player == PlayerID.player1 ? 
-      [Tile(row: 1, col: 0)] : [Tile(row: -1, col: 0)];
+      [Tile(1, 0)] : [Tile(-1, 0)];
     if (pawn.moveCount == 0) {
       pawn.player == PlayerID.player1 ?
-        relativeMoves.add(Tile(row: 2, col: 0)) : 
-        relativeMoves.add(Tile(row: -2, col: 0));
+        relativeMoves.add(Tile(2, 0)) : 
+        relativeMoves.add(Tile(-2, 0));
     }
     return relativeMoves;
   }
@@ -70,12 +70,12 @@ class MoveCalculation {
   static List<Tile> pawnDiagonalAttack({ChessPiece pawn, ChessBoard board}) {
     List<Tile> validMoves = [];
     var diagonals = pawn.player == PlayerID.player1 ?
-      [Tile(row: 1, col: -1), Tile(row: 1, col: 1)] :
-      [Tile(row: -1, col: -1), Tile(row: -1, col: 1)];
+      [Tile(1, -1), Tile(1, 1)] :
+      [Tile(-1, -1), Tile(-1, 1)];
     for (var diagonal in diagonals) {
       var possibleMove = Tile(
-        row: pawn.tile.row + diagonal.row,
-        col: pawn.tile.col + diagonal.col
+        pawn.tile.row + diagonal.row,
+        pawn.tile.col + diagonal.col
       );
       if (SharedFunctions.tileInBounds(possibleMove)) {
         var takenPiece = board.pieceAtTile(possibleMove);
@@ -91,7 +91,7 @@ class MoveCalculation {
   static bool canTakeEnPassant({PlayerID pawnPlayer, Tile diagonal, ChessBoard board}) {
     var rowOffset = (pawnPlayer == PlayerID.player1) ? -1 : 1;
     var takenPiece = board.pieceAtTile(
-      Tile(row: diagonal.row + rowOffset, col: diagonal.col)
+      Tile(diagonal.row + rowOffset, diagonal.col)
     );
     return takenPiece != null && takenPiece == board.enPassantPiece;
   }
@@ -101,8 +101,8 @@ class MoveCalculation {
       piece: bishop,
       board: board,
       directions: [
-        Tile(row: 1, col: 1), Tile(row: 1, col: -1),
-        Tile(row: -1, col: 1), Tile(row: -1, col: -1)
+        Tile(1, 1), Tile(1, -1),
+        Tile(-1, 1), Tile(-1, -1)
       ],
       skipSafetyCheck: skipSafetyCheck
     );
@@ -113,10 +113,10 @@ class MoveCalculation {
       piece: knight,
       board: board,
       relativeMoves: [
-        Tile(row: 1, col: 2), Tile(row: 1, col: -2),
-        Tile(row: -1, col: 2), Tile(row: -1, col: -2),
-        Tile(row: 2, col: 1), Tile(row: 2, col: -1),
-        Tile(row: -2, col: 1), Tile(row: -2, col: -1)
+        Tile(1, 2), Tile(1, -2),
+        Tile(-1, 2), Tile(-1, -2),
+        Tile(2, 1), Tile(2, -1),
+        Tile(-2, 1), Tile(-2, -1)
       ],
       skipSafetyCheck: skipSafetyCheck
     );
@@ -127,8 +127,8 @@ class MoveCalculation {
       piece: rook,
       board: board,
       directions: [
-        Tile(row: 1, col: 0), Tile(row: -1, col: 0),
-        Tile(row: 0, col: 1), Tile(row: 0, col: -1)
+        Tile(1, 0), Tile(-1, 0),
+        Tile(0, 1), Tile(0, -1)
       ],
       skipSafetyCheck: skipSafetyCheck
     ) + rookCastling(rook: rook, board: board, skipSafetyCheck: skipSafetyCheck);
@@ -152,10 +152,10 @@ class MoveCalculation {
       piece: queen,
       board: board,
       directions: [
-        Tile(row: 1, col: 0), Tile(row: -1, col: 0),
-        Tile(row: 0, col: 1), Tile(row: 0, col: -1),
-        Tile(row: 1, col: 1), Tile(row: 1, col: -1),
-        Tile(row: -1, col: 1), Tile(row: -1, col: -1)
+        Tile(1, 0), Tile(-1, 0),
+        Tile(0, 1), Tile(0, -1),
+        Tile(1, 1), Tile(1, -1),
+        Tile(-1, 1), Tile(-1, -1)
       ],
       skipSafetyCheck: skipSafetyCheck
     );
@@ -166,10 +166,10 @@ class MoveCalculation {
       piece: king,
       board: board,
       relativeMoves: [
-        Tile(row: 1, col: 0), Tile(row: -1, col: 0),
-        Tile(row: 0, col: 1), Tile(row: 0, col: -1),
-        Tile(row: 1, col: 1), Tile(row: 1, col: -1),
-        Tile(row: -1, col: 1), Tile(row: -1, col: -1)
+        Tile(1, 0), Tile(-1, 0),
+        Tile(0, 1), Tile(0, -1),
+        Tile(1, 1), Tile(1, -1),
+        Tile(-1, 1), Tile(-1, -1)
       ],
       skipSafetyCheck: skipSafetyCheck
     ) + kingCastling(king: king, board: board, skipSafetyCheck: skipSafetyCheck);
@@ -207,7 +207,7 @@ class MoveCalculation {
       var offset = king.tile.col - rook.tile.col > 0 ? 1 : -1;
       var tileToCheck = rook.tile;
       for (var index = 0; index < range; index++) {
-        tileToCheck = Tile(row: tileToCheck.row, col: tileToCheck.col + offset);
+        tileToCheck = Tile(tileToCheck.row, tileToCheck.col + offset);
         if (tileToCheck == king.tile) {
           return true;
         }
@@ -228,8 +228,8 @@ class MoveCalculation {
     List<Tile> validMoves = [];
     for (var move in relativeMoves) {
       var possibleMove = Tile(
-        row: piece.tile.row + move.row,
-        col: piece.tile.col + move.col
+        piece.tile.row + move.row,
+        piece.tile.col + move.col
       );
       if (SharedFunctions.tileInBounds(possibleMove)) {
         var takenPiece = board.pieceAtTile(possibleMove);
@@ -257,8 +257,8 @@ class MoveCalculation {
       var possibleMove = piece.tile;
       while (SharedFunctions.tileInBounds(possibleMove)) {
         possibleMove = Tile(
-          row: possibleMove.row + direction.row,
-          col: possibleMove.col + direction.col
+          possibleMove.row + direction.row,
+          possibleMove.col + direction.col
         );
         if (SharedFunctions.tileInBounds(possibleMove)) {
           var takenPiece = board.pieceAtTile(possibleMove);

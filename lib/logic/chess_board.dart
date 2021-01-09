@@ -78,12 +78,12 @@ class ChessBoard {
       var pawn = ChessPiece(
         type: ChessPieceType.pawn,
         belongsTo: player,
-        tile: Tile(row: player == PlayerID.player1 ? 1 : 6, col: index)
+        tile: Tile(player == PlayerID.player1 ? 1 : 6, index)
       );
       var piece = ChessPiece(
         type: KING_ROW_PIECES[index],
         belongsTo: player,
-        tile: Tile(row: player == PlayerID.player1 ? 0 : 7, col: index)
+        tile: Tile(player == PlayerID.player1 ? 0 : 7, index)
       );
       addPiece(piece: pawn, tile: pawn.tile);
       addPiece(piece: piece, tile: piece.tile);
@@ -127,7 +127,7 @@ class ChessBoard {
     @required Tile to,
     bool getMoveMeta = false
   }) {
-    var move = Move(from: from, to: to);
+    var move = Move(from, to);
     var movedPiece = board[from.row][from.col];
     var takenPiece = board[to.row][to.col];
     if (getMoveMeta) {
@@ -197,8 +197,8 @@ class ChessBoard {
     var kingCol = rook.tile.col == 0 ? 2 : 6;
     board[rook.tile.row][rook.tile.col == 0 ? 3 : 5] = rook;
     board[rook.tile.row][rook.tile.col == 0 ? 2 : 6] = king;
-    rook.tile = Tile(row: rook.tile.row, col: rookCol);
-    king.tile = Tile(row: rook.tile.row, col: kingCol);
+    rook.tile = Tile(rook.tile.row, rookCol);
+    king.tile = Tile(rook.tile.row, kingCol);
   }
 
   void pawnToQueen({@required ChessPiece pawn}) {
@@ -215,7 +215,7 @@ class ChessBoard {
 
   void checkEnPassant({@required ChessPiece pawn}) {
     var offset = pawn.player == PlayerID.player1 ? -1 : 1;
-    var tile = Tile(row: pawn.tile.row + offset, col: pawn.tile.col);
+    var tile = Tile(pawn.tile.row + offset, pawn.tile.col);
     var takenPiece = pieceAtTile(tile);
     if (takenPiece != null && takenPiece == enPassantPiece) {
       removePiece(tile: tile);

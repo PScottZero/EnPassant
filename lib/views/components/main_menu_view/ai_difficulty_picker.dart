@@ -2,7 +2,7 @@ import 'package:en_passant/views/components/main_menu_view/picker.dart';
 import 'package:flutter/cupertino.dart';
 
 enum AIDifficulty {
-  easy, normal, hard, master
+  easy, normal, hard
 }
 
 class AIDifficultyPicker extends StatelessWidget {
@@ -10,7 +10,6 @@ class AIDifficultyPicker extends StatelessWidget {
     AIDifficulty.easy: Text('Easy'),
     AIDifficulty.normal: Text('Normal'),
     AIDifficulty.hard: Text('Hard'),
-    AIDifficulty.master: Text('Master')
   };
 
   final AIDifficulty aiDifficulty;
