@@ -5,15 +5,13 @@ import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'move_calculation/move_classes/tile.dart';
-
 enum ChessPieceType { pawn, rook, knight, bishop, king, queen }
 
 class ChessPiece {
   ChessPieceType type;
   PlayerID player;
   int moveCount = 0;
-  Tile tile;
+  int tile;
   Sprite sprite;
 
   // for animations
@@ -42,7 +40,7 @@ class ChessPiece {
     return (player == PlayerID.player1) ? value : -value;
   }
 
-  ChessPiece({ChessPieceType type, PlayerID belongsTo, Tile tile}) {
+  ChessPiece({ChessPieceType type, PlayerID belongsTo, int tile}) {
     this.type = type;
     this.tile = tile;
     this.player = belongsTo;
@@ -50,8 +48,8 @@ class ChessPiece {
   }
 
   void update({@required double tileSize, @required AppModel appModel}) {
-    var currX = SharedFunctions.getXFromCol(tile.col, tileSize, appModel);
-    var currY = SharedFunctions.getYFromRow(tile.row, tileSize, appModel);
+    var currX = SharedFunctions.getXFromCol(tile % 8, tileSize, appModel);
+    var currY = SharedFunctions.getYFromRow((tile / 8).floor(), tileSize, appModel);
     if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
       spriteX = currX;
       spriteY = currY;
@@ -81,8 +79,8 @@ class ChessPiece {
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {
-    spriteX = SharedFunctions.getXFromCol(tile.col, tileSize, appModel);
-    spriteY = SharedFunctions.getYFromRow(tile.row, tileSize, appModel);
+    spriteX = SharedFunctions.getXFromCol(tile % 8, tileSize, appModel);
+    spriteY = SharedFunctions.getYFromRow((tile / 8).floor(), tileSize, appModel);
   }
 
   void promote() {
