@@ -12,7 +12,7 @@ class SharedFunctions {
     return player == PlayerID.player1 ? PlayerID.player2 : PlayerID.player1;
   }
 
-  static bool tileIsInTileList(Tile tile, List<Tile> tileList) {
+  static bool tileIsInTileList({Tile tile, List<Tile> tileList}) {
     for (var t in tileList) {
       if (t == tile) {
         return true;
