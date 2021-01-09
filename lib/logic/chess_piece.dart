@@ -9,8 +9,8 @@ enum ChessPieceType { pawn, rook, knight, bishop, king, queen }
 
 class ChessPiece {
   ChessPieceType type;
-  PlayerID player;
-  int moveCount = 0;
+  Player player;
+  bool hasMoved = false;
   int tile;
   Sprite sprite;
 
@@ -37,19 +37,19 @@ class ChessPiece {
       break;
       default: { value = 0 ;}
     }
-    return (player == PlayerID.player1) ? value : -value;
+    return (player == Player.player1) ? value : -value;
   }
 
-  ChessPiece({ChessPieceType type, PlayerID belongsTo, int tile}) {
+  ChessPiece(ChessPieceType type, Player player, int tile) {
     this.type = type;
     this.tile = tile;
-    this.player = belongsTo;
+    this.player = player;
     initSprite();
   }
 
   void update({@required double tileSize, @required AppModel appModel}) {
-    var currX = SharedFunctions.getXFromCol(tile % 8, tileSize, appModel);
-    var currY = SharedFunctions.getYFromRow((tile / 8).floor(), tileSize, appModel);
+    var currX = getXFromCol(tile % 8, tileSize, appModel);
+    var currY = getYFromRow((tile / 8).floor(), tileSize, appModel);
     if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
       spriteX = currX;
       spriteY = currY;
@@ -73,14 +73,14 @@ class ChessPiece {
   }
 
   void initSprite() {
-    String color = player == PlayerID.player1 ? 'white' : 'black';
+    String color = player == Player.player1 ? 'white' : 'black';
     String pieceName = type.toString().substring(type.toString().indexOf('.') + 1);
     sprite = Sprite('pieces/' + pieceName + '_' + color + '.png');
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {
-    spriteX = SharedFunctions.getXFromCol(tile % 8, tileSize, appModel);
-    spriteY = SharedFunctions.getYFromRow((tile / 8).floor(), tileSize, appModel);
+    spriteX = getXFromCol(tile % 8, tileSize, appModel);
+    spriteY = getYFromRow((tile / 8).floor(), tileSize, appModel);
   }
 
   void promote() {

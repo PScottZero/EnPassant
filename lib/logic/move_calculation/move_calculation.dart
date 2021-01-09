@@ -1,4 +1,5 @@
 import 'package:en_passant/logic/shared_functions.dart';
+import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
 import '../chess_board.dart';
 import '../chess_piece.dart';
@@ -11,6 +12,8 @@ enum Direction {
 List<int> movesForPiece(ChessPiece piece, ChessBoard board, {bool legal = true}) {
   List<int> moves;
   switch (piece.type) {
+    case ChessPieceType.pawn: { moves = _pawnMoves(piece, board); }
+    break;
     case ChessPieceType.knight: { moves = _knightMoves(piece, board); }
     break;
     case ChessPieceType.bishop: { moves = _bishopMoves(piece, board); }
@@ -26,43 +29,72 @@ List<int> movesForPiece(ChessPiece piece, ChessBoard board, {bool legal = true})
   return moves;
 }
 
+List<int> _pawnMoves(ChessPiece pawn, ChessBoard board) {
+
+}
+
 List<int> _knightMoves(ChessPiece knight, ChessBoard board) {
-  return _kingKnightPawnHelper(knight, board, [-6, 6, -10, 10, -15, 15, -17, 17]);
+  return _movesFromOffsets(knight, board,
+    [-6, 6, -10, 10, -15, 15, -17, 17], false);
 }
 
 List<int> _bishopMoves(ChessPiece bishop, ChessBoard board) {
-  return _bishopQueenRookHelper(bishop, board, [-7, 7, -9, 9]);
+  return _movesFromOffsets(bishop, board, [-7, 7, -9, 9], true);
 }
 
 List<int> _rookMoves(ChessPiece rook, ChessBoard board) {
-  return _bishopQueenRookHelper(rook, board, [-1, 1, -8, 8]);
+  return _movesFromOffsets(rook, board, [-1, 1, -8, 8], true) +
+    _rookCastleMove(rook, board);
 }
 
 List<int> _queenMoves(ChessPiece queen, ChessBoard board) {
-  return _bishopQueenRookHelper(queen, board, [-1, 1, -7, 7, -8, 8, -9, 9]);
+  return _movesFromOffsets(queen, board, [-1, 1, -7, 7, -8, 8, -9, 9], true);
 }
 
 List<int> _kingMoves(ChessPiece king, ChessBoard board) {
-  return _kingKnightPawnHelper(king, board, [-1, 1, -7, 7, -8, 8, -9, 9]);
+  return _movesFromOffsets(king, board, [-1, 1, -7, 7, -8, 8, -9, 9], false) +
+    _kingCastleMoves(king, board);
 }
 
-List<int> _kingKnightPawnHelper(ChessPiece piece, ChessBoard board, List<int> offsets) {
+List<int> _rookCastleMove(ChessPiece rook, ChessBoard board) {
+  if (!kingInCheck(rook.player, board)) {
+    var king = kingForPlayer(rook.player, board);
+    if (_canCastle(king, rook, board)) {
+      return [king.tile];
+    }
+  }
+  return [];
+}
+
+List<int> _kingCastleMoves(ChessPiece king, ChessBoard board) {
   List<int> moves = [];
-  for (var offset in offsets) {
-    var tile = piece.tile + offset;
-    if (tileInBounds(tile)) {
-      var possiblePiece = board.tiles[tile];
-      if (possiblePiece == null ||
-        (board.tiles[tile].player != piece.player &&
-        piece.type != ChessPieceType.pawn)) {
-        moves.add(tile);
+  if (!kingInCheck(king.player, board)) {
+    for (var rook in rooksForPlayer(king.player, board)) {
+      if (_canCastle(king, rook, board)) {
+        moves.add(rook.tile);
       }
     }
   }
-  return moves;
+  return [];
 }
 
-List<int> _bishopQueenRookHelper(ChessPiece piece, ChessBoard board, List<int> offsets) {
+bool _canCastle(ChessPiece king, ChessPiece rook, ChessBoard board) {
+  if (!rook.hasMoved && !king.hasMoved) {
+    var offset = king.tile - rook.tile > 0 ? 1 : -1;
+    var tile = rook.tile;
+    while (tile != king.tile) {
+      tile += offset;
+      if (board.tiles[tile] != null && tile != king.tile) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+List<int> _movesFromOffsets(
+  ChessPiece piece, ChessBoard board, List<int> offsets, bool repeat
+) {
   List<int> moves = [];
   for (var offset in offsets) {
     var tile = piece.tile;
@@ -79,7 +111,31 @@ List<int> _bishopQueenRookHelper(ChessPiece piece, ChessBoard board, List<int> o
           moves.add(tile);
         }
       }
+      if (!repeat) {
+        break;
+      }
     }
   }
   return moves;
+}
+
+List<ChessPiece> piecesForPlayer(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1Pieces : board.player2Pieces;
+}
+
+ChessPiece kingForPlayer(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1King : board.player2King;
+}
+
+List<ChessPiece> queensForPlayer(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1Queens : board.player2Queens;
+}
+
+List<ChessPiece> rooksForPlayer(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1Rooks : board.player2Rooks;
+}
+
+bool kingInCheck(Player player, ChessBoard board) {
+  return player == Player.player1 ? board.player1KingInCheck :
+    board.player2KingInCheck;
 }

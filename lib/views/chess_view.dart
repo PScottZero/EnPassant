@@ -27,7 +27,7 @@ class _ChessViewState extends State<ChessView> {
       Duration(seconds: 1), 
       (timer) {
         if (appModel != null && appModel.timeLimit != Duration.zero) {
-          appModel.turn == PlayerID.player1 ?
+          appModel.turn == Player.player1 ?
             appModel.decrementPlayer1Timer() :
             appModel.decrementPlayer2Timer();
           if (appModel.player1TimeLeft == Duration.zero ||
