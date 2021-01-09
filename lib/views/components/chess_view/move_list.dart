@@ -1,4 +1,6 @@
 import 'package:en_passant/logic/chess_piece.dart';
+import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
+import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,7 +39,7 @@ class MoveList extends StatelessWidget {
 
   String allMoves(AppModel appModel) {
     var moveString = '';
-    appModel.moves.asMap().forEach((index, move) {
+    appModel.moveMetaList.asMap().forEach((index, move) {
       var turnNumber = ((index + 1) / 2).ceil();
       if (index % 2 == 0) {
         moveString += index == 0 ? '$turnNumber. ' : '   $turnNumber. ';
@@ -50,24 +52,24 @@ class MoveList extends StatelessWidget {
     return moveString;
   }
 
-  String moveToString(Move move) {
-    if (move.meta.kingCastle) {
+  String moveToString(MoveMeta meta) {
+    if (meta.kingCastle) {
       return 'O-O';
-    } else if (move.meta.queenCastle) {
+    } else if (meta.queenCastle) {
       return 'O-O-O';
     } else {
-      String takeString = move.meta.took ? 'x' : '';
-      String promotion = move.meta.promotion ? '=Q' : '';
-      String check = move.meta.isCheck ? '+' : '';
-      String checkmate = move.meta.isCheckmate ? '++': '';
-      String row = '${move.to.row + 1}';
-      String col = '${colToChar(move.to.col)}';
-      if (move.meta.colIsAmbiguous) {
-        row = '${move.from.row + 1}' + row;
-      } else if (move.meta.rowIsAmbiguous) {
-        col = '${colToChar(move.from.col)}' + col;
+      String takeString = meta.took ? 'x' : '';
+      String promotion = meta.promotion ? '=Q' : '';
+      String check = meta.isCheck ? '+' : '';
+      String checkmate = meta.isCheckmate ? '++': '';
+      String row = '${tileToRow(meta.to) + 1}';
+      String col = '${colToChar(tileToCol(meta.to))}';
+      if (meta.colIsAmbiguous) {
+        row = '${tileToRow(meta.from) + 1}' + row;
+      } else if (meta.rowIsAmbiguous) {
+        col = '${colToChar(tileToCol(meta.from))}' + col;
       }
-      return '${pieceToChar(move.meta.type)}$takeString' +
+      return '${pieceToChar(meta.type)}$takeString' +
         '$col$row$promotion$check$checkmate';
     }
   }

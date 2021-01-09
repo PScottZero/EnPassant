@@ -1,9 +1,9 @@
-import 'package:en_passant/logic/move_calculation/move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_stack_object.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
 import 'chess_piece.dart';
+import 'move_calculation/move_classes/move.dart';
 import 'move_calculation/move_classes/move_meta.dart';
 import 'move_calculation/piece_square_tables.dart';
 
@@ -43,7 +43,9 @@ class ChessBoard {
     var index = 0;
     for (var pieceType in KING_ROW_PIECES) {
       var piece = ChessPiece(pieceType, player, kingRowOffset + index);
-      var pawn = ChessPiece(ChessPieceType.pawn, player, pawnRowOffset + index);
+      var pawn = ChessPiece(ChessPieceType.pawn, player, kingRowOffset + pawnRowOffset + index);
+      setTile(piece.tile, piece, this);
+      setTile(pawn.tile, pawn, this);
       piecesForPlayer(player, this).addAll([piece, pawn]);
       if (piece.type == ChessPieceType.king) {
         player == Player.player1 ? player1King = piece : player2King = piece;
@@ -52,6 +54,7 @@ class ChessBoard {
       } else if (piece.type == ChessPieceType.rook) {
         rooksForPlayer(player, this).add(piece);
       }
+      index++;
     }
   }
 }
@@ -64,9 +67,11 @@ int boardValue(ChessBoard board) {
   return value;
 }
 
-MoveMeta push(ChessPiece piece, int tile, ChessBoard board) {
-  var mso = MoveStackObject(piece.tile, tile, piece, board.tiles[tile]);
-  var meta = MoveMeta(piece.tile, tile, piece.player, piece.type);
+MoveMeta push(Move move, ChessBoard board) {
+  var mso = MoveStackObject(move.piece.tile, move.tile, move.piece,
+    board.tiles[move.tile]);
+  var meta = MoveMeta(move.piece.tile, move.tile, move.piece.player,
+    move.piece.type);
   if (castled(mso.movedPiece, mso.takenPiece)) {
     castle(board, mso, meta);
   } else {
@@ -78,7 +83,6 @@ MoveMeta push(ChessPiece piece, int tile, ChessBoard board) {
     }
   }
   board.moveStack.add(mso);
-  enemyKingInCheck(piece.player, board);
   return meta;
 }
 
@@ -158,17 +162,6 @@ void undoPromote(ChessBoard board, MoveStackObject mso) {
   mso.movedPiece.type = ChessPieceType.pawn;
   initSprite(mso.movedPiece);
   queensForPlayer(mso.movedPiece.player, board).remove(mso.movedPiece);
-}
-
-void enemyKingInCheck(Player player, ChessBoard board) {
-  for (var piece in piecesForPlayer(player, board)) {
-    var moves = movesForPiece(piece, board, legal: false);
-    if (moves.contains(kingForPlayer(oppositePlayer(player), board).tile)) {
-      player == Player.player1 ?
-        board.player2KingInCheck = true : board.player1KingInCheck = true;
-      break;
-    }
-  }
 }
 
 void setTile(int tile, ChessPiece piece, ChessBoard board) {

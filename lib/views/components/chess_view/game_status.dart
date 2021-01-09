@@ -24,7 +24,7 @@ class GameStatus extends StatelessWidget {
           return 'Your turn';
         }
       } else {
-        if (appModel.turn == PlayerID.player1) {
+        if (appModel.turn == Player.player1) {
           return 'White\'s turn';
         } else {
           return 'Black\'s turn';
@@ -38,7 +38,7 @@ class GameStatus extends StatelessWidget {
           return 'You Lose :(';
         }
       } else {
-        if (appModel.turn == PlayerID.player1) {
+        if (appModel.turn == Player.player1) {
           return 'Black wins!';
         } else {
           return 'White wins!';

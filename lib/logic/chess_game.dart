@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 
 import 'chess_board.dart';
 import 'chess_piece.dart';
+import 'move_calculation/move_classes/move.dart';
 
 class ChessGame extends Game with TapDetector, ChangeNotifier {
   double width;
@@ -84,7 +85,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   void movePiece(int tile) {
     if (validMoves.contains(tile)) {
       validMoves = [];
-      moveCompletion(push(selectedPiece, tile, board));
+      moveCompletion(push(Move(selectedPiece, tile), board));
     }
   }
 
@@ -92,12 +93,12 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
     await Future.delayed(Duration(milliseconds: 500));
     var move = AIMoveCalculation.move(appModel.aiTurn,
       appModel.aiDifficulty, board);
-    if (move.to.row == -1) {
+    if (move == null) {
       appModel.endGame();
     } else {
       validMoves = [];
-      board.push(move, getMoveMeta: true);
-      moveCompletion(move);
+      var meta = push(move, board);
+      moveCompletion(meta);
     }
   }
 
@@ -108,7 +109,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
       meta.isCheck = true;
       checkHintTile = kingForPlayer(oppositeTurn, board).tile;
     }
-    if (kingIsInCheckmate(oppositeTurn, board)) {
+    if (kingInCheckmate(oppositeTurn, board)) {
       meta.isCheck = false;
       meta.isCheckmate = true;
       appModel.endGame();
@@ -123,10 +124,10 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   int offsetToTile(Offset offset) {
     if (appModel.playingWithAI && appModel.playerSide == Player.player2) {
-      return (offset.dy / tileSize).floor() * 8 +
-        (7 - (offset.dx / tileSize).floor());
-    } else {
       return 7 - (offset.dy / tileSize).floor() * 8 +
+        (offset.dx / tileSize).floor();
+    } else {
+      return (offset.dy / tileSize).floor() * 8 +
         (offset.dx / tileSize).floor();
     }
   }
@@ -169,8 +170,8 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
     for (var tile in validMoves) {
       canvas.drawRect(
         Rect.fromLTWH(
-          getXFromCol(tile % 8, tileSize, appModel),
-          getYFromRow(move.row, tileSize, appModel),
+          getXFromTile(tile, tileSize, appModel),
+          getYFromTile(tile, tileSize, appModel),
           tileSize, tileSize
         ),
         Paint()..color = appModel.theme.moveHint
@@ -182,8 +183,8 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
     if (checkHintTile != null) {
       canvas.drawRect(
         Rect.fromLTWH(
-          getXFromCol(checkHintTile.col, tileSize, appModel),
-          getYFromRow(checkHintTile.row, tileSize, appModel),
+          getXFromTile(checkHintTile, tileSize, appModel),
+          getYFromTile(checkHintTile, tileSize, appModel),
           tileSize, tileSize
         ),
         Paint()..color = appModel.theme.checkHint

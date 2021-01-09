@@ -1,32 +1,28 @@
-import 'package:en_passant/logic/move_calculation/move_classes/piece_move_value.dart';
+import 'package:en_passant/logic/move_calculation/move_classes/move_and_value.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
 import '../chess_board.dart';
 import '../chess_piece.dart';
+import 'move_classes/move.dart';
 
-enum Direction {
-  up, upright, right, downright, down, downleft, left, upleft,
-  knight1, knight2, knight3, knight4, knight5, knight6, knight7, knight8
-}
-
-List<PieceMoveValue> allMoves(Player player, ChessBoard board) {
-  List<PieceMoveValue> pmvs = [];
+List<Move> allMoves(Player player, ChessBoard board) {
+  List<MoveAndValue> moves = [];
   for (var piece in List.from(piecesForPlayer(player, board))) {
     var tiles = movesForPiece(piece, board);
     for (var tile in tiles) {
-      var pmv = PieceMoveValue(piece, tile);
-      push(pmv.piece, pmv.tile, board);
-      pmv.value = boardValue(board);
+      var move = MoveAndValue(Move(piece, tile), 0);
+      push(move.move, board);
+      move.value = boardValue(board);
       pop(board);
-      pmvs.add(PieceMoveValue(piece.tile, tile));
+      moves.add(move);
     }
   }
-  pmvs.sort((a, b) => comparePMVs(a, b, player, board));
-  return pmvs;
+  moves.sort((a, b) => compareMoves(a, b, player, board));
+  return moves.map((move) => move.move);
 }
 
-int comparePMVs(PieceMoveValue a, PieceMoveValue b, Player player, ChessBoard board) {
+int compareMoves(MoveAndValue a, MoveAndValue b, Player player, ChessBoard board) {
   return player == Player.player1 ?
     b.value.compareTo(a.value) : a.value.compareTo(b.value);
 }
@@ -40,24 +36,28 @@ List<int> movesForPiece(ChessPiece piece, ChessBoard board, {bool legal = true})
     break;
     case ChessPieceType.bishop: { moves = _bishopMoves(piece, board); }
     break;
-    case ChessPieceType.rook: { moves = _rookMoves(piece, board); }
+    case ChessPieceType.rook: { moves = _rookMoves(piece, board, legal); }
     break;
     case ChessPieceType.queen: { moves = _queenMoves(piece, board); }
     break;
-    case ChessPieceType.king: { moves = _kingMoves(piece, board); }
+    case ChessPieceType.king: { moves = _kingMoves(piece, board, legal); }
     break;
     default: { moves = []; }
+  }
+  if (legal) {
+    moves.removeWhere((move) => movePutsKingInCheck(piece, move, board));
   }
   return moves;
 }
 
 List<int> _pawnMoves(ChessPiece pawn, ChessBoard board) {
   List<int> moves = [];
-  var firstTile = pawn.tile - 8;
+  var offset = pawn.player == Player.player1 ? -8 : 8;
+  var firstTile = pawn.tile + offset;
   if (board.tiles[firstTile] == null) {
     moves.add(firstTile);
     if (pawn.moveCount == 0) {
-      var secondTile = firstTile - 8;
+      var secondTile = firstTile + offset;
       if (board.tiles[secondTile] == null) {
         moves.add(secondTile);
       }
@@ -68,7 +68,8 @@ List<int> _pawnMoves(ChessPiece pawn, ChessBoard board) {
 
 List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
   List<int> moves = [];
-  var diagonals = [pawn.tile - 7, pawn.tile - 9];
+  var diagonals = pawn.player == Player.player1 ? 
+    [pawn.tile - 7, pawn.tile - 9] : [pawn.tile + 7, pawn.tile + 9];
   for (var diagonal in diagonals) {
     var takenPiece = board.tiles[diagonal];
     if (takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)) {
@@ -87,22 +88,22 @@ List<int> _bishopMoves(ChessPiece bishop, ChessBoard board) {
   return _movesFromOffsets(bishop, board, [-7, 7, -9, 9], true);
 }
 
-List<int> _rookMoves(ChessPiece rook, ChessBoard board) {
+List<int> _rookMoves(ChessPiece rook, ChessBoard board, bool legal) {
   return _movesFromOffsets(rook, board, [-1, 1, -8, 8], true) +
-    _rookCastleMove(rook, board);
+    _rookCastleMove(rook, board, legal);
 }
 
 List<int> _queenMoves(ChessPiece queen, ChessBoard board) {
   return _movesFromOffsets(queen, board, [-1, 1, -7, 7, -8, 8, -9, 9], true);
 }
 
-List<int> _kingMoves(ChessPiece king, ChessBoard board) {
+List<int> _kingMoves(ChessPiece king, ChessBoard board, bool legal) {
   return _movesFromOffsets(king, board, [-1, 1, -7, 7, -8, 8, -9, 9], false) +
-    _kingCastleMoves(king, board);
+    _kingCastleMoves(king, board, legal);
 }
 
-List<int> _rookCastleMove(ChessPiece rook, ChessBoard board) {
-  if (!kingInCheck(rook.player, board)) {
+List<int> _rookCastleMove(ChessPiece rook, ChessBoard board, bool legal) {
+  if (!legal || !kingInCheck(rook.player, board)) {
     var king = kingForPlayer(rook.player, board);
     if (_canCastle(king, rook, board)) {
       return [king.tile];
@@ -111,9 +112,9 @@ List<int> _rookCastleMove(ChessPiece rook, ChessBoard board) {
   return [];
 }
 
-List<int> _kingCastleMoves(ChessPiece king, ChessBoard board) {
+List<int> _kingCastleMoves(ChessPiece king, ChessBoard board, bool legal) {
   List<int> moves = [];
-  if (!kingInCheck(king.player, board)) {
+  if (!legal || !kingInCheck(king.player, board)) {
     for (var rook in rooksForPlayer(king.player, board)) {
       if (_canCastle(king, rook, board)) {
         moves.add(rook.tile);
@@ -164,9 +165,20 @@ List<int> _movesFromOffsets(
   return moves;
 }
 
+bool movePutsKingInCheck(ChessPiece piece, int move, ChessBoard board) {
+  push(Move(piece, move), board);
+  var check = kingInCheck(piece.player, board);
+  pop(board);
+  return check;
+}
+
 bool kingInCheck(Player player, ChessBoard board) {
-  return player == Player.player1 ? board.player1KingInCheck :
-    board.player2KingInCheck;
+  for (var piece in piecesForPlayer(oppositePlayer(player), board)) {
+    if (movesForPiece(piece, board, legal: false).contains(kingForPlayer(player, board).tile)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 bool kingInCheckmate(Player player, ChessBoard board) {
@@ -176,4 +188,9 @@ bool kingInCheckmate(Player player, ChessBoard board) {
     }
   }
   return true;
+}
+
+bool tileIsOnEdge(int tile) {
+  return (tile >= 52 && tile < 64) || (tile >= 0 && tile < 8) ||
+    (tile % 8 == 0) || (tile % 8 == 7);
 }

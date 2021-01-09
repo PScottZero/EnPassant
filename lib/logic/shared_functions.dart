@@ -16,7 +16,7 @@ double getXFromTile(int tile, double tileSize, AppModel appModel) {
 
 double getYFromTile(int tile, double tileSize, AppModel appModel) {
   return appModel.playingWithAI && appModel.playerSide == Player.player2 ? 
-    tileToRow(tile) * tileSize : (7 - tileToRow(tile)) * tileSize;
+    (7 - tileToRow(tile)) * tileSize : tileToRow(tile) * tileSize;
 }
 
 Player oppositePlayer(Player player) {
