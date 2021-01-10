@@ -29,6 +29,7 @@ class ChessBoard {
   List<ChessPiece> player2Queens = [];
   ChessPiece player1King;
   ChessPiece player2King;
+  ChessPiece enPassantPiece;
   bool player1KingInCheck = false;
   bool player2KingInCheck = false;
 
@@ -69,7 +70,7 @@ int boardValue(ChessBoard board) {
 
 MoveMeta push(Move move, ChessBoard board) {
   var mso = MoveStackObject(move.piece.tile, move.tile, move.piece,
-    board.tiles[move.tile]);
+    board.tiles[move.tile], board.enPassantPiece);
   var meta = MoveMeta(move.piece.tile, move.tile, move.piece.player,
     move.piece.type);
   if (castled(mso.movedPiece, mso.takenPiece)) {
@@ -80,6 +81,7 @@ MoveMeta push(Move move, ChessBoard board) {
       if (promotion(mso.movedPiece)) {
         promote(board, mso, meta);
       }
+      checkEnPassant(board, mso, meta);
     }
   }
   board.moveStack.add(mso);
@@ -94,6 +96,10 @@ void pop(ChessBoard board) {
     undoStandardMove(board, mso);
     if (mso.promotion) {
       undoPromote(board, mso);
+    }
+    if (mso.enPassant) {
+      addPiece(mso.takenPiece, board);
+      setTile(mso.takenPiece.tile, mso.takenPiece, board);
     }
   }
 }
@@ -164,6 +170,23 @@ void undoPromote(ChessBoard board, MoveStackObject mso) {
   queensForPlayer(mso.movedPiece.player, board).remove(mso.movedPiece);
 }
 
+void checkEnPassant(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
+  var offset = mso.movedPiece.player == Player.player1 ? 8 : -8;
+  var tile = mso.movedPiece.tile + offset;
+  var takenPiece = board.tiles[tile];
+  if (takenPiece != null && takenPiece == board.enPassantPiece) {
+    removePiece(takenPiece, board);
+    setTile(takenPiece.tile, null, board);
+    mso.takenPiece = takenPiece;
+    mso.enPassant = true;
+  }
+  if (canTakeEnPassant(mso.movedPiece)) {
+    board.enPassantPiece = mso.movedPiece;
+  } else {
+    board.enPassantPiece = null;
+  }
+}
+
 void setTile(int tile, ChessPiece piece, ChessBoard board) {
   board.tiles[tile] = piece;
   if (piece != null) {
@@ -214,4 +237,9 @@ bool castled(ChessPiece movedPiece, ChessPiece takenPiece) {
 bool promotion(ChessPiece movedPiece) {
   return movedPiece.type == ChessPieceType.pawn &&
     (tileToRow(movedPiece.tile) == 7 || tileToRow(movedPiece.tile) == 0);
+}
+
+bool canTakeEnPassant(ChessPiece movedPiece) {
+  return movedPiece.moveCount == 1 &&
+    (tileToRow(movedPiece.tile) == 3 || tileToRow(movedPiece.tile) == 4);
 }

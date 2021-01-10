@@ -88,7 +88,8 @@ List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
     var col = tileToCol(pawn.tile) + diagonal.right;
     if (inBounds(row, col)) {
       var takenPiece = board.tiles[rowColToTile(row, col)];
-      if (takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)) {
+      if (takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)
+        || _canTakeEnPassant(pawn.player, rowColToTile(row, col), board)) {
         moves.add(rowColToTile(row, col));
       }
     }
@@ -96,8 +97,10 @@ List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
   return moves;
 }
 
-List<int> _pawnEnPassantAttack(ChessPiece pawn, ChessBoard board) {
-
+bool _canTakeEnPassant(Player pawnPlayer, int diagonal, ChessBoard board) {
+  var offset = (pawnPlayer == Player.player1) ? 8 : -8;
+  var takenPiece = board.tiles[diagonal + offset];
+  return takenPiece != null && takenPiece == board.enPassantPiece;
 }
 
 List<int> _knightMoves(ChessPiece knight, ChessBoard board) {
