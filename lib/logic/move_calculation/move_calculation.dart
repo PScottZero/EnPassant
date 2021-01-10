@@ -1,3 +1,4 @@
+import 'package:en_passant/logic/move_calculation/move_classes/direction.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_and_value.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
@@ -5,6 +6,18 @@ import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import '../chess_board.dart';
 import '../chess_piece.dart';
 import 'move_classes/move.dart';
+
+const PAWN_DIAGONALS_1 = [DOWN_LEFT, DOWN_RIGHT];
+const PAWN_DIAGONALS_2 = [UP_LEFT, UP_RIGHT];
+const KNIGHT_MOVES = [
+  Direction(1, 2), Direction(-1, 2), Direction(1, -2), Direction(-1, -2),
+  Direction(2, 1), Direction(-2, 1), Direction(2, -1), Direction(-2, -1)
+];
+const BISHOP_MOVES = [UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT];
+const ROOK_MOVES = [UP, RIGHT, DOWN, LEFT];
+const KING_QUEEN_MOVES = [
+  UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
+];
 
 List<Move> allMoves(Player player, ChessBoard board) {
   List<MoveAndValue> moves = [];
@@ -19,7 +32,7 @@ List<Move> allMoves(Player player, ChessBoard board) {
     }
   }
   moves.sort((a, b) => compareMoves(a, b, player, board));
-  return moves.map((move) => move.move);
+  return moves.map((move) => move.move).toList();
 }
 
 int compareMoves(MoveAndValue a, MoveAndValue b, Player player, ChessBoard board) {
@@ -69,36 +82,43 @@ List<int> _pawnMoves(ChessPiece pawn, ChessBoard board) {
 List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
   List<int> moves = [];
   var diagonals = pawn.player == Player.player1 ? 
-    [pawn.tile - 7, pawn.tile - 9] : [pawn.tile + 7, pawn.tile + 9];
+    PAWN_DIAGONALS_1 : PAWN_DIAGONALS_2;
   for (var diagonal in diagonals) {
-    var takenPiece = board.tiles[diagonal];
-    if (takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)) {
-      moves.add(diagonal);
+    var row = tileToRow(pawn.tile) + diagonal.up;
+    var col = tileToCol(pawn.tile) + diagonal.right;
+    if (inBounds(row, col)) {
+      var takenPiece = board.tiles[rowColToTile(row, col)];
+      if (takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)) {
+        moves.add(rowColToTile(row, col));
+      }
     }
   }
   return moves;
 }
 
+List<int> _pawnEnPassantAttack(ChessPiece pawn, ChessBoard board) {
+
+}
+
 List<int> _knightMoves(ChessPiece knight, ChessBoard board) {
-  return _movesFromOffsets(knight, board,
-    [-6, 6, -10, 10, -15, 15, -17, 17], false);
+  return _movesFromDirections(knight, board, KNIGHT_MOVES, false);
 }
 
 List<int> _bishopMoves(ChessPiece bishop, ChessBoard board) {
-  return _movesFromOffsets(bishop, board, [-7, 7, -9, 9], true);
+  return _movesFromDirections(bishop, board, BISHOP_MOVES, true);
 }
 
 List<int> _rookMoves(ChessPiece rook, ChessBoard board, bool legal) {
-  return _movesFromOffsets(rook, board, [-1, 1, -8, 8], true) +
+  return _movesFromDirections(rook, board, ROOK_MOVES, true) +
     _rookCastleMove(rook, board, legal);
 }
 
 List<int> _queenMoves(ChessPiece queen, ChessBoard board) {
-  return _movesFromOffsets(queen, board, [-1, 1, -7, 7, -8, 8, -9, 9], true);
+  return _movesFromDirections(queen, board, KING_QUEEN_MOVES, true);
 }
 
 List<int> _kingMoves(ChessPiece king, ChessBoard board, bool legal) {
-  return _movesFromOffsets(king, board, [-1, 1, -7, 7, -8, 8, -9, 9], false) +
+  return _movesFromDirections(king, board, KING_QUEEN_MOVES, false) +
     _kingCastleMoves(king, board, legal);
 }
 
@@ -121,7 +141,7 @@ List<int> _kingCastleMoves(ChessPiece king, ChessBoard board, bool legal) {
       }
     }
   }
-  return [];
+  return moves;
 }
 
 bool _canCastle(ChessPiece king, ChessPiece rook, ChessBoard board) {
@@ -134,27 +154,30 @@ bool _canCastle(ChessPiece king, ChessPiece rook, ChessBoard board) {
         return false;
       }
     }
+    return true;
   }
-  return true;
+  return false;
 }
 
-List<int> _movesFromOffsets(
-  ChessPiece piece, ChessBoard board, List<int> offsets, bool repeat
+List<int> _movesFromDirections(
+  ChessPiece piece, ChessBoard board, List<Direction> directions, bool repeat
 ) {
   List<int> moves = [];
-  for (var offset in offsets) {
-    var tile = piece.tile;
-    while (tileInBounds(tile)) {
-      tile += offset;
-      if (tileInBounds(tile)) {
-        var possiblePiece = board.tiles[tile];
+  for (var direction in directions) {
+    var row = tileToRow(piece.tile);
+    var col = tileToCol(piece.tile);
+    while (inBounds(row, col)) {
+      row += direction.up;
+      col += direction.right;
+      if (inBounds(row, col)) {
+        var possiblePiece = board.tiles[rowColToTile(row, col)];
         if (possiblePiece != null) {
           if (possiblePiece.player != piece.player) {
-            moves.add(tile);
+            moves.add(rowColToTile(row, col));
           }
           break;
         } else {
-          moves.add(tile);
+          moves.add(rowColToTile(row, col));
         }
       }
       if (!repeat) {
@@ -193,4 +216,12 @@ bool kingInCheckmate(Player player, ChessBoard board) {
 bool tileIsOnEdge(int tile) {
   return (tile >= 52 && tile < 64) || (tile >= 0 && tile < 8) ||
     (tile % 8 == 0) || (tile % 8 == 7);
+}
+
+bool inBounds(int row, int col) {
+  return row >= 0 && row < 8 && col >= 0 && col < 8;
+}
+
+int rowColToTile(int row, int col) {
+  return row * 8 + col;
 }

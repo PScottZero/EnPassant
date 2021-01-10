@@ -91,8 +91,11 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   void aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
-    var move = AIMoveCalculation.move(appModel.aiTurn,
-      appModel.aiDifficulty, board);
+    var args = Map();
+    args['aiPlayer'] = appModel.aiTurn;
+    args['aiDifficulty'] = appModel.aiDifficulty;
+    args['board'] = board;
+    var move = calculateAIMove(args);
     if (move == null) {
       appModel.endGame();
     } else {

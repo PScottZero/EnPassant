@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:en_passant/logic/chess_board.dart';
 import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/chess_view/rounded_alert_button.dart';
+import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -108,6 +110,13 @@ class _ChessViewState extends State<ChessView> {
                     })
                   )
                 ]),
+                SizedBox(height: 10),
+                RoundedButton('Undo', onPressed: () {
+                  if (game.board.moveStack.isNotEmpty) {
+                    pop(game.board);
+                    appModel.changeTurn();
+                  }
+                }),
                 BottomPadding()
               ],
             )

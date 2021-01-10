@@ -62,10 +62,10 @@ class MoveList extends StatelessWidget {
       String promotion = meta.promotion ? '=Q' : '';
       String check = meta.isCheck ? '+' : '';
       String checkmate = meta.isCheckmate ? '++': '';
-      String row = '${tileToRow(meta.to) + 1}';
+      String row = '${8 - tileToRow(meta.to)}';
       String col = '${colToChar(tileToCol(meta.to))}';
       if (meta.colIsAmbiguous) {
-        row = '${tileToRow(meta.from) + 1}' + row;
+        row = '${8 - tileToRow(meta.from)}' + row;
       } else if (meta.rowIsAmbiguous) {
         col = '${colToChar(tileToCol(meta.from))}' + col;
       }

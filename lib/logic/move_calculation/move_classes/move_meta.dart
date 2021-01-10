@@ -15,6 +15,5 @@ class MoveMeta {
   bool isCheckmate = false;
   bool rowIsAmbiguous = false;
   bool colIsAmbiguous = false;
-
   MoveMeta(this.from, this.to, this.player, this.type);
 }
