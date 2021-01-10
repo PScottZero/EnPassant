@@ -1,6 +1,6 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
-import 'package:en_passant/views/components/main_menu_view/player_count_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/game_mode_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/time_limit_picker.dart';
 import 'package:en_passant/views/components/shared/bottom_padding.dart';
@@ -31,28 +31,30 @@ class _MainMenuViewState extends State<MainMenuView> {
               ),
               child: Image(image: AssetImage('assets/images/logo.png')),
             ),
-            SizedBox(height: 30),
-            PlayerCountPicker(
+            SizedBox(height: 20),
+            GameModePicker(
               appModel.playerCount,
               appModel.setPlayerCount
             ),
-            SizedBox(height: 30),
-              appModel.playerCount == 1
-                ? Column(children: [
-                    AIDifficultyPicker(
-                      appModel.aiDifficulty,
-                      appModel.setAIDifficulty
-                    ),
-                    SizedBox(height: 30),
-                    SidePicker(
-                      appModel.playerSide,
-                      appModel.setPlayerSize
-                    )
-                  ])
-                : TimeLimitPicker(
-                    selectedTime: appModel.timeLimit,
-                    setTime: appModel.setTimeLimit,
+            SizedBox(height: 20),
+            appModel.playerCount == 1
+              ? Column(children: [
+                  AIDifficultyPicker(
+                    appModel.aiDifficulty,
+                    appModel.setAIDifficulty
                   ),
+                  SizedBox(height: 20),
+                  SidePicker(
+                    appModel.selectedSide,
+                    appModel.setPlayerSide
+                  ),
+                  SizedBox(height: 20)
+                ])
+              : Container(),
+            TimeLimitPicker(
+              selectedTime: appModel.timeLimit,
+              setTime: appModel.setTimeLimit,
+            ),
             Spacer(),
             MainMenuButtons(),
             BottomPadding()

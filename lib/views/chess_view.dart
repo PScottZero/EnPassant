@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 
-import 'package:en_passant/logic/chess_board.dart';
 import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/components/chess_view/loading_animation.dart';
 import 'package:en_passant/views/components/chess_view/rounded_alert_button.dart';
-import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,7 @@ class _ChessViewState extends State<ChessView> {
 
   _ChessViewState() {
     timer = Timer.periodic(
-      Duration(seconds: 1), 
+      Duration(milliseconds: 50), 
       (timer) {
         if (appModel != null && appModel.timeLimit != Duration.zero) {
           appModel.turn == Player.player1 ?
@@ -77,10 +77,15 @@ class _ChessViewState extends State<ChessView> {
                   ),
                 ),
                 SizedBox(height: 30),
-                GameStatus(),
+                Row(
+                  children: [
+                    GameStatus(),
+                    LoadingAnimation(appModel)
+                  ],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                ),
                 Spacer(),
-                appModel.playerCount == 2 && 
-                  appModel.timeLimit != Duration.zero ?
+                appModel.timeLimit != Duration.zero ?
                   Column(children: [
                     Timers(
                       player1TimeLeft: appModel.player1TimeLeft,
@@ -96,27 +101,25 @@ class _ChessViewState extends State<ChessView> {
                 Row(children: [
                   Expanded(
                     child: RoundedAlertButton('Restart', onConfirm: () {
+                      game.cancelAIMove();
                       appModel.resetGame();
                       game = ChessGame();
+                      if (appModel.selectedSide == Player.random) {
+                        appModel.playerSide = Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
+                      }
                       initGame(context, appModel);
                     })
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     child: RoundedAlertButton('Exit', onConfirm: () {
+                      game.cancelAIMove();
                       appModel.resetGame();
                       timer.cancel();
                       Navigator.pop(context);
                     })
                   )
                 ]),
-                SizedBox(height: 10),
-                RoundedButton('Undo', onPressed: () {
-                  if (game.board.moveStack.isNotEmpty) {
-                    pop(game.board);
-                    appModel.changeTurn();
-                  }
-                }),
                 BottomPadding()
               ],
             )
@@ -128,6 +131,7 @@ class _ChessViewState extends State<ChessView> {
   }
 
   Future<bool> _willPopCallback() async {
+    game.cancelAIMove();
     appModel.resetGame();
     timer.cancel();
     return true;
@@ -136,6 +140,9 @@ class _ChessViewState extends State<ChessView> {
   void initGame(BuildContext context, AppModel appModel) {
     this.appModel = appModel;
     if (appModel.initGame) {
+      if (appModel.selectedSide == Player.random) {
+        appModel.playerSide = Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
+      }
       game.setSize(MediaQuery.of(context).size);
       game.setappModel(appModel);
       game.initSpritePositions();

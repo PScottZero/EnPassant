@@ -1,6 +1,5 @@
 import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +7,8 @@ import 'app_themes.dart';
 
 class AppModel extends ChangeNotifier {
   int playerCount = 1;
-  AIDifficulty aiDifficulty = AIDifficulty.normal;
+  int aiDifficulty = 3;
+  Player selectedSide = Player.player1;
   Player playerSide = Player.player1;
   Duration timeLimit = Duration.zero;
   String themeName = 'Green';
@@ -75,13 +75,16 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setAIDifficulty(AIDifficulty difficulty) {
+  void setAIDifficulty(int difficulty) {
     aiDifficulty = difficulty;
     notifyListeners();
   }
 
-  void setPlayerSize(Player side) {
-    playerSide = side;
+  void setPlayerSide(Player side) {
+    selectedSide = side;
+    if (side != Player.random) {
+      playerSide = side;
+    }
     notifyListeners();
   }
 
@@ -94,14 +97,14 @@ class AppModel extends ChangeNotifier {
 
   void decrementPlayer1Timer() async {
     if (player1TimeLeft.inSeconds > 0 && !gameOver) {
-      player1TimeLeft = Duration(seconds: player1TimeLeft.inSeconds - 1);
+      player1TimeLeft = Duration(milliseconds: player1TimeLeft.inMilliseconds - 50);
       notifyListeners();
     }
   }
 
   void decrementPlayer2Timer() async {
     if (player2TimeLeft.inSeconds > 0 && !gameOver) {
-      player2TimeLeft = Duration(seconds: player2TimeLeft.inSeconds - 1);
+      player2TimeLeft = Duration(milliseconds: player2TimeLeft.inMilliseconds - 50);
       notifyListeners();
     }
   }

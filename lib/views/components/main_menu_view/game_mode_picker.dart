@@ -1,7 +1,7 @@
 import 'package:en_passant/views/components/main_menu_view/picker.dart';
 import 'package:flutter/cupertino.dart';
 
-class PlayerCountPicker extends StatelessWidget {
+class GameModePicker extends StatelessWidget {
   final Map<int, Text> playerCountOptions = const <int, Text>{
     1: Text('One Player'),
     2: Text('Two Player')
@@ -10,12 +10,12 @@ class PlayerCountPicker extends StatelessWidget {
   final int playerCount;
   final Function setFunc;
 
-  PlayerCountPicker(this.playerCount, this.setFunc);
+  GameModePicker(this.playerCount, this.setFunc);
 
   @override
   Widget build(BuildContext context) {
     return Picker<int>(
-      label: 'Player Count',
+      label: 'Game Mode',
       options: playerCountOptions,
       selection: playerCount,
       setFunc: setFunc,

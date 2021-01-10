@@ -1,14 +1,14 @@
 import '../../chess_piece.dart';
+import 'move.dart';
 
 class MoveStackObject {
-  int from;
-  int to;
+  Move move;
   ChessPiece movedPiece;
   ChessPiece takenPiece;
   ChessPiece enPassantPiece;
   bool castled = false;
   bool promotion = false;
   bool enPassant = false;
-  MoveStackObject(this.from, this.to, this.movedPiece,
+  MoveStackObject(this.move, this.movedPiece,
     this.takenPiece, this.enPassantPiece);
 }

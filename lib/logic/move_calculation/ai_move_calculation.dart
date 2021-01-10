@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:en_passant/logic/move_calculation/move_classes/move_and_value.dart';
-import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
 import '../chess_board.dart';
@@ -14,8 +13,8 @@ const INITIAL_BETA = 20000;
 
 Move calculateAIMove(Map args) {
   return _alphaBeta(
-    args['board'], args['aiPlayer'], null, 0,
-    _maxDepth(args['aiDifficulty']), INITIAL_ALPHA, INITIAL_BETA
+    args['board'], args['aiPlayer'], null, 0, args['aiDifficulty'],
+    INITIAL_ALPHA, INITIAL_BETA
   ).move;
 }
 
@@ -44,13 +43,4 @@ MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move,
     }
   }
   return bestMove;
-}
-
-int _maxDepth(AIDifficulty aiDifficulty) {
-  switch (aiDifficulty) {
-    case AIDifficulty.easy: { return 2; }
-    case AIDifficulty.normal: { return 4; }
-    case AIDifficulty.hard: { return 6; }
-    default: { return 0; }
-  }
 }

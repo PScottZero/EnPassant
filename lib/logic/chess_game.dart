@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:async/async.dart';
 import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
+import 'package:en_passant/logic/move_calculation/chess_piece_sprite.dart';
 import 'package:en_passant/logic/move_calculation/move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
@@ -20,10 +22,18 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   double tileSize;
   AppModel appModel;
   ChessBoard board = ChessBoard();
+  Map<ChessPiece, ChessPieceSprite> spriteMap = Map();
 
+  CancelableOperation aiOperation;
   List<int> validMoves = [];
   ChessPiece selectedPiece;
   int checkHintTile;
+
+  ChessGame() {
+    for (var piece in board.player1Pieces + board.player2Pieces) {
+      spriteMap[piece] = ChessPieceSprite(piece);
+    }
+  }
 
   @override
   void onTapDown(TapDownDetails details) {
@@ -58,13 +68,13 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   @override
   void update(double t) {
     for (var piece in board.player1Pieces + board.player2Pieces) {
-      piece.update(tileSize: tileSize, appModel: appModel);
+      spriteMap[piece].update(tileSize, appModel, piece);
     }
   }
 
   void initSpritePositions() {
     for (var piece in board.player1Pieces + board.player2Pieces) {
-      piece.initSpritePosition(tileSize, appModel);
+      spriteMap[piece].initSpritePosition(tileSize, appModel);
     }
   }
 
@@ -85,23 +95,30 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   void movePiece(int tile) {
     if (validMoves.contains(tile)) {
       validMoves = [];
-      moveCompletion(push(Move(selectedPiece, tile), board));
+      moveCompletion(push(Move(selectedPiece.tile, tile), board, getMeta: true));
     }
   }
 
-  void aiMove() async {
-    await Future.delayed(Duration(milliseconds: 500));
+  void aiMove() {
     var args = Map();
     args['aiPlayer'] = appModel.aiTurn;
     args['aiDifficulty'] = appModel.aiDifficulty;
     args['board'] = board;
-    var move = calculateAIMove(args);
-    if (move == null) {
-      appModel.endGame();
-    } else {
-      validMoves = [];
-      var meta = push(move, board);
-      moveCompletion(meta);
+    aiOperation = CancelableOperation.fromFuture(compute(calculateAIMove, args));
+    aiOperation.value.then((move) {
+      if (move == null || appModel.gameOver) {
+        appModel.endGame();
+      } else {
+        validMoves = [];
+        var meta = push(move, board, getMeta: true);
+        moveCompletion(meta);
+      }
+    });
+  }
+
+  void cancelAIMove() {
+    if (aiOperation != null) {
+      aiOperation.cancel();
     }
   }
 
@@ -127,8 +144,8 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   int offsetToTile(Offset offset) {
     if (appModel.playingWithAI && appModel.playerSide == Player.player2) {
-      return 7 - (offset.dy / tileSize).floor() * 8 +
-        (offset.dx / tileSize).floor();
+      return (7 - (offset.dy / tileSize).floor()) * 8 +
+        7 - (offset.dx / tileSize).floor();
     } else {
       return (offset.dy / tileSize).floor() * 8 +
         (offset.dx / tileSize).floor();
@@ -161,9 +178,9 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   void drawPieces(Canvas canvas) {
     for (var piece in board.player1Pieces + board.player2Pieces) {
-      piece.sprite.renderRect(canvas, Rect.fromLTWH(
-        piece.spriteX + 5,
-        piece.spriteY + 5,
+      spriteMap[piece].sprite.renderRect(canvas, Rect.fromLTWH(
+        spriteMap[piece].spriteX + 5,
+        spriteMap[piece].spriteY + 5,
         tileSize - 10, tileSize - 10
       ));
     }

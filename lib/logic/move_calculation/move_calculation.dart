@@ -21,10 +21,11 @@ const KING_QUEEN_MOVES = [
 
 List<Move> allMoves(Player player, ChessBoard board) {
   List<MoveAndValue> moves = [];
-  for (var piece in List.from(piecesForPlayer(player, board))) {
+  var pieces = List.from(piecesForPlayer(player, board));
+  for (var piece in pieces) {
     var tiles = movesForPiece(piece, board);
     for (var tile in tiles) {
-      var move = MoveAndValue(Move(piece, tile), 0);
+      var move = MoveAndValue(Move(piece.tile, tile), 0);
       push(move.move, board);
       move.value = boardValue(board);
       pop(board);
@@ -88,8 +89,8 @@ List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
     var col = tileToCol(pawn.tile) + diagonal.right;
     if (inBounds(row, col)) {
       var takenPiece = board.tiles[rowColToTile(row, col)];
-      if (takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)
-        || _canTakeEnPassant(pawn.player, rowColToTile(row, col), board)) {
+      if ((takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)) ||
+        _canTakeEnPassant(pawn.player, rowColToTile(row, col), board)) {
         moves.add(rowColToTile(row, col));
       }
     }
@@ -100,7 +101,7 @@ List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
 bool _canTakeEnPassant(Player pawnPlayer, int diagonal, ChessBoard board) {
   var offset = (pawnPlayer == Player.player1) ? 8 : -8;
   var takenPiece = board.tiles[diagonal + offset];
-  return takenPiece != null && takenPiece == board.enPassantPiece;
+  return takenPiece != null && takenPiece.player != pawnPlayer && takenPiece == board.enPassantPiece;
 }
 
 List<int> _knightMoves(ChessPiece knight, ChessBoard board) {
@@ -192,7 +193,7 @@ List<int> _movesFromDirections(
 }
 
 bool movePutsKingInCheck(ChessPiece piece, int move, ChessBoard board) {
-  push(Move(piece, move), board);
+  push(Move(piece.tile, move), board);
   var check = kingInCheck(piece.player, board);
   pop(board);
   return check;

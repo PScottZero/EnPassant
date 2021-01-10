@@ -1,7 +1,5 @@
-import '../../chess_piece.dart';
-
 class Move {
-  ChessPiece piece;
-  int tile;
-  Move(this.piece, this.tile);
+  int from;
+  int to;
+  Move(this.from, this.to);
 }
