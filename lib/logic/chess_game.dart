@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:async/async.dart';
@@ -21,6 +22,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   double width;
   double tileSize;
   AppModel appModel;
+  BuildContext context;
   ChessBoard board = ChessBoard();
   Map<ChessPiece, ChessPieceSprite> spriteMap = Map();
 
@@ -29,9 +31,17 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   ChessPiece selectedPiece;
   int checkHintTile;
 
-  ChessGame() {
+  ChessGame(this.appModel, this.context) {
+    appModel.resetGame();
+    width = MediaQuery.of(context).size.width - 68;
+    tileSize = width / 8;
+    resize(Size(width, width));
     for (var piece in board.player1Pieces + board.player2Pieces) {
       spriteMap[piece] = ChessPieceSprite(piece);
+    }
+    initSpritePositions();
+    if (appModel.isAIsTurn) {
+      aiMove();
     }
   }
 
@@ -58,17 +68,21 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
 
   @override
   void render(Canvas canvas) {
-    drawBoard(canvas);
-    drawCheckHint(canvas);
-    drawSelectedPieceHint(canvas);
-    drawPieces(canvas);
-    drawMoveHints(canvas);
+    if (appModel != null) {
+      drawBoard(canvas);
+      drawCheckHint(canvas);
+      drawSelectedPieceHint(canvas);
+      drawPieces(canvas);
+      drawMoveHints(canvas);
+    }
   }
 
   @override
   void update(double t) {
-    for (var piece in board.player1Pieces + board.player2Pieces) {
-      spriteMap[piece].update(tileSize, appModel, piece);
+    if (appModel != null) {
+      for (var piece in board.player1Pieces + board.player2Pieces) {
+        spriteMap[piece].update(tileSize, appModel, piece);
+      }
     }
   }
 
@@ -99,7 +113,8 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
     }
   }
 
-  void aiMove() {
+  void aiMove() async {
+    await Future.delayed(Duration(milliseconds: 500));
     var args = Map();
     args['aiPlayer'] = appModel.aiTurn;
     args['aiDifficulty'] = appModel.aiDifficulty;
@@ -150,16 +165,6 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
       return (offset.dy / tileSize).floor() * 8 +
         (offset.dx / tileSize).floor();
     }
-  }
-
-  void setSize(Size screenSize) {
-    width = screenSize.width - 68;
-    tileSize = width / 8;
-    resize(Size(width, width));
-  }
-
-  void setappModel(AppModel appModel) {
-    this.appModel = appModel;
   }
 
   void drawBoard(Canvas canvas) {

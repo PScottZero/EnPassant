@@ -56,7 +56,7 @@ class _MainMenuViewState extends State<MainMenuView> {
               setTime: appModel.setTimeLimit,
             ),
             Spacer(),
-            MainMenuButtons(),
+            MainMenuButtons(appModel),
             BottomPadding()
           ],
         ),

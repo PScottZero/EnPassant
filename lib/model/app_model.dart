@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
@@ -18,7 +20,6 @@ class AppModel extends ChangeNotifier {
 
   bool gameOver = false;
   Player turn = Player.player1;
-  bool initGame = true;
   List<MoveMeta> moveMetaList = [];
   Duration player1TimeLeft = Duration.zero;
   Duration player2TimeLeft = Duration.zero;
@@ -56,18 +57,15 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void finalizeGameInit() {
-    initGame = false;
-    notifyListeners();
-  }
-
   void resetGame() {
     gameOver = false;
     turn = Player.player1;
-    initGame = true;
     moveMetaList = [];
     player1TimeLeft = timeLimit;
     player2TimeLeft = timeLimit;
+    if (selectedSide == Player.random) {
+      playerSide = Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
+    }
   }
 
   void setPlayerCount(int count) {
