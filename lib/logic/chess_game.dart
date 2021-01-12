@@ -1,9 +1,8 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:async/async.dart';
 import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
-import 'package:en_passant/logic/move_calculation/chess_piece_sprite.dart';
+import 'package:en_passant/logic/chess_piece_sprite.dart';
 import 'package:en_passant/logic/move_calculation/move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
@@ -18,13 +17,14 @@ import 'chess_board.dart';
 import 'chess_piece.dart';
 import 'move_calculation/move_classes/move.dart';
 
-class ChessGame extends Game with TapDetector, ChangeNotifier {
+class ChessGame extends Game with TapDetector {
   double width;
   double tileSize;
   AppModel appModel;
   BuildContext context;
   ChessBoard board = ChessBoard();
   Map<ChessPiece, ChessPieceSprite> spriteMap = Map();
+  Move latestMove;
 
   CancelableOperation aiOperation;
   List<int> validMoves = [];
@@ -37,7 +37,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
     tileSize = width / 8;
     resize(Size(width, width));
     for (var piece in board.player1Pieces + board.player2Pieces) {
-      spriteMap[piece] = ChessPieceSprite(piece);
+      spriteMap[piece] = ChessPieceSprite(piece, appModel.pieceTheme);
     }
     initSpritePositions();
     if (appModel.isAIsTurn) {
@@ -70,10 +70,15 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   void render(Canvas canvas) {
     if (appModel != null) {
       drawBoard(canvas);
-      drawCheckHint(canvas);
+      if (appModel.showHints) {
+        drawCheckHint(canvas);
+        drawLatestMove(canvas);
+      }
       drawSelectedPieceHint(canvas);
       drawPieces(canvas);
-      drawMoveHints(canvas);
+      if (appModel.showHints) {
+        drawMoveHints(canvas);
+      }
     }
   }
 
@@ -138,6 +143,7 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
   }
 
   void moveCompletion(MoveMeta meta) {
+    latestMove = meta.move;
     checkHintTile = null;
     var oppositeTurn = oppositePlayer(appModel.turn);
     if (kingInCheck(oppositeTurn, board)) {
@@ -197,6 +203,27 @@ class ChessGame extends Game with TapDetector, ChangeNotifier {
         Rect.fromLTWH(
           getXFromTile(tile, tileSize, appModel),
           getYFromTile(tile, tileSize, appModel),
+          tileSize, tileSize
+        ),
+        Paint()..color = appModel.theme.moveHint
+      );
+    }
+  }
+
+  void drawLatestMove(Canvas canvas) {
+    if (latestMove != null) {
+      canvas.drawRect(
+        Rect.fromLTWH(
+          getXFromTile(latestMove.from, tileSize, appModel),
+          getYFromTile(latestMove.from, tileSize, appModel),
+          tileSize, tileSize
+        ),
+        Paint()..color = appModel.theme.moveHint
+      );
+      canvas.drawRect(
+        Rect.fromLTWH(
+          getXFromTile(latestMove.to, tileSize, appModel),
+          getYFromTile(latestMove.to, tileSize, appModel),
           tileSize, tileSize
         ),
         Paint()..color = appModel.theme.moveHint

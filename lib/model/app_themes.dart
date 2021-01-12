@@ -22,7 +22,7 @@ class AppThemes {
   static List<AppTheme> get themeList {
     var themeList = <AppTheme>[
       AppTheme(
-        name: "Bismuth",
+        name: 'Bismuth',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -39,7 +39,7 @@ class AppThemes {
         moveHint: Color(0x88ffff00)
       ),
       AppTheme(
-        name: "Candy",
+        name: 'Candy',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -54,7 +54,7 @@ class AppThemes {
         checkHint: Color(0x88ff0000),
       ),
       AppTheme(
-        name: "Blue",
+        name: 'Blue',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -65,7 +65,7 @@ class AppThemes {
         )
       ),
       AppTheme(
-        name: "Green",
+        name: 'Green',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -76,7 +76,7 @@ class AppThemes {
         )
       ),
       AppTheme(
-        name: "Red",
+        name: 'Red',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -87,7 +87,7 @@ class AppThemes {
         )
       ),
       AppTheme(
-        name: "Iridescent",
+        name: 'Iridescent',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -103,7 +103,7 @@ class AppThemes {
         darkTile: Color(0xff7991a6)
       ),
       AppTheme(
-        name: "Black & White",
+        name: 'Black & White',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -116,7 +116,7 @@ class AppThemes {
         darkTile: Color(0xff808080)
       ),
       AppTheme(
-        name: "Opal",
+        name: 'Opal',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -134,7 +134,7 @@ class AppThemes {
         moveHint: Color(0x88aae39e)
       ),
       AppTheme(
-        name: "Regal",
+        name: 'Regal',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -149,7 +149,7 @@ class AppThemes {
         checkHint: Color(0xffff0000)
       ),
       AppTheme(
-        name: "Vaporwave",
+        name: 'Vaporwave',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -164,7 +164,7 @@ class AppThemes {
         checkHint: Color(0x80ff0000)
       ),
       AppTheme(
-        name: "Dark",
+        name: 'Dark',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -175,7 +175,7 @@ class AppThemes {
         )
       ),
       AppTheme(
-        name: "Light",
+        name: 'Light',
         background: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -184,6 +184,47 @@ class AppThemes {
             const Color(0xff8e8e8e),
           ]
         )
+      ),
+      AppTheme(
+        name: 'E2-E4',
+        background: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xfff9f1c2),
+            const Color(0xff530b0e),
+          ]
+        ),
+        lightTile: const Color(0xffd4cb97),
+        darkTile: const Color(0xff671216),
+        checkHint: const Color(0xffff0000)
+      ),
+      AppTheme(
+        name: 'Gold Ore',
+        background: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xff595959),
+            const Color(0xff807126),
+          ]
+        ),
+        lightTile: const Color(0xfff0d656),
+        darkTile: const Color(0xff807126)
+      ),
+      AppTheme(
+        name: 'Aquamarine',
+        background: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xff03e8fc),
+            const Color(0xff0345fc),
+          ]
+        ),
+        lightTile: const Color(0xff03e8fc),
+        darkTile: const Color(0xff0345fc),
+        moveHint: const Color(0xbb2aad46)
       )
     ];
     themeList.sort((a, b) => a.name.compareTo(b.name));

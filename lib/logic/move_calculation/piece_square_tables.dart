@@ -94,8 +94,7 @@ int squareValue(ChessPiece piece, bool inEndGame) {
     case ChessPieceType.queen: { value = QUEEN_TABLE[tile]; }
     break;
     case ChessPieceType.king: { 
-      value = inEndGame ? KING_ENDGAME_TABLE[tile] : 
-        KING_TABLE[tile];
+      value = inEndGame ? KING_ENDGAME_TABLE[tile] : KING_TABLE[tile];
     }
     break;
     default: { value = 0; }

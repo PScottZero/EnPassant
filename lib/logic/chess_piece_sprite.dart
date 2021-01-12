@@ -3,11 +3,12 @@ import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 
-import '../chess_piece.dart';
-import '../shared_functions.dart';
+import 'chess_piece.dart';
+import 'shared_functions.dart';
 
 class ChessPieceSprite {
   ChessPieceType type;
+  String pieceTheme;
   int tile;
   Sprite sprite;
   double spriteX;
@@ -15,9 +16,10 @@ class ChessPieceSprite {
   double offsetX = 0;
   double offsetY = 0;
 
-  ChessPieceSprite(ChessPiece piece) {
+  ChessPieceSprite(ChessPiece piece, String pieceTheme) {
     this.tile = piece.tile;
     this.type = piece.type;
+    this.pieceTheme = pieceTheme;
     initSprite(piece);
   }
 
@@ -55,7 +57,7 @@ class ChessPieceSprite {
   void initSprite(ChessPiece piece) {
     String color = piece.player == Player.player1 ? 'white' : 'black';
     String pieceName = type.toString().substring(type.toString().indexOf('.') + 1);
-    sprite = Sprite('pieces/' + pieceName + '_' + color + '.png');
+    sprite = Sprite('pieces/${pieceName}_${pieceTheme.toLowerCase()}_$color.png');
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {

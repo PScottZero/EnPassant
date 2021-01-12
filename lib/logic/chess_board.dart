@@ -66,7 +66,7 @@ class ChessBoard {
 int boardValue(ChessBoard board) {
   int value = 0;
   for (var piece in board.player1Pieces + board.player2Pieces) {
-    value += piece.value + squareValue(piece, false);
+    value += piece.value + squareValue(piece, inEndGame(board));
   }
   return value;
 }
@@ -271,4 +271,11 @@ bool promotion(ChessPiece movedPiece) {
 bool canTakeEnPassant(ChessPiece movedPiece) {
   return movedPiece.moveCount == 1 &&
     (tileToRow(movedPiece.tile) == 3 || tileToRow(movedPiece.tile) == 4);
+}
+
+bool inEndGame(ChessBoard board) {
+  return (queensForPlayer(Player.player1, board).isEmpty &&
+    queensForPlayer(Player.player2, board).isEmpty) ||
+    piecesForPlayer(Player.player1, board).length <= 3 ||
+    piecesForPlayer(Player.player2, board).length <= 3;
 }

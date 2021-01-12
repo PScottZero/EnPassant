@@ -1,10 +1,6 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
-bool tileInBounds(int tile) {
-  return tile >= 0 && tile < 64;
-}
-
 int tileToRow(int tile) { return (tile / 8).floor(); }
 
 int tileToCol(int tile) { return tile % 8; }

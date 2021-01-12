@@ -1,5 +1,4 @@
 import 'package:en_passant/logic/chess_game.dart';
-import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';

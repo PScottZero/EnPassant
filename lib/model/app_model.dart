@@ -13,10 +13,17 @@ class AppModel extends ChangeNotifier {
   Player selectedSide = Player.player1;
   Player playerSide = Player.player1;
   Duration timeLimit = Duration.zero;
+  String pieceTheme = 'Default';
   String themeName = 'Green';
+  List<String> get pieceThemes {
+    var pieceThemes = ['Default', 'Angular'];
+    pieceThemes.sort();
+    return pieceThemes;
+  }
   AppTheme get theme { return AppThemes.themeList[themeIndex]; }
   bool showMoveHistory = true;
   bool soundEnabled = true;
+  bool showHints = true;
 
   bool gameOver = false;
   Player turn = Player.player1;
@@ -32,6 +39,16 @@ class AppModel extends ChangeNotifier {
       }
     });
     return themeIndex;
+  }
+
+  int get pieceThemeIndex {
+    var pieceThemeIndex = 0;
+    pieceThemes.asMap().forEach((index, theme) {
+      if (theme == pieceTheme) {
+        pieceThemeIndex = index;
+      }
+    });
+    return pieceThemeIndex;
   }
 
   Player get aiTurn { return oppositePlayer(playerSide); }
@@ -114,6 +131,13 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setPieceTheme(int index) async {
+    pieceTheme = pieceThemes[index];
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('pieceTheme', pieceTheme);
+    notifyListeners();
+  }
+
   void setShowMoveHistory(bool show) async {
     final prefs = await SharedPreferences.getInstance();
     showMoveHistory = show;
@@ -128,11 +152,22 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setShowHints(bool show) async {
+    final prefs = await SharedPreferences.getInstance();
+    showHints = show;
+    prefs.setBool('showHints', show);
+    notifyListeners();
+  }
+
   void loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     themeName = prefs.getString('themeName') ?? 'Green';
+    pieceTheme = prefs.getString('pieceTheme') ?? 'Default';
     showMoveHistory = prefs.getBool('showMoveHistory') ?? true;
     soundEnabled = prefs.getBool('soundEnabled') ?? true;
+    showHints = prefs.getBool('showHints') ?? true;
     notifyListeners();
   }
+
+  void update() { notifyListeners(); }
 }

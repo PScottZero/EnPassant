@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/model/app_model.dart';
@@ -104,13 +103,13 @@ class _ChessViewState extends State<ChessView> {
                     child: RoundedAlertButton('Restart', onConfirm: () {
                       game.cancelAIMove();
                       game = ChessGame(appModel, context);
+                      game.appModel.update();
                     })
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     child: RoundedAlertButton('Exit', onConfirm: () {
-                      game.cancelAIMove();
-                      timer.cancel();
+                      exit();
                       Navigator.pop(context);
                     })
                   )
@@ -126,8 +125,12 @@ class _ChessViewState extends State<ChessView> {
   }
 
   Future<bool> _willPopCallback() async {
+    exit();
+    return true;
+  }
+
+  void exit() {
     game.cancelAIMove();
     timer.cancel();
-    return true;
   }
 }
