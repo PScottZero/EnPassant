@@ -225,6 +225,20 @@ class AppThemes {
         lightTile: const Color(0xff03e8fc),
         darkTile: const Color(0xff0345fc),
         moveHint: const Color(0xbb2aad46)
+      ),
+       AppTheme(
+        name: 'Video Chess',
+        background: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xff382db5),
+            const Color(0xff382db5),
+          ]
+        ),
+        lightTile: const Color(0xff584fdb),
+        darkTile: const Color(0xff382db5),
+        moveHint: const Color(0xbb2aad46)
       )
     ];
     themeList.sort((a, b) => a.name.compareTo(b.name));

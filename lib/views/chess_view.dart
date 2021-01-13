@@ -28,7 +28,7 @@ class _ChessViewState extends State<ChessView> {
 
   _ChessViewState(this.game) {
     timer = Timer.periodic(
-      Duration(milliseconds: 50), 
+      Duration(milliseconds: TIMER_ACCURACY_MS), 
       (timer) {
         game.appModel.turn == Player.player1 ?
           game.appModel.decrementPlayer1Timer() :

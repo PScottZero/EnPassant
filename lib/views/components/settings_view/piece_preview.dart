@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:flame/game/game.dart';
 import 'package:flame/sprite.dart';
@@ -9,12 +10,12 @@ class PiecePreview extends Game {
   AppModel appModel;
   Map<int, String> get imageMap {
     return {
-      0: 'pieces/king_${appModel.pieceTheme.toLowerCase()}_black.png',
-      1: 'pieces/queen_${appModel.pieceTheme.toLowerCase()}_white.png',
-      2: 'pieces/rook_${appModel.pieceTheme.toLowerCase()}_white.png',
-      3: 'pieces/bishop_${appModel.pieceTheme.toLowerCase()}_black.png',
-      4: 'pieces/knight_${appModel.pieceTheme.toLowerCase()}_black.png',
-      5: 'pieces/pawn_${appModel.pieceTheme.toLowerCase()}_white.png',
+      0: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/king_black.png',
+      1: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/queen_white.png',
+      2: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/rook_white.png',
+      3: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/bishop_black.png',
+      4: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/knight_black.png',
+      5: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/pawn_white.png',
     };
   }
   Map<int, Sprite> spriteMap = Map();

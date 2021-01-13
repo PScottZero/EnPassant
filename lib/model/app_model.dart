@@ -7,16 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_themes.dart';
 
+const TIMER_ACCURACY_MS = 100;
+
 class AppModel extends ChangeNotifier {
   int playerCount = 1;
   int aiDifficulty = 3;
   Player selectedSide = Player.player1;
   Player playerSide = Player.player1;
   Duration timeLimit = Duration.zero;
-  String pieceTheme = 'Default';
+  String pieceTheme = 'Classic';
   String themeName = 'Green';
   List<String> get pieceThemes {
-    var pieceThemes = ['Default', 'Angular'];
+    var pieceThemes = ['Classic', 'Angular', 'Letters', '8-Bit', 'Video Chess'];
     pieceThemes.sort();
     return pieceThemes;
   }
@@ -112,14 +114,16 @@ class AppModel extends ChangeNotifier {
 
   void decrementPlayer1Timer() async {
     if (player1TimeLeft.inSeconds > 0 && !gameOver) {
-      player1TimeLeft = Duration(milliseconds: player1TimeLeft.inMilliseconds - 50);
+      player1TimeLeft = Duration(
+        milliseconds: player1TimeLeft.inMilliseconds - TIMER_ACCURACY_MS);
       notifyListeners();
     }
   }
 
   void decrementPlayer2Timer() async {
     if (player2TimeLeft.inSeconds > 0 && !gameOver) {
-      player2TimeLeft = Duration(milliseconds: player2TimeLeft.inMilliseconds - 50);
+      player2TimeLeft = Duration(
+        milliseconds: player2TimeLeft.inMilliseconds - TIMER_ACCURACY_MS);
       notifyListeners();
     }
   }
@@ -162,7 +166,7 @@ class AppModel extends ChangeNotifier {
   void loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     themeName = prefs.getString('themeName') ?? 'Green';
-    pieceTheme = prefs.getString('pieceTheme') ?? 'Default';
+    pieceTheme = prefs.getString('pieceTheme') ?? 'Classic';
     showMoveHistory = prefs.getBool('showMoveHistory') ?? true;
     soundEnabled = prefs.getBool('soundEnabled') ?? true;
     showHints = prefs.getBool('showHints') ?? true;

@@ -18,3 +18,7 @@ double getYFromTile(int tile, double tileSize, AppModel appModel) {
 Player oppositePlayer(Player player) {
   return player == Player.player1 ? Player.player2 : Player.player1;
 }
+
+String pieceThemeFormat(String themeString) {
+  return themeString.toLowerCase().replaceAll(' ', '');
+}
