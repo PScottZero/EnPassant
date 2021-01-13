@@ -54,21 +54,23 @@ class _ChessViewState extends State<ChessView> {
               children: [
                 Spacer(),
                 Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: CupertinoColors.white,
-                      width: 4
-                    ),
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 10,
-                        color: Color(0x88000000)
-                      )
-                    ]
-                  ),
+                  decoration: appModel.theme.name != 'Video Chess' ?
+                    BoxDecoration(
+                      border: Border.all(
+                        color: CupertinoColors.white,
+                        width: 4
+                      ),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 10,
+                          color: Color(0x88000000)
+                        )
+                      ]
+                    ) : BoxDecoration(),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: appModel.theme.name != 'Video Chess' ?
+                      BorderRadius.circular(10): BorderRadius.zero,
                     child: Container(
                       child: game.widget,
                       width: MediaQuery.of(context).size.width - 68,
@@ -85,35 +87,48 @@ class _ChessViewState extends State<ChessView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                 ),
                 Spacer(),
-                appModel.timeLimit != Duration.zero ?
-                  Column(children: [
-                    Timers(
-                      player1TimeLeft: appModel.player1TimeLeft,
-                      player2TimeLeft: appModel.player2TimeLeft,
-                    ),
-                    SizedBox(height: 14)
-                  ]) : Container(),
-                appModel.showMoveHistory ?
-                  Column(children: [
-                    MoveList(),
-                    SizedBox(height: 10)
-                  ]) : Container(),
-                Row(children: [
-                  Expanded(
-                    child: RoundedAlertButton('Restart', onConfirm: () {
-                      game.cancelAIMove();
-                      game = ChessGame(appModel, context);
-                      game.appModel.update();
-                    })
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: 204),
+                  child: ListView(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    children: [Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        appModel.timeLimit != Duration.zero ?
+                          Column(children: [
+                            Timers(
+                              player1TimeLeft: appModel.player1TimeLeft,
+                              player2TimeLeft: appModel.player2TimeLeft,
+                            ),
+                            SizedBox(height: 14)
+                          ]) : Container(),
+                        appModel.showMoveHistory ?
+                          Column(children: [
+                            MoveList(),
+                            SizedBox(height: 10)
+                          ]) : Container(),
+                        Row(children: [
+                          Expanded(
+                            child: RoundedAlertButton('Restart', onConfirm: () {
+                              game.cancelAIMove();
+                              game = ChessGame(appModel, context);
+                              game.appModel.update();
+                            })
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: RoundedAlertButton('Exit', onConfirm: () {
+                              exit();
+                              Navigator.pop(context);
+                            })
+                          )
+                        ]),
+                      ]
+                    )]
                   ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: RoundedAlertButton('Exit', onConfirm: () {
-                      exit();
-                      Navigator.pop(context);
-                    })
-                  )
-                ]),
+                ),
                 BottomPadding()
               ],
             )

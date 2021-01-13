@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_themes.dart';
 
 const TIMER_ACCURACY_MS = 100;
+const PIECE_THEMES = ['Classic', 'Angular', '8-Bit', 'Letters', 'Video Chess'];
 
 class AppModel extends ChangeNotifier {
   int playerCount = 1;
@@ -18,7 +19,7 @@ class AppModel extends ChangeNotifier {
   String pieceTheme = 'Classic';
   String themeName = 'Green';
   List<String> get pieceThemes {
-    var pieceThemes = ['Classic', 'Angular', 'Letters', '8-Bit', 'Video Chess'];
+    var pieceThemes = List<String>.from(PIECE_THEMES);
     pieceThemes.sort();
     return pieceThemes;
   }

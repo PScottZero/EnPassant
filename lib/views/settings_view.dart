@@ -21,26 +21,34 @@ class SettingsView extends StatelessWidget {
             SizedBox(height: MediaQuery.of(context).padding.top),
             TextLarge('Settings'),
             SizedBox(height: 20),
-            AppThemePicker(),
-            SizedBox(height: 20),
-            PieceThemePicker(),
-            SizedBox(height: 20),
-            Toggle(
-              'Show Hints',
-              toggle: appModel.showHints,
-              setFunc: appModel.setShowHints,
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                physics: ClampingScrollPhysics(),
+                children: [
+                  AppThemePicker(),
+                  SizedBox(height: 20),
+                  PieceThemePicker(),
+                  SizedBox(height: 20),
+                  Toggle(
+                    'Show Hints',
+                    toggle: appModel.showHints,
+                    setFunc: appModel.setShowHints,
+                  ),
+                  Toggle(
+                    'Show Move History',
+                    toggle: appModel.showMoveHistory,
+                    setFunc: appModel.setShowMoveHistory
+                  ),
+                  Toggle(
+                    'Sound Enabled',
+                    toggle: appModel.soundEnabled,
+                    setFunc: appModel.setSoundEnabled
+                  ),
+                ],
+              ),
             ),
-            Toggle(
-              'Show Move History',
-              toggle: appModel.showMoveHistory,
-              setFunc: appModel.setShowMoveHistory
-            ),
-            Toggle(
-              'Sound Enabled',
-              toggle: appModel.soundEnabled,
-              setFunc: appModel.setSoundEnabled
-            ),
-            Spacer(),
+            SizedBox(height: 30),
             RoundedButton('Back', onPressed: () {
               Navigator.pop(context);
             }),

@@ -32,30 +32,38 @@ class _MainMenuViewState extends State<MainMenuView> {
               child: Image(image: AssetImage('assets/images/logo.png')),
             ),
             SizedBox(height: 20),
-            GameModePicker(
-              appModel.playerCount,
-              appModel.setPlayerCount
-            ),
-            SizedBox(height: 20),
-            appModel.playerCount == 1
-              ? Column(children: [
-                  AIDifficultyPicker(
-                    appModel.aiDifficulty,
-                    appModel.setAIDifficulty
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                physics: ClampingScrollPhysics(),
+                children: [
+                  GameModePicker(
+                    appModel.playerCount,
+                    appModel.setPlayerCount
                   ),
                   SizedBox(height: 20),
-                  SidePicker(
-                    appModel.selectedSide,
-                    appModel.setPlayerSide
+                  appModel.playerCount == 1
+                    ? Column(children: [
+                        AIDifficultyPicker(
+                          appModel.aiDifficulty,
+                          appModel.setAIDifficulty
+                        ),
+                        SizedBox(height: 20),
+                        SidePicker(
+                          appModel.selectedSide,
+                          appModel.setPlayerSide
+                        ),
+                        SizedBox(height: 20)
+                      ])
+                    : Container(),
+                  TimeLimitPicker(
+                    selectedTime: appModel.timeLimit,
+                    setTime: appModel.setTimeLimit,
                   ),
-                  SizedBox(height: 20)
-                ])
-              : Container(),
-            TimeLimitPicker(
-              selectedTime: appModel.timeLimit,
-              setTime: appModel.setTimeLimit,
+                ],
+              )
             ),
-            Spacer(),
+            SizedBox(height: 10),
             MainMenuButtons(appModel),
             BottomPadding()
           ],
