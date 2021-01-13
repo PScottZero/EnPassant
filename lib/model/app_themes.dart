@@ -7,14 +7,16 @@ class AppTheme {
   Color darkTile;
   Color moveHint;
   Color checkHint;
+  Color latestMove;
 
   AppTheme({
     this.name,
     this.background,
     this.lightTile = const Color(0xFFC9B28F),
     this.darkTile = const Color(0xFF69493b),
-    this.moveHint = const Color(0x550000FF),
-    this.checkHint = const Color(0x55FF0000)
+    this.moveHint = const Color(0xdd5c81c4),
+    this.latestMove = const Color(0xccc47937),
+    this.checkHint = const Color(0x88ff0000)
   });
 }
 
@@ -27,16 +29,17 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff2560a5),
-            const Color(0xff2f6e72),
-            const Color(0xff4faa55),
-            const Color(0xffe6de50),
-            const Color(0xffdb70eb),
+            Color(0xff2560a5),
+            Color(0xff2f6e72),
+            Color(0xff4faa55),
+            Color(0xffe6de50),
+            Color(0xffdb70eb),
           ]
         ),
         lightTile: Color(0xff4faa55),
         darkTile: Color(0xff2560a5),
-        moveHint: Color(0x88ffff00)
+        moveHint: Color(0xaaffff00),
+        latestMove: Color(0xaadb70eb)
       ),
       AppTheme(
         name: 'Candy',
@@ -44,8 +47,8 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff8934eb),
-            const Color(0xff004f80),
+            Color(0xff8934eb),
+            Color(0xff004f80),
           ]
         ),
         lightTile: Color(0xff0088ff),
@@ -59,10 +62,10 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff236e91),
-            const Color(0xff0f4964),
+            Color(0xff236e91),
+            Color(0xff0f4964),
           ]
-        )
+        ),
       ),
       AppTheme(
         name: 'Green',
@@ -70,10 +73,10 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff25804f),
-            const Color(0xff00584f),
+            Color(0xff25804f),
+            Color(0xff00584f),
           ]
-        )
+        ),
       ),
       AppTheme(
         name: 'Red',
@@ -81,8 +84,8 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xfff54242),
-            const Color(0xff912323)
+            Color(0xfff54242),
+            Color(0xff912323)
           ]
         )
       ),
@@ -92,11 +95,11 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xffb2b2b2),
-            const Color(0xffb24d00),
-            const Color(0xffb2004d),
-            const Color(0xff004db2),
-            const Color(0xff4d4d4d)
+            Color(0xffb2b2b2),
+            Color(0xffb24d00),
+            Color(0xffb2004d),
+            Color(0xff004db2),
+            Color(0xff4d4d4d)
           ]
         ),
         lightTile: Color(0xffabc0d1),
@@ -108,8 +111,8 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xffb2b2b2),
-            const Color(0xff4e4e4e),
+            Color(0xffb2b2b2),
+            Color(0xff4e4e4e),
           ]
         ),
         lightTile: Color(0xffb2b2b2),
@@ -121,12 +124,12 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xffb5b8c9),
-            const Color(0xffc7958a),
-            const Color(0xffdbd879),
-            const Color(0xff96cf8a),
-            const Color(0xff6a81df),
-            const Color(0xff507fc2)
+            Color(0xffb5b8c9),
+            Color(0xffc7958a),
+            Color(0xffdbd879),
+            Color(0xff96cf8a),
+            Color(0xff6a81df),
+            Color(0xff507fc2)
           ]
         ),
         lightTile: Color(0xffd1d7e0),
@@ -139,8 +142,8 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff2c0078),
-            const Color(0xff6d3ac7),
+            Color(0xff2c0078),
+            Color(0xff6d3ac7),
           ]
         ),
         lightTile: Color(0xfff0c76e),
@@ -154,14 +157,15 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xffff78ed),
-            const Color(0xff602af5),
+            Color(0xffff78ed),
+            Color(0xff602af5),
           ]
         ),
         lightTile: Color(0xffff78ed),
         darkTile: Color(0xff602af5),
-        moveHint: Color(0x80d1116b),
-        checkHint: Color(0x80ff0000)
+        moveHint: Color(0xddd1116b),
+        checkHint: Color(0x80ff0000),
+        latestMove: Color(0xaa00d0d4)
       ),
       AppTheme(
         name: 'Dark',
@@ -169,8 +173,8 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff1e1e1e),
-            const Color(0xff2e2e2e),
+            Color(0xff1e1e1e),
+            Color(0xff2e2e2e),
           ]
         )
       ),
@@ -180,8 +184,8 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xffaeaeae),
-            const Color(0xff8e8e8e),
+            Color(0xffaeaeae),
+            Color(0xff8e8e8e),
           ]
         )
       ),
@@ -191,13 +195,14 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xfff9f1c2),
-            const Color(0xff530b0e),
+            Color(0xfff9f1c2),
+            Color(0xff530b0e),
           ]
         ),
-        lightTile: const Color(0xffd4cb97),
-        darkTile: const Color(0xff671216),
-        checkHint: const Color(0xffff0000)
+        lightTile: Color(0xffd4cb97),
+        darkTile: Color(0xff671216),
+        checkHint: Color(0xffff0000),
+        moveHint: Color(0xdd444444)
       ),
       AppTheme(
         name: 'Gold Ore',
@@ -205,12 +210,13 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff595959),
-            const Color(0xff807126),
+            Color(0xff595959),
+            Color(0xff807126),
           ]
         ),
-        lightTile: const Color(0xfff0d656),
-        darkTile: const Color(0xff807126)
+        lightTile: Color(0xfff0d656),
+        darkTile: Color(0xff807126),
+        moveHint: Color(0xdd444444)
       ),
       AppTheme(
         name: 'Aquamarine',
@@ -218,13 +224,14 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff03e8fc),
-            const Color(0xff0345fc),
+            Color(0xff03e8fc),
+            Color(0xff0345fc),
           ]
         ),
-        lightTile: const Color(0xff03e8fc),
-        darkTile: const Color(0xff0345fc),
-        moveHint: const Color(0xbb2aad46)
+        lightTile: Color(0xff03e8fc),
+        darkTile: Color(0xff0345fc),
+        moveHint: Color(0xdd2aad46),
+        latestMove: Color(0xdd0683d6)
       ),
        AppTheme(
         name: 'Video Chess',
@@ -232,13 +239,14 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xff382db5),
-            const Color(0xff382db5),
+            Color(0xff382db5),
+            Color(0xff382db5),
           ]
         ),
-        lightTile: const Color(0xff584fdb),
-        darkTile: const Color(0xff382db5),
-        moveHint: const Color(0xbb2aad46)
+        lightTile: Color(0xff584fdb),
+        darkTile: Color(0xff382db5),
+        moveHint: Color(0x88c4c6ff),
+        latestMove: Color(0x88c47937)
       )
     ];
     themeList.sort((a, b) => a.name.compareTo(b.name));

@@ -61,7 +61,7 @@ class MoveList extends StatelessWidget {
       String takeString = meta.took ? 'x' : '';
       String promotion = meta.promotion ? '=Q' : '';
       String check = meta.isCheck ? '+' : '';
-      String checkmate = meta.isCheckmate ? '++': '';
+      String checkmate = meta.isCheckmate ? '#': '';
       String row = '${8 - tileToRow(meta.move.to)}';
       String col = '${colToChar(tileToCol(meta.move.to))}';
       if (meta.colIsAmbiguous) {

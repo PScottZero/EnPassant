@@ -70,6 +70,10 @@ android {
                 debugSymbolLevel 'FULL'
             }
         }
+
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
 
     lintOptions {

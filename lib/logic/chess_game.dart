@@ -199,12 +199,14 @@ class ChessGame extends Game with TapDetector {
 
   void drawMoveHints(Canvas canvas) {
     for (var tile in validMoves) {
-      canvas.drawRect(
-        Rect.fromLTWH(
-          getXFromTile(tile, tileSize, appModel),
-          getYFromTile(tile, tileSize, appModel),
-          tileSize, tileSize
+      canvas.drawCircle(
+        Offset(
+          getXFromTile(tile, tileSize,
+            appModel) + (tileSize / 2),
+          getYFromTile(tile, tileSize,
+            appModel) + (tileSize / 2)
         ),
+        tileSize / 5,
         Paint()..color = appModel.theme.moveHint
       );
     }
@@ -218,7 +220,7 @@ class ChessGame extends Game with TapDetector {
           getYFromTile(latestMove.from, tileSize, appModel),
           tileSize, tileSize
         ),
-        Paint()..color = appModel.theme.moveHint
+        Paint()..color = appModel.theme.latestMove
       );
       canvas.drawRect(
         Rect.fromLTWH(
@@ -226,7 +228,7 @@ class ChessGame extends Game with TapDetector {
           getYFromTile(latestMove.to, tileSize, appModel),
           tileSize, tileSize
         ),
-        Paint()..color = appModel.theme.moveHint
+        Paint()..color = appModel.theme.latestMove
       );
     }
   }
@@ -246,14 +248,12 @@ class ChessGame extends Game with TapDetector {
 
   void drawSelectedPieceHint(Canvas canvas) {
     if (selectedPiece != null) {
-      canvas.drawCircle(
-        Offset(
-          getXFromTile(selectedPiece.tile, tileSize,
-            appModel) + (tileSize / 2),
-          getYFromTile(selectedPiece.tile, tileSize,
-            appModel) + (tileSize / 2)
+      canvas.drawRect(
+        Rect.fromLTWH(
+          getXFromTile(selectedPiece.tile, tileSize, appModel),
+          getYFromTile(selectedPiece.tile, tileSize, appModel),
+          tileSize, tileSize
         ),
-        tileSize / 2,
         Paint()..color = appModel.theme.moveHint
       );
     }
