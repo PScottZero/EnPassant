@@ -8,6 +8,7 @@ class AppTheme {
   Color moveHint;
   Color checkHint;
   Color latestMove;
+  Color border;
 
   AppTheme({
     this.name,
@@ -16,7 +17,8 @@ class AppTheme {
     this.darkTile = const Color(0xFF69493b),
     this.moveHint = const Color(0xdd5c81c4),
     this.latestMove = const Color(0xccc47937),
-    this.checkHint = const Color(0x88ff0000)
+    this.checkHint = const Color(0x88ff0000),
+    this.border = const Color(0xffffffff)
   });
 }
 
@@ -39,7 +41,8 @@ class AppThemes {
         lightTile: Color(0xff4faa55),
         darkTile: Color(0xff2560a5),
         moveHint: Color(0xaaffff00),
-        latestMove: Color(0xaadb70eb)
+        latestMove: Color(0xaadb70eb),
+        border: Color(0xff184387)
       ),
       AppTheme(
         name: 'Candy',
@@ -53,8 +56,10 @@ class AppThemes {
         ),
         lightTile: Color(0xff0088ff),
         darkTile: Color(0xff8800aa),
-        moveHint: Color(0x88ffff00),
+        moveHint: Color(0xdddb70eb),
         checkHint: Color(0x88ff0000),
+        latestMove: Color(0xcc25804f),
+        border: Color(0xffdb70eb)
       ),
       AppTheme(
         name: 'Blue',
@@ -103,7 +108,9 @@ class AppThemes {
           ]
         ),
         lightTile: Color(0xffabc0d1),
-        darkTile: Color(0xff7991a6)
+        darkTile: Color(0xff7991a6),
+        moveHint: Color(0xcc004db2),
+        border: Color(0xff4d5d6b)
       ),
       AppTheme(
         name: 'Black & White',
@@ -116,7 +123,10 @@ class AppThemes {
           ]
         ),
         lightTile: Color(0xffb2b2b2),
-        darkTile: Color(0xff808080)
+        darkTile: Color(0xff808080),
+        moveHint: Color(0xdd555555),
+        checkHint: Color(0xff333333),
+        latestMove: Color(0xdddddddd)
       ),
       AppTheme(
         name: 'Opal',
@@ -134,7 +144,9 @@ class AppThemes {
         ),
         lightTile: Color(0xffd1d7e0),
         darkTile: Color(0xff6494d6),
-        moveHint: Color(0x88aae39e)
+        moveHint: Color(0xcc8ad979),
+        latestMove: Color(0xddc7958a),
+        border: Color(0xff9cc5d9)
       ),
       AppTheme(
         name: 'Regal',
@@ -148,8 +160,9 @@ class AppThemes {
         ),
         lightTile: Color(0xfff0c76e),
         darkTile: Color(0xff942222),
-        moveHint: Color(0x800000ff),
-        checkHint: Color(0xffff0000)
+        moveHint: Color(0xcc5d27ba),
+        checkHint: Color(0xffff0000),
+        border: Color(0xff8c5fd9)
       ),
       AppTheme(
         name: 'Vaporwave',
@@ -165,7 +178,8 @@ class AppThemes {
         darkTile: Color(0xff602af5),
         moveHint: Color(0xddd1116b),
         checkHint: Color(0x80ff0000),
-        latestMove: Color(0xaa00d0d4)
+        latestMove: Color(0xaa00d0d4),
+        border: Color(0xff926bff)
       ),
       AppTheme(
         name: 'Dark',
@@ -176,7 +190,8 @@ class AppThemes {
             Color(0xff1e1e1e),
             Color(0xff2e2e2e),
           ]
-        )
+        ),
+        border: Color(0xff888888)
       ),
       AppTheme(
         name: 'Light',
@@ -200,9 +215,9 @@ class AppThemes {
           ]
         ),
         lightTile: Color(0xffd4cb97),
-        darkTile: Color(0xff671216),
+        darkTile: Color(0xff73181c),
         checkHint: Color(0xffff0000),
-        moveHint: Color(0xdd444444)
+        moveHint: Color(0xdd666666)
       ),
       AppTheme(
         name: 'Gold Ore',
@@ -231,7 +246,8 @@ class AppThemes {
         lightTile: Color(0xff03e8fc),
         darkTile: Color(0xff0345fc),
         moveHint: Color(0xdd2aad46),
-        latestMove: Color(0xdd0683d6)
+        latestMove: Color(0xdd0683d6),
+        border: Color(0xffc2e3ff)
       ),
        AppTheme(
         name: 'Video Chess',

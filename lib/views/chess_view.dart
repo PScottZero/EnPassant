@@ -25,6 +25,7 @@ class ChessView extends StatefulWidget {
 class _ChessViewState extends State<ChessView> {
   ChessGame game;
   Timer timer;
+  final ScrollController scrollController = ScrollController();
 
   _ChessViewState(this.game) {
     timer = Timer.periodic(
@@ -43,7 +44,8 @@ class _ChessViewState extends State<ChessView> {
   }
 
   @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
     return Consumer<AppModel>(
       builder: (context, appModel, child) {
         return WillPopScope(
@@ -57,7 +59,7 @@ class _ChessViewState extends State<ChessView> {
                   decoration: appModel.theme.name != 'Video Chess' ?
                     BoxDecoration(
                       border: Border.all(
-                        color: CupertinoColors.white,
+                        color: appModel.theme.border,
                         width: 4
                       ),
                       borderRadius: BorderRadius.circular(14),
@@ -87,46 +89,45 @@ class _ChessViewState extends State<ChessView> {
                   mainAxisAlignment: MainAxisAlignment.center,
                 ),
                 Spacer(),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: 204),
+                Container(
+                  constraints: BoxConstraints(maxHeight:
+                    MediaQuery.of(context).size.height > 700 ? 204 : 134),
                   child: ListView(
+                    controller: scrollController,
                     physics: ClampingScrollPhysics(),
                     shrinkWrap: true,
                     padding: EdgeInsets.zero,
-                    children: [Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        appModel.timeLimit != Duration.zero ?
-                          Column(children: [
-                            Timers(
-                              player1TimeLeft: appModel.player1TimeLeft,
-                              player2TimeLeft: appModel.player2TimeLeft,
-                            ),
-                            SizedBox(height: 14)
-                          ]) : Container(),
-                        appModel.showMoveHistory ?
-                          Column(children: [
-                            MoveList(),
-                            SizedBox(height: 10)
-                          ]) : Container(),
-                        Row(children: [
-                          Expanded(
-                            child: RoundedAlertButton('Restart', onConfirm: () {
-                              game.cancelAIMove();
-                              game = ChessGame(appModel, context);
-                              game.appModel.update();
-                            })
+                    children: [
+                      appModel.timeLimit != Duration.zero ?
+                        Column(children: [
+                          Timers(
+                            player1TimeLeft: appModel.player1TimeLeft,
+                            player2TimeLeft: appModel.player2TimeLeft,
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: RoundedAlertButton('Exit', onConfirm: () {
-                              exit();
-                              Navigator.pop(context);
-                            })
-                          )
-                        ]),
-                      ]
-                    )]
+                          SizedBox(height: 14)
+                        ]) : Container(),
+                      appModel.showMoveHistory ?
+                        Column(children: [
+                          MoveList(),
+                          SizedBox(height: 10)
+                        ]) : Container(),
+                      Row(children: [
+                        Expanded(
+                          child: RoundedAlertButton('Restart', onConfirm: () {
+                            game.cancelAIMove();
+                            game = ChessGame(appModel, context);
+                            game.appModel.update();
+                          })
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: RoundedAlertButton('Exit', onConfirm: () {
+                            exit();
+                            Navigator.pop(context);
+                          })
+                        )
+                      ]),
+                    ]
                   ),
                 ),
                 BottomPadding()
@@ -137,6 +138,10 @@ class _ChessViewState extends State<ChessView> {
         );
       }
     );
+  }
+
+  void scrollToBottom() {
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
   }
 
   Future<bool> _willPopCallback() async {

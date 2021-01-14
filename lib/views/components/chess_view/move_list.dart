@@ -58,18 +58,15 @@ class MoveList extends StatelessWidget {
     } else if (meta.queenCastle) {
       return 'O-O-O';
     } else {
+      String ambiguity = meta.rowIsAmbiguous ? '${colToChar(tileToCol(meta.move.from))}' : '';
+      ambiguity += meta.colIsAmbiguous ? '${8 - tileToRow(meta.move.from)}' : '';
       String takeString = meta.took ? 'x' : '';
       String promotion = meta.promotion ? '=Q' : '';
       String check = meta.isCheck ? '+' : '';
       String checkmate = meta.isCheckmate ? '#': '';
       String row = '${8 - tileToRow(meta.move.to)}';
       String col = '${colToChar(tileToCol(meta.move.to))}';
-      if (meta.colIsAmbiguous) {
-        row = '${8 - tileToRow(meta.move.from)}' + row;
-      } else if (meta.rowIsAmbiguous) {
-        col = '${colToChar(tileToCol(meta.move.from))}' + col;
-      }
-      return '${pieceToChar(meta.type)}$takeString' +
+      return '${pieceToChar(meta.type)}$ambiguity$takeString' +
         '$col$row$promotion$check$checkmate';
     }
   }
