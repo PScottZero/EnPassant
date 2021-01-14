@@ -25,6 +25,7 @@ class ChessPieceSprite {
 
   void update(double tileSize, AppModel appModel, ChessPiece piece) {
     if (piece.type != this.type) {
+      this.type = piece.type;
       initSprite(piece);
     }
     if (piece.tile != this.tile) {

@@ -90,6 +90,9 @@ MoveMeta push(Move move, ChessBoard board, {bool getMeta = false}) {
       checkEnPassant(board, mso, meta);
     }
   }
+  if (meta.type == ChessPieceType.pawn && meta.took) {
+    meta.rowIsAmbiguous = true;
+  }
   board.moveStack.add(mso);
   return meta;
 }
