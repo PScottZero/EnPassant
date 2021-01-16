@@ -8,7 +8,7 @@ En Passant is a chess app written in Flutter using Flame engine. It is a remake 
 - 1 or 2 player gameplay (2 player is offline)
 - Six AI difficulty levels
 - Customizable app theme
-- Customizeble piece theme
+- Customizable piece theme
 
 ## AI Description
 
