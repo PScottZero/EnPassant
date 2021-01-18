@@ -249,7 +249,7 @@ class AppThemes {
         latestMove: Color(0xdd0683d6),
         border: Color(0xffc2e3ff)
       ),
-       AppTheme(
+      AppTheme(
         name: 'Video Chess',
         background: LinearGradient(
           begin: Alignment.topCenter,
@@ -263,9 +263,23 @@ class AppThemes {
         darkTile: Color(0xff382db5),
         moveHint: Color(0x88c4c6ff),
         latestMove: Color(0x88c47937)
+      ),
+      AppTheme(
+        name: 'AMOLED',
+        background: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xff000000),
+            Color(0xff000000),
+          ]
+        ),
+        lightTile: Color(0xff333333),
+        darkTile: Color(0xff111111),
+        border: Color(0xff000000)
       )
     ];
     themeList.sort((a, b) => a.name.compareTo(b.name));
     return themeList;
-  } 
+  }
 }
