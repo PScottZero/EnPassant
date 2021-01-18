@@ -30,17 +30,21 @@ class GameStatus extends StatelessWidget {
         }
       }
     } else {
-      if (appModel.playerCount == 1) {
-        if (appModel.isAIsTurn) {
-          return 'You Win!';
-        } else {
-          return 'You Lose :(';
-        }
+      if (appModel.stalemate) {
+        return 'Stalemate';
       } else {
-        if (appModel.turn == Player.player1) {
-          return 'Black wins!';
+        if (appModel.playerCount == 1) {
+          if (appModel.isAIsTurn) {
+            return 'You Win!';
+          } else {
+            return 'You Lose :(';
+          }
         } else {
-          return 'White wins!';
+          if (appModel.turn == Player.player1) {
+            return 'Black wins!';
+          } else {
+            return 'White wins!';
+          }
         }
       }
     }

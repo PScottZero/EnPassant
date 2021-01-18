@@ -27,8 +27,10 @@ class AppModel extends ChangeNotifier {
   bool showMoveHistory = true;
   bool soundEnabled = true;
   bool showHints = true;
+  bool flip = true;
 
   bool gameOver = false;
+  bool stalemate = false;
   Player turn = Player.player1;
   List<MoveMeta> moveMetaList = [];
   Duration player1TimeLeft = Duration.zero;
@@ -79,6 +81,7 @@ class AppModel extends ChangeNotifier {
 
   void resetGame() {
     gameOver = false;
+    stalemate = false;
     turn = Player.player1;
     moveMetaList = [];
     player1TimeLeft = timeLimit;
@@ -164,6 +167,13 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setFlipBoard(bool flip) async {
+    final prefs = await SharedPreferences.getInstance();
+    this.flip = flip;
+    prefs.setBool('flip', flip);
+    notifyListeners();
+  }
+
   void loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     themeName = prefs.getString('themeName') ?? 'Green';
@@ -171,6 +181,7 @@ class AppModel extends ChangeNotifier {
     showMoveHistory = prefs.getBool('showMoveHistory') ?? true;
     soundEnabled = prefs.getBool('soundEnabled') ?? true;
     showHints = prefs.getBool('showHints') ?? true;
+    flip = prefs.getBool('flip') ?? true;
     notifyListeners();
   }
 

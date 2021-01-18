@@ -151,6 +151,10 @@ class ChessGame extends Game with TapDetector {
       checkHintTile = kingForPlayer(oppositeTurn, board).tile;
     }
     if (kingInCheckmate(oppositeTurn, board)) {
+      if (!meta.isCheck) {
+        appModel.stalemate = true;
+        meta.isStalemate = true;
+      }
       meta.isCheck = false;
       meta.isCheckmate = true;
       appModel.endGame();
@@ -164,7 +168,7 @@ class ChessGame extends Game with TapDetector {
   }
 
   int offsetToTile(Offset offset) {
-    if (appModel.playingWithAI && appModel.playerSide == Player.player2) {
+    if (appModel.flip && appModel.playingWithAI && appModel.playerSide == Player.player2) {
       return (7 - (offset.dy / tileSize).floor()) * 8 +
         7 - (offset.dx / tileSize).floor();
     } else {

@@ -2,6 +2,7 @@ import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,16 @@ class MoveList extends StatelessWidget {
         moveString += ' ';
       }
     });
+    if (appModel.gameOver) {
+      if (appModel.turn == Player.player1) {
+        moveString += ' ';
+      }
+      if (appModel.stalemate) {
+        moveString += '  ½-½';
+      } else {
+        moveString += appModel.turn == Player.player2 ? '  1-0' : '  0-1';
+      }
+    }
     return moveString;
   }
 
@@ -63,7 +74,7 @@ class MoveList extends StatelessWidget {
       String takeString = meta.took ? 'x' : '';
       String promotion = meta.promotion ? '=Q' : '';
       String check = meta.isCheck ? '+' : '';
-      String checkmate = meta.isCheckmate ? '#': '';
+      String checkmate = meta.isCheckmate && !meta.isStalemate ? '#': '';
       String row = '${8 - tileToRow(meta.move.to)}';
       String col = '${colToChar(tileToCol(meta.move.to))}';
       return '${pieceToChar(meta.type)}$ambiguity$takeString' +

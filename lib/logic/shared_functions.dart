@@ -6,12 +6,12 @@ int tileToRow(int tile) { return (tile / 8).floor(); }
 int tileToCol(int tile) { return tile % 8; }
 
 double getXFromTile(int tile, double tileSize, AppModel appModel) {
-  return appModel.playingWithAI && appModel.playerSide == Player.player2 ? 
+  return appModel.flip && appModel.playingWithAI && appModel.playerSide == Player.player2 ? 
     (7 - tileToCol(tile)) * tileSize : tileToCol(tile) * tileSize;
 }
 
 double getYFromTile(int tile, double tileSize, AppModel appModel) {
-  return appModel.playingWithAI && appModel.playerSide == Player.player2 ? 
+  return appModel.flip && appModel.playingWithAI && appModel.playerSide == Player.player2 ? 
     (7 - tileToRow(tile)) * tileSize : tileToRow(tile) * tileSize;
 }
 

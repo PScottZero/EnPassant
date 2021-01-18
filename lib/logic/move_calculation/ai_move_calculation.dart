@@ -8,8 +8,10 @@ import 'move_calculation.dart';
 import '../shared_functions.dart';
 import 'move_classes/move.dart';
 
-const INITIAL_ALPHA = -20000;
-const INITIAL_BETA = 20000;
+const INITIAL_ALPHA = -40000;
+const STALEMATE_ALPHA = -20000;
+const INITIAL_BETA = 40000;
+const STALEMATE_BETA = 20000;
 
 Move calculateAIMove(Map args) {
   return _alphaBeta(
@@ -41,6 +43,9 @@ MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move,
       beta = min(beta, bestMove.value);
       if (beta <= alpha) { break; }
     }
+  }
+  if (bestMove.value.abs() == INITIAL_BETA && !kingInCheck(player, board)) {
+    bestMove.value = player == Player.player1 ? STALEMATE_ALPHA : STALEMATE_BETA;
   }
   return bestMove;
 }

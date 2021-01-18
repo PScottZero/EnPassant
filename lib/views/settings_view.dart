@@ -41,6 +41,11 @@ class SettingsView extends StatelessWidget {
                     setFunc: appModel.setShowMoveHistory
                   ),
                   Toggle(
+                    'Flip Board For Black',
+                    toggle: appModel.flip,
+                    setFunc: appModel.setFlipBoard
+                  ),
+                  Toggle(
                     'Sound Enabled',
                     toggle: appModel.soundEnabled,
                     setFunc: appModel.setSoundEnabled

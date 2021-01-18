@@ -13,6 +13,7 @@ class MoveMeta {
   bool promotion = false;
   bool isCheck = false;
   bool isCheckmate = false;
+  bool isStalemate = false;
   bool rowIsAmbiguous = false;
   bool colIsAmbiguous = false;
   MoveMeta(this.move, this.player, this.type);
