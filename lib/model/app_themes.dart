@@ -274,9 +274,9 @@ class AppThemes {
             Color(0xff000000),
           ]
         ),
-        lightTile: Color(0xff333333),
-        darkTile: Color(0xff111111),
-        border: Color(0xff000000)
+        lightTile: Color(0xff444444),
+        darkTile: Color(0xff333333),
+        border: Color(0xff555555)
       )
     ];
     themeList.sort((a, b) => a.name.compareTo(b.name));
