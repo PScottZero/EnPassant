@@ -8,7 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_themes.dart';
 
 const TIMER_ACCURACY_MS = 100;
-const PIECE_THEMES = ['Classic', 'Angular', '8-Bit', 'Letters', 'Video Chess'];
+const PIECE_THEMES = [
+  'Classic', 'Angular', '8-Bit', 'Letters', 'Video Chess', 'Lewis Chessmen'
+];
 
 class AppModel extends ChangeNotifier {
   int playerCount = 1;

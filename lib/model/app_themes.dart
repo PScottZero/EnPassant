@@ -162,7 +162,7 @@ class AppThemes {
         darkTile: Color(0xff942222),
         moveHint: Color(0xcc5d27ba),
         checkHint: Color(0xffff0000),
-        border: Color(0xff8c5fd9)
+        border: Color(0xff6b0707)
       ),
       AppTheme(
         name: 'Vaporwave',
@@ -231,7 +231,8 @@ class AppThemes {
         ),
         lightTile: Color(0xfff0d656),
         darkTile: Color(0xff807126),
-        moveHint: Color(0xdd444444)
+        moveHint: Color(0xdd444444),
+        border: Color(0xff5c563c)
       ),
       AppTheme(
         name: 'Aquamarine',
@@ -277,6 +278,22 @@ class AppThemes {
         lightTile: Color(0xff444444),
         darkTile: Color(0xff333333),
         border: Color(0xff555555)
+      ),
+      AppTheme(
+        name: 'Lewis',
+        background: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xff5e4523),
+            Color(0xff5e4523),
+          ]
+        ),
+        lightTile: Color(0xffdbd1c1),
+        darkTile: Color(0xffab3848),
+        moveHint: Color(0xdd800b0b),
+        latestMove: Color(0xddcc9c6c),
+        border: Color(0xffbdaa8c)
       )
     ];
     themeList.sort((a, b) => a.name.compareTo(b.name));
