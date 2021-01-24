@@ -9,6 +9,7 @@ class MoveStackObject {
   bool castled = false;
   bool promotion = false;
   bool enPassant = false;
+  List<List<Move>> possibleOpenings;
   MoveStackObject(this.move, this.movedPiece,
-    this.takenPiece, this.enPassantPiece);
+    this.takenPiece, this.enPassantPiece, this.possibleOpenings);
 }

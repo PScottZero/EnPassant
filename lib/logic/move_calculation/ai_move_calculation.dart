@@ -14,10 +14,15 @@ const INITIAL_BETA = 40000;
 const STALEMATE_BETA = 20000;
 
 Move calculateAIMove(Map args) {
-  return _alphaBeta(
-    args['board'], args['aiPlayer'], null, 0, args['aiDifficulty'],
-    INITIAL_ALPHA, INITIAL_BETA
-  ).move;
+  ChessBoard board = args['board'];
+  if (board.possibleOpenings.isNotEmpty) {
+    return _openingMove(board, args['aiPlayer']);
+  } else {
+    return _alphaBeta(
+      board, args['aiPlayer'], null, 0, args['aiDifficulty'],
+      INITIAL_ALPHA, INITIAL_BETA
+    ).move;
+  }
 }
 
 MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move,
@@ -48,4 +53,10 @@ MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move,
     bestMove.value = player == Player.player1 ? STALEMATE_ALPHA : STALEMATE_BETA;
   }
   return bestMove;
+}
+
+Move _openingMove(ChessBoard board, Player aiPlayer) {
+  List<Move> possibleMoves = board.possibleOpenings.map(
+    (opening) => opening[board.moveCount]).toList();
+  return possibleMoves[Random.secure().nextInt(possibleMoves.length)];
 }

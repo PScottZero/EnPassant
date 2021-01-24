@@ -59,7 +59,7 @@ List<int> movesForPiece(ChessPiece piece, ChessBoard board, {bool legal = true})
     default: { moves = []; }
   }
   if (legal) {
-    moves.removeWhere((move) => movePutsKingInCheck(piece, move, board));
+    moves.removeWhere((move) => _movePutsKingInCheck(piece, move, board));
   }
   return moves;
 }
@@ -87,11 +87,11 @@ List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
   for (var diagonal in diagonals) {
     var row = tileToRow(pawn.tile) + diagonal.up;
     var col = tileToCol(pawn.tile) + diagonal.right;
-    if (inBounds(row, col)) {
-      var takenPiece = board.tiles[rowColToTile(row, col)];
+    if (_inBounds(row, col)) {
+      var takenPiece = board.tiles[_rowColToTile(row, col)];
       if ((takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)) ||
-        _canTakeEnPassant(pawn.player, rowColToTile(row, col), board)) {
-        moves.add(rowColToTile(row, col));
+        _canTakeEnPassant(pawn.player, _rowColToTile(row, col), board)) {
+        moves.add(_rowColToTile(row, col));
       }
     }
   }
@@ -155,7 +155,7 @@ bool _canCastle(ChessPiece king, ChessPiece rook, ChessBoard board, bool legal) 
     while (tile != king.tile) {
       tile += offset;
       if ((board.tiles[tile] != null && tile != king.tile) ||
-        (legal && kingInCheckAtTile(tile, king.player, board))) {
+        (legal && _kingInCheckAtTile(tile, king.player, board))) {
         return false;
       }
     }
@@ -171,18 +171,18 @@ List<int> _movesFromDirections(
   for (var direction in directions) {
     var row = tileToRow(piece.tile);
     var col = tileToCol(piece.tile);
-    while (inBounds(row, col)) {
+    while (_inBounds(row, col)) {
       row += direction.up;
       col += direction.right;
-      if (inBounds(row, col)) {
-        var possiblePiece = board.tiles[rowColToTile(row, col)];
+      if (_inBounds(row, col)) {
+        var possiblePiece = board.tiles[_rowColToTile(row, col)];
         if (possiblePiece != null) {
           if (possiblePiece.player != piece.player) {
-            moves.add(rowColToTile(row, col));
+            moves.add(_rowColToTile(row, col));
           }
           break;
         } else {
-          moves.add(rowColToTile(row, col));
+          moves.add(_rowColToTile(row, col));
         }
       }
       if (!repeat) {
@@ -193,14 +193,14 @@ List<int> _movesFromDirections(
   return moves;
 }
 
-bool movePutsKingInCheck(ChessPiece piece, int move, ChessBoard board) {
+bool _movePutsKingInCheck(ChessPiece piece, int move, ChessBoard board) {
   push(Move(piece.tile, move), board);
   var check = kingInCheck(piece.player, board);
   pop(board);
   return check;
 }
 
-bool kingInCheckAtTile(int tile, Player player, ChessBoard board) {
+bool _kingInCheckAtTile(int tile, Player player, ChessBoard board) {
   for (var piece in piecesForPlayer(oppositePlayer(player), board)) {
     if (movesForPiece(piece, board, legal: false).contains(tile)) {
       return true;
@@ -227,15 +227,10 @@ bool kingInCheckmate(Player player, ChessBoard board) {
   return true;
 }
 
-bool tileIsOnEdge(int tile) {
-  return (tile >= 52 && tile < 64) || (tile >= 0 && tile < 8) ||
-    (tile % 8 == 0) || (tile % 8 == 7);
-}
-
-bool inBounds(int row, int col) {
+bool _inBounds(int row, int col) {
   return row >= 0 && row < 8 && col >= 0 && col < 8;
 }
 
-int rowColToTile(int row, int col) {
+int _rowColToTile(int row, int col) {
   return row * 8 + col;
 }
