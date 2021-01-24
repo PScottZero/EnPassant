@@ -285,8 +285,8 @@ class AppThemes {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xff5e4523),
-            Color(0xff5e4523),
+            Color(0xff423428),
+            Color(0xff423428),
           ]
         ),
         lightTile: Color(0xffdbd1c1),
