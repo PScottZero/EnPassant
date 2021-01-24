@@ -191,16 +191,18 @@ void _undoPromote(ChessBoard board, MoveStackObject mso) {
 void _checkEnPassant(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
   var offset = mso.movedPiece.player == Player.player1 ? 8 : -8;
   var tile = mso.movedPiece.tile + offset;
-  var takenPiece = board.tiles[tile];
-  if (takenPiece != null && takenPiece == board.enPassantPiece) {
-    _removePiece(takenPiece, board);
-    _setTile(takenPiece.tile, null, board);
-    mso.enPassant = true;
-  }
-  if (_canTakeEnPassant(mso.movedPiece)) {
-    board.enPassantPiece = mso.movedPiece;
-  } else {
-    board.enPassantPiece = null;
+  if (tile >= 0 && tile < 64) {
+    var takenPiece = board.tiles[tile];
+    if (takenPiece != null && takenPiece == board.enPassantPiece) {
+      _removePiece(takenPiece, board);
+      _setTile(takenPiece.tile, null, board);
+      mso.enPassant = true;
+    }
+    if (_canTakeEnPassant(mso.movedPiece)) {
+      board.enPassantPiece = mso.movedPiece;
+    } else {
+      board.enPassantPiece = null;
+    }
   }
 }
 
