@@ -124,25 +124,16 @@ class ChessGame extends Game with TapDetector {
     args['aiPlayer'] = appModel.aiTurn;
     args['aiDifficulty'] = appModel.aiDifficulty;
     args['board'] = board;
-    var move = calculateAIMove(args);
-    if (move == null || appModel.gameOver) {
-      appModel.endGame();
-    } else {
-      validMoves = [];
-      var meta = push(move, board, getMeta: true);
-      moveCompletion(meta);
-    }
-
-    // aiOperation = CancelableOperation.fromFuture(compute(calculateAIMove, args));
-    // aiOperation.value.then((move) {
-    //   if (move == null || appModel.gameOver) {
-    //     appModel.endGame();
-    //   } else {
-    //     validMoves = [];
-    //     var meta = push(move, board, getMeta: true);
-    //     moveCompletion(meta);
-    //   }
-    // });
+    aiOperation = CancelableOperation.fromFuture(compute(calculateAIMove, args));
+    aiOperation.value.then((move) {
+      if (move == null || appModel.gameOver) {
+        appModel.endGame();
+      } else {
+        validMoves = [];
+        var meta = push(move, board, getMeta: true);
+        moveCompletion(meta);
+      }
+    });
   }
 
   void cancelAIMove() {

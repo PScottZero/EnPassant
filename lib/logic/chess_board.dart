@@ -97,6 +97,11 @@ MoveMeta push(Move move, ChessBoard board, {bool getMeta = false}) {
       _checkEnPassant(board, mso, meta);
     }
   }
+  if (_canTakeEnPassant(mso.movedPiece)) {
+    board.enPassantPiece = mso.movedPiece;
+  } else {
+    board.enPassantPiece = null;
+  }
   if (meta.type == ChessPieceType.pawn && meta.took) {
     meta.rowIsAmbiguous = true;
   }
@@ -191,18 +196,11 @@ void _undoPromote(ChessBoard board, MoveStackObject mso) {
 void _checkEnPassant(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
   var offset = mso.movedPiece.player == Player.player1 ? 8 : -8;
   var tile = mso.movedPiece.tile + offset;
-  if (tile >= 0 && tile < 64) {
-    var takenPiece = board.tiles[tile];
-    if (takenPiece != null && takenPiece == board.enPassantPiece) {
-      _removePiece(takenPiece, board);
-      _setTile(takenPiece.tile, null, board);
-      mso.enPassant = true;
-    }
-    if (_canTakeEnPassant(mso.movedPiece)) {
-      board.enPassantPiece = mso.movedPiece;
-    } else {
-      board.enPassantPiece = null;
-    }
+  var takenPiece = board.tiles[tile];
+  if (takenPiece != null && takenPiece == board.enPassantPiece) {
+    _removePiece(takenPiece, board);
+    _setTile(takenPiece.tile, null, board);
+    mso.enPassant = true;
   }
 }
 
@@ -290,7 +288,7 @@ bool _promotion(ChessPiece movedPiece) {
 }
 
 bool _canTakeEnPassant(ChessPiece movedPiece) {
-  return movedPiece.moveCount == 1 &&
+  return movedPiece.moveCount == 1 && movedPiece.type == ChessPieceType.pawn &&
     (tileToRow(movedPiece.tile) == 3 || tileToRow(movedPiece.tile) == 4);
 }
 

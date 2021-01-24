@@ -22,7 +22,3 @@ Player oppositePlayer(Player player) {
 String pieceThemeFormat(String themeString) {
   return themeString.toLowerCase().replaceAll(' ', '');
 }
-
-bool tileInBounds(int tile) {
-  return tile >= 0 && tile < 64;
-}
