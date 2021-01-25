@@ -15,9 +15,6 @@ const STALEMATE_BETA = 20000;
 
 Move calculateAIMove(Map args) {
   ChessBoard board = args['board'];
-  if (args['aiDifficulty'] < 4) {
-    board.possibleOpenings = [];
-  }
   if (board.possibleOpenings.isNotEmpty) {
     return _openingMove(board, args['aiPlayer']);
   } else {
@@ -30,7 +27,7 @@ Move calculateAIMove(Map args) {
 MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move, int depth,
     int maxDepth, int alpha, int beta) {
   if (depth == maxDepth) {
-    return MoveAndValue(move, boardValue(board, maxDepth));
+    return MoveAndValue(move, boardValue(board));
   }
   var bestMove = MoveAndValue(
       null, player == Player.player1 ? INITIAL_ALPHA : INITIAL_BETA);

@@ -20,13 +20,11 @@ class MoveList extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(15)),
           color: Color(0x20000000),
         ),
-        child: SingleChildScrollView(
+        child: ListView(
           scrollDirection: Axis.horizontal,
           controller: scrollController,
           padding: EdgeInsets.only(left: 15, right: 15),
-          child: Center(
-            child: TextRegular(allMoves(appModel)),
-          ),
+          children: [Center(child: TextRegular(allMoves(appModel)))],
         ),
       ),
     );

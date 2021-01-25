@@ -40,7 +40,7 @@ List<Move> allMoves(Player player, ChessBoard board, int aiDifficulty) {
     for (var tile in tiles) {
       var move = MoveAndValue(Move(piece.tile, tile), 0);
       push(move.move, board);
-      move.value = boardValue(board, aiDifficulty);
+      move.value = boardValue(board);
       pop(board);
       moves.add(move);
     }
