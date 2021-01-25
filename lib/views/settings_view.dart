@@ -29,7 +29,7 @@ class SettingsView extends StatelessWidget {
                   AppThemePicker(),
                   SizedBox(height: 20),
                   PieceThemePicker(),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Toggle(
                     'Show Hints',
                     toggle: appModel.showHints,
