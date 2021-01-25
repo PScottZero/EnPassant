@@ -32,7 +32,7 @@ const KING_QUEEN_MOVES = [
   UP_LEFT
 ];
 
-List<Move> allMoves(Player player, ChessBoard board) {
+List<Move> allMoves(Player player, ChessBoard board, int aiDifficulty) {
   List<MoveAndValue> moves = [];
   var pieces = List.from(piecesForPlayer(player, board));
   for (var piece in pieces) {
@@ -40,7 +40,7 @@ List<Move> allMoves(Player player, ChessBoard board) {
     for (var tile in tiles) {
       var move = MoveAndValue(Move(piece.tile, tile), 0);
       push(move.move, board);
-      move.value = boardValue(board);
+      move.value = boardValue(board, aiDifficulty);
       pop(board);
       moves.add(move);
     }

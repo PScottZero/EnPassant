@@ -67,10 +67,14 @@ class ChessBoard {
   }
 }
 
-int boardValue(ChessBoard board) {
+int boardValue(ChessBoard board, int aiDifficulty) {
   int value = 0;
   for (var piece in board.player1Pieces + board.player2Pieces) {
-    value += piece.value + squareValue(piece, _inEndGame(board));
+    if (aiDifficulty < 4) {
+      value += piece.value;
+    } else {
+      value += piece.value + squareValue(piece, _inEndGame(board));
+    }
   }
   return value;
 }

@@ -30,11 +30,11 @@ Move calculateAIMove(Map args) {
 MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move, int depth,
     int maxDepth, int alpha, int beta) {
   if (depth == maxDepth) {
-    return MoveAndValue(move, boardValue(board));
+    return MoveAndValue(move, boardValue(board, maxDepth));
   }
   var bestMove = MoveAndValue(
       null, player == Player.player1 ? INITIAL_ALPHA : INITIAL_BETA);
-  for (var move in allMoves(player, board)) {
+  for (var move in allMoves(player, board, maxDepth)) {
     push(move, board);
     var result = _alphaBeta(
         board, oppositePlayer(player), move, depth + 1, maxDepth, alpha, beta);
