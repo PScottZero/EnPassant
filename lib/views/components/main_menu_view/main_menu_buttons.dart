@@ -9,7 +9,7 @@ import '../../settings_view.dart';
 
 class MainMenuButtons extends StatelessWidget {
   final AppModel appModel;
-  
+
   MainMenuButtons(this.appModel);
 
   @override
@@ -18,28 +18,46 @@ class MainMenuButtons extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [
-          RoundedButton('Start', onPressed: () {
-            Navigator.push(context,
-              CupertinoPageRoute(builder: (context) =>
-                ChessView(ChessGame(appModel, context)))
-            );
-          }),
+          RoundedButton(
+            'Start',
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => ChessView(
+                    ChessGame(appModel, context),
+                  ),
+                ),
+              );
+            },
+          ),
           SizedBox(height: 10),
-          Row(children: [
-            Expanded(
-              child: RoundedButton('GitHub', onPressed: () {
-                openGitHub();
-              })
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: RoundedButton('Settings', onPressed: () {
-                Navigator.push(context,
-                  CupertinoPageRoute(builder: (context) => SettingsView())
-                );
-              })
-            )
-          ])
+          Row(
+            children: [
+              Expanded(
+                child: RoundedButton(
+                  'GitHub',
+                  onPressed: () {
+                    openGitHub();
+                  },
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: RoundedButton(
+                  'Settings',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => SettingsView(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

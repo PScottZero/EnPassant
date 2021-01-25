@@ -15,9 +15,9 @@ class Timers extends StatelessWidget {
         children: [
           TimerWidget(timeLeft: player1TimeLeft, color: Colors.white),
           SizedBox(width: 10),
-          TimerWidget(timeLeft: player2TimeLeft, color: Colors.black)
-        ]
-      )
+          TimerWidget(timeLeft: player2TimeLeft, color: Colors.black),
+        ],
+      ),
     );
   }
 }

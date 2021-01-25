@@ -18,19 +18,17 @@ class MoveList extends StatelessWidget {
         height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
-          color: Color(0x20000000)
+          color: Color(0x20000000),
         ),
-        child: ListView(
+        child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           controller: scrollController,
           padding: EdgeInsets.only(left: 15, right: 15),
-          children: [
-            Center(
-              child: TextRegular(allMoves(appModel))
-            )
-          ],
-        )
-      )
+          child: Center(
+            child: TextRegular(allMoves(appModel)),
+          ),
+        ),
+      ),
     );
   }
 
@@ -70,28 +68,48 @@ class MoveList extends StatelessWidget {
     } else if (meta.queenCastle) {
       move = 'O-O-O';
     } else {
-      String ambiguity = meta.rowIsAmbiguous ? '${colToChar(tileToCol(meta.move.from))}' : '';
-      ambiguity += meta.colIsAmbiguous ? '${8 - tileToRow(meta.move.from)}' : '';
+      String ambiguity =
+          meta.rowIsAmbiguous ? '${colToChar(tileToCol(meta.move.from))}' : '';
+      ambiguity +=
+          meta.colIsAmbiguous ? '${8 - tileToRow(meta.move.from)}' : '';
       String takeString = meta.took ? 'x' : '';
       String promotion = meta.promotion ? '=Q' : '';
       String row = '${8 - tileToRow(meta.move.to)}';
       String col = '${colToChar(tileToCol(meta.move.to))}';
       move = '${pieceToChar(meta.type)}$ambiguity$takeString' +
-        '$col$row$promotion';
+          '$col$row$promotion';
     }
     String check = meta.isCheck ? '+' : '';
-    String checkmate = meta.isCheckmate && !meta.isStalemate ? '#': '';
+    String checkmate = meta.isCheckmate && !meta.isStalemate ? '#' : '';
     return move + '$check$checkmate';
   }
 
   String pieceToChar(ChessPieceType type) {
     switch (type) {
-      case ChessPieceType.king: { return 'K'; }
-      case ChessPieceType.queen: { return 'Q'; }
-      case ChessPieceType.rook: { return 'R'; }
-      case ChessPieceType.bishop: { return 'B'; }
-      case ChessPieceType.knight: { return 'N'; }
-      default: { return ''; }
+      case ChessPieceType.king:
+        {
+          return 'K';
+        }
+      case ChessPieceType.queen:
+        {
+          return 'Q';
+        }
+      case ChessPieceType.rook:
+        {
+          return 'R';
+        }
+      case ChessPieceType.bishop:
+        {
+          return 'B';
+        }
+      case ChessPieceType.knight:
+        {
+          return 'N';
+        }
+      default:
+        {
+          return '';
+        }
     }
   }
 

@@ -24,17 +24,20 @@ class UndoRedoButtons extends StatelessWidget {
         Expanded(
           child: RoundedIconButton(
             CupertinoIcons.arrow_counterclockwise,
-            onPressed: undoEnabled ? () => undo() : null
-          )
+            onPressed: undoEnabled ? () => undo() : null,
+          ),
         ),
-        !appModel.playingWithAI ?
-          SizedBox(width: 10) : Container(),
-        !appModel.playingWithAI ?
-          Expanded(child: RoundedIconButton(
-            CupertinoIcons.arrow_clockwise,
-            onPressed: game.board.redoStack.isNotEmpty ?
-              () => game.redoMove() : null
-          )) : Container(),
+        !appModel.playingWithAI ? SizedBox(width: 10) : Container(),
+        !appModel.playingWithAI
+            ? Expanded(
+                child: RoundedIconButton(
+                  CupertinoIcons.arrow_clockwise,
+                  onPressed: game.board.redoStack.isNotEmpty
+                      ? () => game.redoMove()
+                      : null,
+                ),
+              )
+            : Container(),
       ],
     );
   }

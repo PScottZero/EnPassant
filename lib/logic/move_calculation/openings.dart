@@ -1,49 +1,59 @@
 import 'move_classes/move.dart';
 
 var openings = [
-  [ // Ruy Lopez
+  [
+    // Ruy Lopez
     Move(tileToInt('e2'), tileToInt('e4')),
     Move(tileToInt('e7'), tileToInt('e5')),
     Move(tileToInt('g1'), tileToInt('f3')),
     Move(tileToInt('b8'), tileToInt('c6')),
     Move(tileToInt('f1'), tileToInt('b5')),
   ],
-  [ // Italian Game
+  [
+    // Italian Game
     Move(tileToInt('e2'), tileToInt('e4')),
     Move(tileToInt('e7'), tileToInt('e5')),
     Move(tileToInt('g1'), tileToInt('f3')),
     Move(tileToInt('b8'), tileToInt('c6')),
     Move(tileToInt('f1'), tileToInt('c4'))
   ],
-  [ // Sicilian Defense
+  [
+    // Sicilian Defense
     Move(tileToInt('e2'), tileToInt('e4')),
     Move(tileToInt('c7'), tileToInt('c5')),
   ],
-  [ // French Defense
+  [
+    // French Defense
     Move(tileToInt('e2'), tileToInt('e4')),
     Move(tileToInt('e7'), tileToInt('e6')),
   ],
-  [ // Caro-Kann Defense
+  [
+    // Caro-Kann Defense
     Move(tileToInt('e2'), tileToInt('e4')),
     Move(tileToInt('c7'), tileToInt('c6')),
   ],
-  [ // Pirc Defense
+  [
+    // Pirc Defense
     Move(tileToInt('e2'), tileToInt('e4')),
     Move(tileToInt('d7'), tileToInt('d6')),
   ],
-  [ // Queen's Gambit
+  [
+    // Queen's Gambit
     Move(tileToInt('d2'), tileToInt('d4')),
     Move(tileToInt('d7'), tileToInt('d5')),
     Move(tileToInt('c2'), tileToInt('c4')),
   ],
-  [ // Indian Defense
+  [
+    // Indian Defense
     Move(tileToInt('d2'), tileToInt('d4')),
     Move(tileToInt('g8'), tileToInt('f6')),
   ],
-  [ // English Opening
+  [
+    // English Opening
     Move(tileToInt('c2'), tileToInt('c4')),
   ],
-  [ // Reti Opening
+  [
+    // Reti Opening
     Move(tileToInt('g1'), tileToInt('f3')),
   ]
 ];

@@ -18,6 +18,7 @@ class PiecePreview extends Game {
       5: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/pawn_white.png',
     };
   }
+
   Map<int, Sprite> spriteMap = Map();
   bool rendered = false;
 
@@ -31,21 +32,21 @@ class PiecePreview extends Game {
   @override
   void render(Canvas canvas) {
     for (var index = 0; index < 6; index++) {
-      canvas.drawRect(Rect.fromLTWH(
-          (index % 2) * 40.0, (index / 2).floor() * 40.0, 40, 40
-      ), Paint()..color = (index + (index / 2).floor()) % 2 == 0 ? 
-          appModel.theme.lightTile : appModel.theme.darkTile
+      canvas.drawRect(
+        Rect.fromLTWH((index % 2) * 40.0, (index / 2).floor() * 40.0, 40, 40),
+        Paint()
+          ..color = (index + (index / 2).floor()) % 2 == 0
+              ? appModel.theme.lightTile
+              : appModel.theme.darkTile,
       );
-      spriteMap[index].renderRect(canvas,
+      spriteMap[index].renderRect(
+        canvas,
         Rect.fromLTWH(
-          (index % 2) * 40.0 + 5,
-          (index / 2).floor() * 40.0 + 5,
-          30, 30
-        )
+            (index % 2) * 40.0 + 5, (index / 2).floor() * 40.0 + 5, 30, 30),
       );
     }
   }
-  
+
   @override
   void update(double t) {}
 }

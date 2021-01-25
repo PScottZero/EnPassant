@@ -9,21 +9,23 @@ class TimeLimitPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      TextSmall('Time Limit'),
-      SizedBox(height: 10),
-      Container(
-        child: CupertinoTimerPicker(
-          initialTimerDuration: selectedTime,
-          mode: CupertinoTimerPickerMode.hm,
-          onTimerDurationChanged: setTime
+    return Column(
+      children: [
+        TextSmall('Time Limit'),
+        SizedBox(height: 10),
+        Container(
+          child: CupertinoTimerPicker(
+            initialTimerDuration: selectedTime,
+            mode: CupertinoTimerPickerMode.hm,
+            onTimerDurationChanged: setTime,
+          ),
+          height: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Color(0x20000000),
+          ),
         ),
-        height: 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Color(0x20000000)
-        ),
-      ),
-    ]);
+      ],
+    );
   }
 }

@@ -18,21 +18,25 @@ class AppThemePicker extends StatelessWidget {
             ),
             CupertinoPicker(
               scrollController: FixedExtentScrollController(
-                initialItem: appModel.themeIndex
+                initialItem: appModel.themeIndex,
               ),
               itemExtent: 50,
               onSelectedItemChanged: appModel.setTheme,
-              children: AppThemes.themeList.map((theme) => Container(
-                padding: EdgeInsets.all(10),
-                child: TextRegular(theme.name)
-              )).toList()
+              children: themeList
+                  .map(
+                    (theme) => Container(
+                      padding: EdgeInsets.all(10),
+                      child: TextRegular(theme.name),
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         ),
         height: 120,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
-          color: Color(0x20000000)
+          color: Color(0x20000000),
         ),
       ),
     );

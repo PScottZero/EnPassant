@@ -11,28 +11,30 @@ class Picker<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      TextSmall(label),
-      SizedBox(height: 10),
-      Container(
-        child: CupertinoTheme(
-          data: CupertinoThemeData(
-            textTheme: CupertinoTextThemeData(
-              textStyle: TextStyle(fontFamily: 'Jura', fontSize: 8)
-            )
+    return Column(
+      children: [
+        TextSmall(label),
+        SizedBox(height: 10),
+        Container(
+          child: CupertinoTheme(
+            data: CupertinoThemeData(
+              textTheme: CupertinoTextThemeData(
+                textStyle: TextStyle(fontFamily: 'Jura', fontSize: 8),
+              ),
+            ),
+            child: CupertinoSlidingSegmentedControl<T>(
+              children: options,
+              groupValue: selection,
+              onValueChanged: (T val) {
+                setFunc(val);
+              },
+              thumbColor: Color(0x88FFFFFF),
+              backgroundColor: Color(0x20000000),
+            ),
           ),
-          child: CupertinoSlidingSegmentedControl<T>(
-            children: options,
-            groupValue: selection,
-            onValueChanged: (T val) {
-              setFunc(val);
-            },
-            thumbColor: Color(0x88FFFFFF),
-            backgroundColor: Color(0x20000000),
-          ),
-        ),
-        width: double.infinity,
-      )
-    ]);
+          width: double.infinity,
+        )
+      ],
+    );
   }
 }

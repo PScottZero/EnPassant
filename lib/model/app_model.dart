@@ -9,7 +9,12 @@ import 'app_themes.dart';
 
 const TIMER_ACCURACY_MS = 100;
 const PIECE_THEMES = [
-  'Classic', 'Angular', '8-Bit', 'Letters', 'Video Chess', 'Lewis Chessmen'
+  'Classic',
+  'Angular',
+  '8-Bit',
+  'Letters',
+  'Video Chess',
+  'Lewis Chessmen'
 ];
 
 class AppModel extends ChangeNotifier {
@@ -25,7 +30,11 @@ class AppModel extends ChangeNotifier {
     pieceThemes.sort();
     return pieceThemes;
   }
-  AppTheme get theme { return AppThemes.themeList[themeIndex]; }
+
+  AppTheme get theme {
+    return themeList[themeIndex];
+  }
+
   bool showMoveHistory = true;
   bool allowUndoRedo = true;
   bool soundEnabled = true;
@@ -41,7 +50,7 @@ class AppModel extends ChangeNotifier {
 
   int get themeIndex {
     var themeIndex = 0;
-    AppThemes.themeList.asMap().forEach((index, theme) {
+    themeList.asMap().forEach((index, theme) {
       if (theme.name == themeName) {
         themeIndex = index;
       }
@@ -59,13 +68,21 @@ class AppModel extends ChangeNotifier {
     return pieceThemeIndex;
   }
 
-  Player get aiTurn { return oppositePlayer(playerSide); }
+  Player get aiTurn {
+    return oppositePlayer(playerSide);
+  }
 
-  bool get isAIsTurn { return playingWithAI && (turn == aiTurn); }
+  bool get isAIsTurn {
+    return playingWithAI && (turn == aiTurn);
+  }
 
-  bool get playingWithAI { return playerCount == 1; }
+  bool get playingWithAI {
+    return playerCount == 1;
+  }
 
-  AppModel() { loadSharedPrefs(); }
+  AppModel() {
+    loadSharedPrefs();
+  }
 
   void pushMoveMeta(MoveMeta meta) {
     moveMetaList.add(meta);
@@ -100,7 +117,8 @@ class AppModel extends ChangeNotifier {
     player1TimeLeft = timeLimit;
     player2TimeLeft = timeLimit;
     if (selectedSide == Player.random) {
-      playerSide = Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
+      playerSide =
+          Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
     }
   }
 
@@ -132,7 +150,7 @@ class AppModel extends ChangeNotifier {
   void decrementPlayer1Timer() async {
     if (player1TimeLeft.inSeconds > 0 && !gameOver) {
       player1TimeLeft = Duration(
-        milliseconds: player1TimeLeft.inMilliseconds - TIMER_ACCURACY_MS);
+          milliseconds: player1TimeLeft.inMilliseconds - TIMER_ACCURACY_MS);
       notifyListeners();
     }
   }
@@ -140,13 +158,13 @@ class AppModel extends ChangeNotifier {
   void decrementPlayer2Timer() async {
     if (player2TimeLeft.inSeconds > 0 && !gameOver) {
       player2TimeLeft = Duration(
-        milliseconds: player2TimeLeft.inMilliseconds - TIMER_ACCURACY_MS);
+          milliseconds: player2TimeLeft.inMilliseconds - TIMER_ACCURACY_MS);
       notifyListeners();
     }
   }
 
   void setTheme(int index) async {
-    themeName = AppThemes.themeList[index].name;
+    themeName = themeList[index].name;
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('themeName', themeName);
     notifyListeners();
@@ -206,5 +224,7 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void update() { notifyListeners(); }
+  void update() {
+    notifyListeners();
+  }
 }

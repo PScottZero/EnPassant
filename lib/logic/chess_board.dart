@@ -51,7 +51,7 @@ class ChessBoard {
       var id = player == Player.player1 ? index * 2 : index * 2 + 16;
       var piece = ChessPiece(id, pieceType, player, kingRowOffset + index);
       var pawn = ChessPiece(id + 1, ChessPieceType.pawn, player,
-        kingRowOffset + pawnRowOffset + index);
+          kingRowOffset + pawnRowOffset + index);
       _setTile(piece.tile, piece, this);
       _setTile(pawn.tile, pawn, this);
       piecesForPlayer(player, this).addAll([piece, pawn]);
@@ -76,11 +76,9 @@ int boardValue(ChessBoard board) {
 }
 
 MoveMeta push(Move move, ChessBoard board, {bool getMeta = false}) {
-  var mso = MoveStackObject(move, board.tiles[move.from],
-    board.tiles[move.to], board.enPassantPiece,
-    List.from(board.possibleOpenings));
-  var meta = MoveMeta(move, mso.movedPiece.player,
-    mso.movedPiece.type);
+  var mso = MoveStackObject(move, board.tiles[move.from], board.tiles[move.to],
+      board.enPassantPiece, List.from(board.possibleOpenings));
+  var meta = MoveMeta(move, mso.movedPiece.player, mso.movedPiece.type);
   if (board.possibleOpenings.isNotEmpty) {
     _filterPossibleOpenings(board, move);
   }
@@ -114,7 +112,7 @@ MoveMeta push(Move move, ChessBoard board, {bool getMeta = false}) {
 MoveStackObject pop(ChessBoard board) {
   var mso = board.moveStack.removeLast();
   board.enPassantPiece = mso.enPassantPiece;
-  board.possibleOpenings = mso.possibleOpenings; 
+  board.possibleOpenings = mso.possibleOpenings;
   if (mso.castled) {
     _undoCastle(board, mso);
   } else {
@@ -152,28 +150,31 @@ void _undoStandardMove(ChessBoard board, MoveStackObject mso) {
 }
 
 void _castle(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
-  var king = mso.movedPiece.type == ChessPieceType.king ?
-    mso.movedPiece : mso.takenPiece;
-  var rook = mso.movedPiece.type == ChessPieceType.rook ?
-    mso.movedPiece : mso.takenPiece;
+  var king = mso.movedPiece.type == ChessPieceType.king
+      ? mso.movedPiece
+      : mso.takenPiece;
+  var rook = mso.movedPiece.type == ChessPieceType.rook
+      ? mso.movedPiece
+      : mso.takenPiece;
   _setTile(king.tile, null, board);
   _setTile(rook.tile, null, board);
   var kingCol = tileToCol(rook.tile) == 0 ? 2 : 6;
   var rookCol = tileToCol(rook.tile) == 0 ? 3 : 5;
   _setTile(tileToRow(king.tile) * 8 + kingCol, king, board);
   _setTile(tileToRow(rook.tile) * 8 + rookCol, rook, board);
-  tileToCol(rook.tile) == 3 ? meta.queenCastle = true :
-    meta.kingCastle = true;
+  tileToCol(rook.tile) == 3 ? meta.queenCastle = true : meta.kingCastle = true;
   king.moveCount++;
   rook.moveCount++;
   mso.castled = true;
 }
 
 void _undoCastle(ChessBoard board, MoveStackObject mso) {
-  var king = mso.movedPiece.type == ChessPieceType.king ?
-    mso.movedPiece : mso.takenPiece;
-  var rook = mso.movedPiece.type == ChessPieceType.rook ?
-    mso.movedPiece : mso.takenPiece;
+  var king = mso.movedPiece.type == ChessPieceType.king
+      ? mso.movedPiece
+      : mso.takenPiece;
+  var rook = mso.movedPiece.type == ChessPieceType.rook
+      ? mso.movedPiece
+      : mso.takenPiece;
   _setTile(king.tile, null, board);
   _setTile(rook.tile, null, board);
   var rookCol = tileToCol(rook.tile) == 3 ? 0 : 7;
@@ -208,7 +209,8 @@ void _checkEnPassant(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
 
 void _checkMoveAmbiguity(Move move, MoveMeta moveMeta, ChessBoard board) {
   var piece = board.tiles[move.from];
-  for (var otherPiece in _piecesOfTypeForPlayer(piece.type, piece.player, board)) {
+  for (var otherPiece
+      in _piecesOfTypeForPlayer(piece.type, piece.player, board)) {
     if (piece != otherPiece) {
       if (movesForPiece(otherPiece, board).contains(move.to)) {
         if (tileToCol(otherPiece.tile) == tileToCol(piece.tile)) {
@@ -222,9 +224,11 @@ void _checkMoveAmbiguity(Move move, MoveMeta moveMeta, ChessBoard board) {
 }
 
 void _filterPossibleOpenings(ChessBoard board, Move move) {
-  board.possibleOpenings = board.possibleOpenings.where(
-    (opening) => opening[board.moveCount] == move &&
-    opening.length > board.moveCount + 1).toList();
+  board.possibleOpenings = board.possibleOpenings
+      .where((opening) =>
+          opening[board.moveCount] == move &&
+          opening.length > board.moveCount + 1)
+      .toList();
 }
 
 void _setTile(int tile, ChessPiece piece, ChessBoard board) {
@@ -270,7 +274,8 @@ List<ChessPiece> _queensForPlayer(Player player, ChessBoard board) {
   return player == Player.player1 ? board.player1Queens : board.player2Queens;
 }
 
-List<ChessPiece> _piecesOfTypeForPlayer(ChessPieceType type, Player player, ChessBoard board) {
+List<ChessPiece> _piecesOfTypeForPlayer(
+    ChessPieceType type, Player player, ChessBoard board) {
   List<ChessPiece> pieces = [];
   for (var piece in piecesForPlayer(player, board)) {
     if (piece.type == type) {
@@ -286,17 +291,18 @@ bool _castled(ChessPiece movedPiece, ChessPiece takenPiece) {
 
 bool _promotion(ChessPiece movedPiece) {
   return movedPiece.type == ChessPieceType.pawn &&
-    (tileToRow(movedPiece.tile) == 7 || tileToRow(movedPiece.tile) == 0);
+      (tileToRow(movedPiece.tile) == 7 || tileToRow(movedPiece.tile) == 0);
 }
 
 bool _canTakeEnPassant(ChessPiece movedPiece) {
-  return movedPiece.moveCount == 1 && movedPiece.type == ChessPieceType.pawn &&
-    (tileToRow(movedPiece.tile) == 3 || tileToRow(movedPiece.tile) == 4);
+  return movedPiece.moveCount == 1 &&
+      movedPiece.type == ChessPieceType.pawn &&
+      (tileToRow(movedPiece.tile) == 3 || tileToRow(movedPiece.tile) == 4);
 }
 
 bool _inEndGame(ChessBoard board) {
   return (_queensForPlayer(Player.player1, board).isEmpty &&
-    _queensForPlayer(Player.player2, board).isEmpty) ||
-    piecesForPlayer(Player.player1, board).length <= 3 ||
-    piecesForPlayer(Player.player2, board).length <= 3;
+          _queensForPlayer(Player.player2, board).isEmpty) ||
+      piecesForPlayer(Player.player1, board).length <= 3 ||
+      piecesForPlayer(Player.player2, board).length <= 3;
 }

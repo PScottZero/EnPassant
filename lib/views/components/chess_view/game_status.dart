@@ -9,8 +9,7 @@ class GameStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
-      builder: (context, appModel, child) =>
-        TextRegular(getStatus(appModel))
+      builder: (context, appModel, child) => TextRegular(getStatus(appModel)),
     );
   }
 

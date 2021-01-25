@@ -18,34 +18,38 @@ class PieceThemePicker extends StatelessWidget {
                 child: TextSmall('Piece Theme'),
                 padding: EdgeInsets.all(10),
               ),
-              Row(children: [
-                Expanded(
-                  child: CupertinoPicker(
-                    scrollController: FixedExtentScrollController(
-                      initialItem: appModel.pieceThemeIndex
+              Row(
+                children: [
+                  Expanded(
+                    child: CupertinoPicker(
+                      scrollController: FixedExtentScrollController(
+                        initialItem: appModel.pieceThemeIndex,
+                      ),
+                      itemExtent: 50,
+                      onSelectedItemChanged: appModel.setPieceTheme,
+                      children: appModel.pieceThemes
+                          .map(
+                            (theme) => Container(
+                              padding: EdgeInsets.all(10),
+                              child: TextRegular(theme),
+                            ),
+                          )
+                          .toList(),
                     ),
-                    itemExtent: 50,
-                    onSelectedItemChanged: appModel.setPieceTheme,
-                    children: appModel.pieceThemes.map((theme) => Container(
-                      padding: EdgeInsets.all(10),
-                      child: TextRegular(theme)
-                    )).toList()
-                  )
-                ),
-                Container(
-                  height: 120,
-                  width: 80,
-                  child: PiecePreview(appModel).widget
-                )
-              ]
-            ),
-          ]),
-          height: 120,
-          decoration: BoxDecoration(
-            color: Color(0x20000000)
+                  ),
+                  Container(
+                    height: 120,
+                    width: 80,
+                    child: PiecePreview(appModel).widget,
+                  ),
+                ],
+              ),
+            ],
           ),
+          height: 120,
+          decoration: BoxDecoration(color: Color(0x20000000)),
         ),
-      )
+      ),
     );
   }
 }

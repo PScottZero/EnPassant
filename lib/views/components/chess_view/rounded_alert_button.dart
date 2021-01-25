@@ -7,8 +7,8 @@ class RoundedAlertButton extends StatelessWidget {
   final String label;
   final Function onConfirm;
 
-  RoundedAlertButton(this.label, { @required this.onConfirm });
-  
+  RoundedAlertButton(this.label, {@required this.onConfirm});
+
   @override
   Widget build(BuildContext context) {
     return RoundedButton(label, onPressed: () {
@@ -17,10 +17,15 @@ class RoundedAlertButton extends StatelessWidget {
         builder: (BuildContext context) {
           return CupertinoAlertDialog(
             title: TextDefault(label),
-            content: TextDefault('Are you sure you want to ${label.toLowerCase()}?'),
+            content: TextDefault(
+              'Are you sure you want to ${label.toLowerCase()}?',
+            ),
             actions: [
               CupertinoButton(
-                child: TextDefault(label, color: CupertinoColors.destructiveRed),
+                child: TextDefault(
+                  label,
+                  color: CupertinoColors.destructiveRed,
+                ),
                 onPressed: () {
                   onConfirm();
                   Navigator.pop(context);
@@ -31,10 +36,10 @@ class RoundedAlertButton extends StatelessWidget {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-              )
-            ]
+              ),
+            ],
           );
-        }
+        },
       );
     });
   }

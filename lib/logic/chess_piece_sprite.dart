@@ -54,11 +54,13 @@ class ChessPieceSprite {
       }
     }
   }
-  
+
   void initSprite(ChessPiece piece) {
     String color = piece.player == Player.player1 ? 'white' : 'black';
-    String pieceName = type.toString().substring(type.toString().indexOf('.') + 1);
-    sprite = Sprite('pieces/${pieceThemeFormat(pieceTheme)}/${pieceName}_$color.png');
+    String pieceName =
+        type.toString().substring(type.toString().indexOf('.') + 1);
+    sprite = Sprite(
+        'pieces/${pieceThemeFormat(pieceTheme)}/${pieceName}_$color.png');
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {

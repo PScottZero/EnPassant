@@ -3,12 +3,13 @@ import 'package:flutter/cupertino.dart';
 
 class LoadingAnimation extends StatelessWidget {
   final AppModel appModel;
-  
+
   LoadingAnimation(this.appModel);
 
   @override
   Widget build(BuildContext context) {
-    return !appModel.gameOver && appModel.playerCount == 1 && appModel.isAIsTurn ?
-      CupertinoActivityIndicator(radius: 12) : Container();
+    return !appModel.gameOver && appModel.playerCount == 1 && appModel.isAIsTurn
+        ? CupertinoActivityIndicator(radius: 12)
+        : Container();
   }
 }

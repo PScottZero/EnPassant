@@ -7,7 +7,7 @@ class Toggle extends StatelessWidget {
   final Function setFunc;
 
   Toggle(this.label, {this.toggle, this.setFunc});
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,9 +19,9 @@ class Toggle extends StatelessWidget {
           CupertinoSwitch(
             value: toggle,
             onChanged: setFunc,
-          )
+          ),
         ],
-      )
+      ),
     );
   }
 }

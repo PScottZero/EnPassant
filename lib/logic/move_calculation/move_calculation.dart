@@ -10,13 +10,26 @@ import 'move_classes/move.dart';
 const PAWN_DIAGONALS_1 = [DOWN_LEFT, DOWN_RIGHT];
 const PAWN_DIAGONALS_2 = [UP_LEFT, UP_RIGHT];
 const KNIGHT_MOVES = [
-  Direction(1, 2), Direction(-1, 2), Direction(1, -2), Direction(-1, -2),
-  Direction(2, 1), Direction(-2, 1), Direction(2, -1), Direction(-2, -1)
+  Direction(1, 2),
+  Direction(-1, 2),
+  Direction(1, -2),
+  Direction(-1, -2),
+  Direction(2, 1),
+  Direction(-2, 1),
+  Direction(2, -1),
+  Direction(-2, -1)
 ];
 const BISHOP_MOVES = [UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT];
 const ROOK_MOVES = [UP, RIGHT, DOWN, LEFT];
 const KING_QUEEN_MOVES = [
-  UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT
+  UP,
+  UP_RIGHT,
+  RIGHT,
+  DOWN_RIGHT,
+  DOWN,
+  DOWN_LEFT,
+  LEFT,
+  UP_LEFT
 ];
 
 List<Move> allMoves(Player player, ChessBoard board) {
@@ -36,27 +49,51 @@ List<Move> allMoves(Player player, ChessBoard board) {
   return moves.map((move) => move.move).toList();
 }
 
-int _compareMoves(MoveAndValue a, MoveAndValue b, Player player, ChessBoard board) {
-  return player == Player.player1 ?
-    b.value.compareTo(a.value) : a.value.compareTo(b.value);
+int _compareMoves(
+    MoveAndValue a, MoveAndValue b, Player player, ChessBoard board) {
+  return player == Player.player1
+      ? b.value.compareTo(a.value)
+      : a.value.compareTo(b.value);
 }
 
-List<int> movesForPiece(ChessPiece piece, ChessBoard board, {bool legal = true}) {
+List<int> movesForPiece(ChessPiece piece, ChessBoard board,
+    {bool legal = true}) {
   List<int> moves;
   switch (piece.type) {
-    case ChessPieceType.pawn: { moves = _pawnMoves(piece, board); }
-    break;
-    case ChessPieceType.knight: { moves = _knightMoves(piece, board); }
-    break;
-    case ChessPieceType.bishop: { moves = _bishopMoves(piece, board); }
-    break;
-    case ChessPieceType.rook: { moves = _rookMoves(piece, board, legal); }
-    break;
-    case ChessPieceType.queen: { moves = _queenMoves(piece, board); }
-    break;
-    case ChessPieceType.king: { moves = _kingMoves(piece, board, legal); }
-    break;
-    default: { moves = []; }
+    case ChessPieceType.pawn:
+      {
+        moves = _pawnMoves(piece, board);
+      }
+      break;
+    case ChessPieceType.knight:
+      {
+        moves = _knightMoves(piece, board);
+      }
+      break;
+    case ChessPieceType.bishop:
+      {
+        moves = _bishopMoves(piece, board);
+      }
+      break;
+    case ChessPieceType.rook:
+      {
+        moves = _rookMoves(piece, board, legal);
+      }
+      break;
+    case ChessPieceType.queen:
+      {
+        moves = _queenMoves(piece, board);
+      }
+      break;
+    case ChessPieceType.king:
+      {
+        moves = _kingMoves(piece, board, legal);
+      }
+      break;
+    default:
+      {
+        moves = [];
+      }
   }
   if (legal) {
     moves.removeWhere((move) => _movePutsKingInCheck(piece, move, board));
@@ -82,15 +119,16 @@ List<int> _pawnMoves(ChessPiece pawn, ChessBoard board) {
 
 List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
   List<int> moves = [];
-  var diagonals = pawn.player == Player.player1 ? 
-    PAWN_DIAGONALS_1 : PAWN_DIAGONALS_2;
+  var diagonals =
+      pawn.player == Player.player1 ? PAWN_DIAGONALS_1 : PAWN_DIAGONALS_2;
   for (var diagonal in diagonals) {
     var row = tileToRow(pawn.tile) + diagonal.up;
     var col = tileToCol(pawn.tile) + diagonal.right;
     if (_inBounds(row, col)) {
       var takenPiece = board.tiles[_rowColToTile(row, col)];
-      if ((takenPiece != null && takenPiece.player == oppositePlayer(pawn.player)) ||
-        _canTakeEnPassant(pawn.player, _rowColToTile(row, col), board)) {
+      if ((takenPiece != null &&
+              takenPiece.player == oppositePlayer(pawn.player)) ||
+          _canTakeEnPassant(pawn.player, _rowColToTile(row, col), board)) {
         moves.add(_rowColToTile(row, col));
       }
     }
@@ -101,7 +139,9 @@ List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
 bool _canTakeEnPassant(Player pawnPlayer, int diagonal, ChessBoard board) {
   var offset = (pawnPlayer == Player.player1) ? 8 : -8;
   var takenPiece = board.tiles[diagonal + offset];
-  return takenPiece != null && takenPiece.player != pawnPlayer && takenPiece == board.enPassantPiece;
+  return takenPiece != null &&
+      takenPiece.player != pawnPlayer &&
+      takenPiece == board.enPassantPiece;
 }
 
 List<int> _knightMoves(ChessPiece knight, ChessBoard board) {
@@ -114,7 +154,7 @@ List<int> _bishopMoves(ChessPiece bishop, ChessBoard board) {
 
 List<int> _rookMoves(ChessPiece rook, ChessBoard board, bool legal) {
   return _movesFromDirections(rook, board, ROOK_MOVES, true) +
-    _rookCastleMove(rook, board, legal);
+      _rookCastleMove(rook, board, legal);
 }
 
 List<int> _queenMoves(ChessPiece queen, ChessBoard board) {
@@ -123,7 +163,7 @@ List<int> _queenMoves(ChessPiece queen, ChessBoard board) {
 
 List<int> _kingMoves(ChessPiece king, ChessBoard board, bool legal) {
   return _movesFromDirections(king, board, KING_QUEEN_MOVES, false) +
-    _kingCastleMoves(king, board, legal);
+      _kingCastleMoves(king, board, legal);
 }
 
 List<int> _rookCastleMove(ChessPiece rook, ChessBoard board, bool legal) {
@@ -148,14 +188,15 @@ List<int> _kingCastleMoves(ChessPiece king, ChessBoard board, bool legal) {
   return moves;
 }
 
-bool _canCastle(ChessPiece king, ChessPiece rook, ChessBoard board, bool legal) {
+bool _canCastle(
+    ChessPiece king, ChessPiece rook, ChessBoard board, bool legal) {
   if (rook.moveCount == 0 && king.moveCount == 0) {
     var offset = king.tile - rook.tile > 0 ? 1 : -1;
     var tile = rook.tile;
     while (tile != king.tile) {
       tile += offset;
       if ((board.tiles[tile] != null && tile != king.tile) ||
-        (legal && _kingInCheckAtTile(tile, king.player, board))) {
+          (legal && _kingInCheckAtTile(tile, king.player, board))) {
         return false;
       }
     }
@@ -164,9 +205,8 @@ bool _canCastle(ChessPiece king, ChessPiece rook, ChessBoard board, bool legal) 
   return false;
 }
 
-List<int> _movesFromDirections(
-  ChessPiece piece, ChessBoard board, List<Direction> directions, bool repeat
-) {
+List<int> _movesFromDirections(ChessPiece piece, ChessBoard board,
+    List<Direction> directions, bool repeat) {
   List<int> moves = [];
   for (var direction in directions) {
     var row = tileToRow(piece.tile);
@@ -211,7 +251,8 @@ bool _kingInCheckAtTile(int tile, Player player, ChessBoard board) {
 
 bool kingInCheck(Player player, ChessBoard board) {
   for (var piece in piecesForPlayer(oppositePlayer(player), board)) {
-    if (movesForPiece(piece, board, legal: false).contains(kingForPlayer(player, board).tile)) {
+    if (movesForPiece(piece, board, legal: false)
+        .contains(kingForPlayer(player, board).tile)) {
       return true;
     }
   }

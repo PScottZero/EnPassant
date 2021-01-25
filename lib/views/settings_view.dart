@@ -38,34 +38,37 @@ class SettingsView extends StatelessWidget {
                   Toggle(
                     'Allow Undo/Redo',
                     toggle: appModel.allowUndoRedo,
-                    setFunc: appModel.setAllowUndoRedo
+                    setFunc: appModel.setAllowUndoRedo,
                   ),
                   Toggle(
                     'Show Move History',
                     toggle: appModel.showMoveHistory,
-                    setFunc: appModel.setShowMoveHistory
+                    setFunc: appModel.setShowMoveHistory,
                   ),
                   Toggle(
                     'Flip Board For Black',
                     toggle: appModel.flip,
-                    setFunc: appModel.setFlipBoard
+                    setFunc: appModel.setFlipBoard,
                   ),
                   Toggle(
                     'Sound Enabled',
                     toggle: appModel.soundEnabled,
-                    setFunc: appModel.setSoundEnabled
+                    setFunc: appModel.setSoundEnabled,
                   ),
                 ],
               ),
             ),
             SizedBox(height: 30),
-            RoundedButton('Back', onPressed: () {
-              Navigator.pop(context);
-            }),
-            BottomPadding()
+            RoundedButton(
+              'Back',
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            BottomPadding(),
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }

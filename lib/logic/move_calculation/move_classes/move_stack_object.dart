@@ -10,6 +10,6 @@ class MoveStackObject {
   bool promotion = false;
   bool enPassant = false;
   List<List<Move>> possibleOpenings;
-  MoveStackObject(this.move, this.movedPiece,
-    this.takenPiece, this.enPassantPiece, this.possibleOpenings);
+  MoveStackObject(this.move, this.movedPiece, this.takenPiece,
+      this.enPassantPiece, this.possibleOpenings);
 }

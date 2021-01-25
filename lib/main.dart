@@ -8,12 +8,8 @@ import 'package:provider/provider.dart';
 import 'logic/shared_functions.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => AppModel(),
-      child: EnPassantApp()
-    )
-  );
+  runApp(ChangeNotifierProvider(
+      create: (context) => AppModel(), child: EnPassantApp()));
   _loadFlameAssets();
 }
 
@@ -22,7 +18,8 @@ void _loadFlameAssets() {
   for (var theme in PIECE_THEMES) {
     for (var color in ['black', 'white']) {
       for (var piece in ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']) {
-        pieceImages.add('pieces/${pieceThemeFormat(theme)}/${piece}_$color.png');
+        pieceImages
+            .add('pieces/${pieceThemeFormat(theme)}/${piece}_$color.png');
       }
     }
   }
@@ -42,7 +39,7 @@ class EnPassantApp extends StatelessWidget {
         textTheme: CupertinoTextThemeData(
           textStyle: TextStyle(fontFamily: 'Jura', fontSize: 16),
           pickerTextStyle: TextStyle(fontFamily: 'Jura'),
-        )
+        ),
       ),
       home: MainMenuView(),
     );

@@ -19,16 +19,13 @@ class _MainMenuViewState extends State<MainMenuView> {
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
       builder: (context, appModel, child) => Container(
-        decoration: BoxDecoration(
-          gradient: appModel.theme.background
-        ),
+        decoration: BoxDecoration(gradient: appModel.theme.background),
         padding: EdgeInsets.all(30),
         child: Column(
           children: [
             Container(
               padding: EdgeInsets.fromLTRB(
-                10, MediaQuery.of(context).padding.top + 10, 10, 0
-              ),
+                  10, MediaQuery.of(context).padding.top + 10, 10, 0),
               child: Image(image: AssetImage('assets/images/logo.png')),
             ),
             SizedBox(height: 20),
@@ -39,36 +36,38 @@ class _MainMenuViewState extends State<MainMenuView> {
                 children: [
                   GameModePicker(
                     appModel.playerCount,
-                    appModel.setPlayerCount
+                    appModel.setPlayerCount,
                   ),
                   SizedBox(height: 20),
                   appModel.playerCount == 1
-                    ? Column(children: [
-                        AIDifficultyPicker(
-                          appModel.aiDifficulty,
-                          appModel.setAIDifficulty
-                        ),
-                        SizedBox(height: 20),
-                        SidePicker(
-                          appModel.selectedSide,
-                          appModel.setPlayerSide
-                        ),
-                        SizedBox(height: 20)
-                      ])
-                    : Container(),
+                      ? Column(
+                          children: [
+                            AIDifficultyPicker(
+                              appModel.aiDifficulty,
+                              appModel.setAIDifficulty,
+                            ),
+                            SizedBox(height: 20),
+                            SidePicker(
+                              appModel.selectedSide,
+                              appModel.setPlayerSide,
+                            ),
+                            SizedBox(height: 20),
+                          ],
+                        )
+                      : Container(),
                   TimeLimitPicker(
                     selectedTime: appModel.timeLimit,
                     setTime: appModel.setTimeLimit,
                   ),
                 ],
-              )
+              ),
             ),
             SizedBox(height: 10),
             MainMenuButtons(appModel),
-            BottomPadding()
+            BottomPadding(),
           ],
         ),
-      )
+      ),
     );
   }
 }

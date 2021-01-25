@@ -4,12 +4,17 @@ class TextDefault extends StatelessWidget {
   final String text;
   final Color color;
 
-  TextDefault(this.text, { this.color = CupertinoColors.white });
+  TextDefault(this.text, {this.color = CupertinoColors.white});
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,
-      style: TextStyle(fontSize: 16, fontFamily: 'Jura', color: color)
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        fontFamily: 'Jura',
+        color: color,
+      ),
     );
   }
 }
@@ -38,7 +43,7 @@ class TextRegular extends StatelessWidget {
 
 class TextLarge extends StatelessWidget {
   final String text;
-  
+
   TextLarge(this.text);
 
   @override
