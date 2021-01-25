@@ -24,12 +24,12 @@ class ChessGame extends Game with TapDetector {
   BuildContext context;
   ChessBoard board = ChessBoard();
   Map<ChessPiece, ChessPieceSprite> spriteMap = Map();
-  Move latestMove;
-
+  
   CancelableOperation aiOperation;
   List<int> validMoves = [];
   ChessPiece selectedPiece;
   int checkHintTile;
+  Move latestMove;
 
   ChessGame(this.appModel, this.context) {
     appModel.resetGame();
@@ -39,29 +39,29 @@ class ChessGame extends Game with TapDetector {
     for (var piece in board.player1Pieces + board.player2Pieces) {
       spriteMap[piece] = ChessPieceSprite(piece, appModel.pieceTheme);
     }
-    initSpritePositions();
+    _initSpritePositions();
     if (appModel.isAIsTurn) {
-      aiMove();
+      _aiMove();
     }
   }
 
   @override
   void onTapDown(TapDownDetails details) {
     if (appModel.gameOver || !(appModel.isAIsTurn)) {
-      var tile = offsetToTile(details.localPosition);
+      var tile = _offsetToTile(details.localPosition);
       var touchedPiece = board.tiles[tile];
       if (selectedPiece != null && touchedPiece != null &&
         touchedPiece.player == selectedPiece.player) {
         if (validMoves.contains(tile)) {
-          movePiece(tile);
+          _movePiece(tile);
         } else {
           validMoves = [];
-          selectPiece(touchedPiece);
+          _selectPiece(touchedPiece);
         }
       } else if (selectedPiece == null) {
-        selectPiece(touchedPiece);
+        _selectPiece(touchedPiece);
       } else {
-        movePiece(tile);
+        _movePiece(tile);
       }
     }
   }
@@ -69,15 +69,15 @@ class ChessGame extends Game with TapDetector {
   @override
   void render(Canvas canvas) {
     if (appModel != null) {
-      drawBoard(canvas);
+      _drawBoard(canvas);
       if (appModel.showHints) {
-        drawCheckHint(canvas);
-        drawLatestMove(canvas);
+        _drawCheckHint(canvas);
+        _drawLatestMove(canvas);
       }
-      drawSelectedPieceHint(canvas);
-      drawPieces(canvas);
+      _drawSelectedPieceHint(canvas);
+      _drawPieces(canvas);
       if (appModel.showHints) {
-        drawMoveHints(canvas);
+        _drawMoveHints(canvas);
       }
     }
   }
@@ -91,13 +91,13 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void initSpritePositions() {
+  void _initSpritePositions() {
     for (var piece in board.player1Pieces + board.player2Pieces) {
       spriteMap[piece].initSpritePosition(tileSize, appModel);
     }
   }
 
-  void selectPiece(ChessPiece piece) {
+  void _selectPiece(ChessPiece piece) {
     if (piece != null) {
       if (piece.player == appModel.turn) {
         selectedPiece = piece;
@@ -111,14 +111,14 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void movePiece(int tile) {
+  void _movePiece(int tile) {
     if (validMoves.contains(tile)) {
       validMoves = [];
-      moveCompletion(push(Move(selectedPiece.tile, tile), board, getMeta: true));
+      _moveCompletion(push(Move(selectedPiece.tile, tile), board, getMeta: true));
     }
   }
 
-  void aiMove() async {
+  void _aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
     var args = Map();
     args['aiPlayer'] = appModel.aiTurn;
@@ -131,7 +131,7 @@ class ChessGame extends Game with TapDetector {
       } else {
         validMoves = [];
         var meta = push(move, board, getMeta: true);
-        moveCompletion(meta);
+        _moveCompletion(meta);
       }
     });
   }
@@ -142,7 +142,49 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void moveCompletion(MoveMeta meta) {
+  void undoMove() {
+    board.redoStack.add(pop(board));
+    if (appModel.moveMetaList.length > 1) {
+      var meta = appModel.moveMetaList[appModel.moveMetaList.length - 2];
+      _moveCompletion(meta, clearRedo: false, undoing: true);
+    } else {
+      _undoOpeningMove();
+      appModel.changeTurn();
+    }
+  }
+
+  void undoTwoMoves() {
+    pop(board);
+    pop(board);
+    appModel.popMoveMeta();
+    if (appModel.moveMetaList.length > 1) {
+      _moveCompletion(appModel.moveMetaList[appModel.moveMetaList.length - 2],
+        clearRedo: false, undoing: true);
+      appModel.changeTurn();
+    } else {
+      _undoOpeningMove();
+    }
+  }
+
+  void _undoOpeningMove() {
+    selectedPiece = null;
+    validMoves = [];
+    latestMove = null;
+    checkHintTile = null;
+    appModel.popMoveMeta();
+  }
+
+  void redoMove() {
+    _moveCompletion(push(board.redoStack.removeLast().move, board),
+      clearRedo: false);
+  }
+
+  void _moveCompletion(MoveMeta meta, { bool clearRedo = true,
+    bool undoing = false }) {
+    if (clearRedo) {
+      board.redoStack = [];
+    }
+    validMoves = [];
     latestMove = meta.move;
     checkHintTile = null;
     var oppositeTurn = oppositePlayer(appModel.turn);
@@ -159,15 +201,20 @@ class ChessGame extends Game with TapDetector {
       meta.isCheckmate = true;
       appModel.endGame();
     }
-    appModel.addMoveMeta(meta);
+    if (undoing) {
+      appModel.popMoveMeta();
+      appModel.unendGame();
+    } else {
+      appModel.pushMoveMeta(meta);
+    }
     appModel.changeTurn();
     selectedPiece = null;
-    if (appModel.isAIsTurn) {
-      aiMove();
+    if (appModel.isAIsTurn && !undoing) {
+      _aiMove();
     }
   }
 
-  int offsetToTile(Offset offset) {
+  int _offsetToTile(Offset offset) {
     if (appModel.flip && appModel.playingWithAI && appModel.playerSide == Player.player2) {
       return (7 - (offset.dy / tileSize).floor()) * 8 +
         7 - (offset.dx / tileSize).floor();
@@ -177,7 +224,7 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void drawBoard(Canvas canvas) {
+  void _drawBoard(Canvas canvas) {
     for (int tileNo = 0; tileNo < 64; tileNo++) {
       canvas.drawRect(
         Rect.fromLTWH(
@@ -191,7 +238,7 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void drawPieces(Canvas canvas) {
+  void _drawPieces(Canvas canvas) {
     for (var piece in board.player1Pieces + board.player2Pieces) {
       spriteMap[piece].sprite.renderRect(canvas, Rect.fromLTWH(
         spriteMap[piece].spriteX + 5,
@@ -201,7 +248,7 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void drawMoveHints(Canvas canvas) {
+  void _drawMoveHints(Canvas canvas) {
     for (var tile in validMoves) {
       canvas.drawCircle(
         Offset(
@@ -216,7 +263,7 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void drawLatestMove(Canvas canvas) {
+  void _drawLatestMove(Canvas canvas) {
     if (latestMove != null) {
       canvas.drawRect(
         Rect.fromLTWH(
@@ -237,7 +284,7 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void drawCheckHint(Canvas canvas) {
+  void _drawCheckHint(Canvas canvas) {
     if (checkHintTile != null) {
       canvas.drawRect(
         Rect.fromLTWH(
@@ -250,7 +297,7 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void drawSelectedPieceHint(Canvas canvas) {
+  void _drawSelectedPieceHint(Canvas canvas) {
     if (selectedPiece != null) {
       canvas.drawRect(
         Rect.fromLTWH(

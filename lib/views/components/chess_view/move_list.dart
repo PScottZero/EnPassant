@@ -20,16 +20,16 @@ class MoveList extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(15)),
           color: Color(0x20000000)
         ),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            controller: scrollController,
-            padding: EdgeInsets.only(left: 15, right: 15),
-            children: [
-              Center(
-                child: TextRegular(allMoves(appModel))
-              )
-            ],
-          )
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          controller: scrollController,
+          padding: EdgeInsets.only(left: 15, right: 15),
+          children: [
+            Center(
+              child: TextRegular(allMoves(appModel))
+            )
+          ],
+        )
       )
     );
   }
@@ -64,22 +64,24 @@ class MoveList extends StatelessWidget {
   }
 
   String moveToString(MoveMeta meta) {
+    String move;
     if (meta.kingCastle) {
-      return 'O-O';
+      move = 'O-O';
     } else if (meta.queenCastle) {
-      return 'O-O-O';
+      move = 'O-O-O';
     } else {
       String ambiguity = meta.rowIsAmbiguous ? '${colToChar(tileToCol(meta.move.from))}' : '';
       ambiguity += meta.colIsAmbiguous ? '${8 - tileToRow(meta.move.from)}' : '';
       String takeString = meta.took ? 'x' : '';
       String promotion = meta.promotion ? '=Q' : '';
-      String check = meta.isCheck ? '+' : '';
-      String checkmate = meta.isCheckmate && !meta.isStalemate ? '#': '';
       String row = '${8 - tileToRow(meta.move.to)}';
       String col = '${colToChar(tileToCol(meta.move.to))}';
-      return '${pieceToChar(meta.type)}$ambiguity$takeString' +
-        '$col$row$promotion$check$checkmate';
+      move = '${pieceToChar(meta.type)}$ambiguity$takeString' +
+        '$col$row$promotion';
     }
+    String check = meta.isCheck ? '+' : '';
+    String checkmate = meta.isCheckmate && !meta.isStalemate ? '#': '';
+    return move + '$check$checkmate';
   }
 
   String pieceToChar(ChessPieceType type) {

@@ -4,6 +4,7 @@ import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/chess_view/loading_animation.dart';
 import 'package:en_passant/views/components/chess_view/rounded_alert_button.dart';
+import 'package:en_passant/views/components/chess_view/undo_redo_buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -106,11 +107,16 @@ class _ChessViewState extends State<ChessView> {
                           ),
                           SizedBox(height: 14)
                         ]) : Container(),
-                      appModel.showMoveHistory ?
-                        Column(children: [
-                          MoveList(),
-                          SizedBox(height: 10)
-                        ]) : Container(),
+                      Row(children: [
+                        appModel.showMoveHistory ?
+                          Expanded(child: MoveList()) : Container(),
+                        appModel.showMoveHistory && appModel.allowUndoRedo ?
+                          SizedBox(width: 10) : Container(),
+                        appModel.allowUndoRedo ?
+                          Expanded(child: UndoRedoButtons(appModel, game)) : Container()
+                      ]),
+                      appModel.showMoveHistory || appModel.allowUndoRedo ?
+                        SizedBox(height: 10) : Container(),
                       Row(children: [
                         Expanded(
                           child: RoundedAlertButton('Restart', onConfirm: () {

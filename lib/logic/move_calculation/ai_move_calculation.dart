@@ -15,6 +15,9 @@ const STALEMATE_BETA = 20000;
 
 Move calculateAIMove(Map args) {
   ChessBoard board = args['board'];
+  if (args['aiDifficulty'] < 4) {
+    board.possibleOpenings = [];
+  }
   if (board.possibleOpenings.isNotEmpty) {
     return _openingMove(board, args['aiPlayer']);
   } else {

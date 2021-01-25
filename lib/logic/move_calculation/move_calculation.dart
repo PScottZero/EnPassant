@@ -32,11 +32,11 @@ List<Move> allMoves(Player player, ChessBoard board) {
       moves.add(move);
     }
   }
-  moves.sort((a, b) => compareMoves(a, b, player, board));
+  moves.sort((a, b) => _compareMoves(a, b, player, board));
   return moves.map((move) => move.move).toList();
 }
 
-int compareMoves(MoveAndValue a, MoveAndValue b, Player player, ChessBoard board) {
+int _compareMoves(MoveAndValue a, MoveAndValue b, Player player, ChessBoard board) {
   return player == Player.player1 ?
     b.value.compareTo(a.value) : a.value.compareTo(b.value);
 }

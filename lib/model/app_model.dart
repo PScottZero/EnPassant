@@ -27,6 +27,7 @@ class AppModel extends ChangeNotifier {
   }
   AppTheme get theme { return AppThemes.themeList[themeIndex]; }
   bool showMoveHistory = true;
+  bool allowUndoRedo = true;
   bool soundEnabled = true;
   bool showHints = true;
   bool flip = true;
@@ -66,13 +67,23 @@ class AppModel extends ChangeNotifier {
 
   AppModel() { loadSharedPrefs(); }
 
-  void addMoveMeta(MoveMeta meta) {
+  void pushMoveMeta(MoveMeta meta) {
     moveMetaList.add(meta);
+    notifyListeners();
+  }
+
+  void popMoveMeta() {
+    moveMetaList.removeLast();
     notifyListeners();
   }
 
   void endGame() {
     gameOver = true;
+    notifyListeners();
+  }
+
+  void unendGame() {
+    gameOver = false;
     notifyListeners();
   }
 
@@ -176,6 +187,13 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setAllowUndoRedo(bool allow) async {
+    final prefs = await SharedPreferences.getInstance();
+    this.allowUndoRedo = allow;
+    prefs.setBool('allowUndoRedo', allow);
+    notifyListeners();
+  }
+
   void loadSharedPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     themeName = prefs.getString('themeName') ?? 'Green';
@@ -184,6 +202,7 @@ class AppModel extends ChangeNotifier {
     soundEnabled = prefs.getBool('soundEnabled') ?? true;
     showHints = prefs.getBool('showHints') ?? true;
     flip = prefs.getBool('flip') ?? true;
+    allowUndoRedo = prefs.getBool('allowUndoRedo') ?? true;
     notifyListeners();
   }
 

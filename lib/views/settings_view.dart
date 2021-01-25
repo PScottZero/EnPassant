@@ -36,6 +36,11 @@ class SettingsView extends StatelessWidget {
                     setFunc: appModel.setShowHints,
                   ),
                   Toggle(
+                    'Allow Undo/Redo',
+                    toggle: appModel.allowUndoRedo,
+                    setFunc: appModel.setAllowUndoRedo
+                  ),
+                  Toggle(
                     'Show Move History',
                     toggle: appModel.showMoveHistory,
                     setFunc: appModel.setShowMoveHistory

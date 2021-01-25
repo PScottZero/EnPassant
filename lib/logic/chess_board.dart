@@ -23,6 +23,7 @@ const KING_ROW_PIECES = [
 class ChessBoard {
   List<ChessPiece> tiles = List(64);
   List<MoveStackObject> moveStack = [];
+  List<MoveStackObject> redoStack = [];
   List<ChessPiece> player1Pieces = [];
   List<ChessPiece> player2Pieces = [];
   List<ChessPiece> player1Rooks = [];
@@ -110,7 +111,7 @@ MoveMeta push(Move move, ChessBoard board, {bool getMeta = false}) {
   return meta;
 }
 
-void pop(ChessBoard board) {
+MoveStackObject pop(ChessBoard board) {
   var mso = board.moveStack.removeLast();
   board.enPassantPiece = mso.enPassantPiece;
   board.possibleOpenings = mso.possibleOpenings; 
@@ -127,6 +128,7 @@ void pop(ChessBoard board) {
     }
   }
   board.moveCount--;
+  return mso;
 }
 
 void _standardMove(ChessBoard board, MoveStackObject mso, MoveMeta meta) {

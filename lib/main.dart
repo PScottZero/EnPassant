@@ -14,10 +14,10 @@ void main() {
       child: EnPassantApp()
     )
   );
-  loadFlameAssets();
+  _loadFlameAssets();
 }
 
-loadFlameAssets() {
+void _loadFlameAssets() {
   List<String> pieceImages = [];
   for (var theme in PIECE_THEMES) {
     for (var color in ['black', 'white']) {
