@@ -115,9 +115,11 @@ class ChessGame extends Game with TapDetector {
   void _movePiece(int tile) {
     if (validMoves.contains(tile)) {
       validMoves = [];
-      _moveCompletion(
-        push(Move(selectedPiece.tile, tile), board, getMeta: true),
-      );
+      var meta = push(Move(selectedPiece.tile, tile), board, getMeta: true);
+      if (meta.promotion) {
+        appModel.requestPromotion();
+      }
+      _moveCompletion(meta, changeTurn: !meta.promotion);
     }
   }
 
@@ -136,7 +138,10 @@ class ChessGame extends Game with TapDetector {
       } else {
         validMoves = [];
         var meta = push(move, board, getMeta: true);
-        _moveCompletion(meta);
+        _moveCompletion(meta, changeTurn: !meta.promotion);
+        if (meta.promotion) {
+          promote(ChessPieceType.queen);
+        }
       }
     });
   }
@@ -159,13 +164,12 @@ class ChessGame extends Game with TapDetector {
   }
 
   void undoTwoMoves() {
-    pop(board);
-    pop(board);
+    board.redoStack.add(pop(board));
+    board.redoStack.add(pop(board));
     appModel.popMoveMeta();
     if (appModel.moveMetaList.length > 1) {
       _moveCompletion(appModel.moveMetaList[appModel.moveMetaList.length - 2],
-          clearRedo: false, undoing: true);
-      appModel.changeTurn();
+          clearRedo: false, undoing: true, changeTurn: false);
     } else {
       _undoOpeningMove();
     }
@@ -180,12 +184,32 @@ class ChessGame extends Game with TapDetector {
   }
 
   void redoMove() {
-    _moveCompletion(push(board.redoStack.removeLast().move, board),
+    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
         clearRedo: false);
   }
 
-  void _moveCompletion(MoveMeta meta,
-      {bool clearRedo = true, bool undoing = false}) {
+  void redoTwoMoves() {
+    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
+        clearRedo: false, changeTurn: false, updateMetaList: true);
+    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
+        clearRedo: false, changeTurn: false, updateMetaList: true);
+  }
+
+  void promote(ChessPieceType type) {
+    board.moveStack.last.movedPiece.type = type;
+    board.moveStack.last.promotionType = type;
+    addPromotedPiece(board, board.moveStack.last);
+    appModel.moveMetaList.last.promotionType = type;
+    _moveCompletion(appModel.moveMetaList.last, updateMetaList: false);
+  }
+
+  void _moveCompletion(
+    MoveMeta meta, {
+    bool clearRedo = true,
+    bool undoing = false,
+    bool changeTurn = true,
+    bool updateMetaList = true,
+  }) {
     if (clearRedo) {
       board.redoStack = [];
     }
@@ -209,12 +233,14 @@ class ChessGame extends Game with TapDetector {
     if (undoing) {
       appModel.popMoveMeta();
       appModel.unendGame();
-    } else {
+    } else if (updateMetaList) {
       appModel.pushMoveMeta(meta);
     }
-    appModel.changeTurn();
+    if (changeTurn) {
+      appModel.changeTurn();
+    }
     selectedPiece = null;
-    if (appModel.isAIsTurn && !undoing) {
+    if (appModel.isAIsTurn && changeTurn) {
       _aiMove();
     }
   }

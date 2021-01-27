@@ -15,6 +15,14 @@ class UndoRedoButtons extends StatelessWidget {
     }
   }
 
+  bool get redoEnabled {
+    if (appModel.playingWithAI) {
+      return game.board.redoStack.length > 1 && !appModel.isAIsTurn;
+    } else {
+      return game.board.redoStack.isNotEmpty;
+    }
+  }
+
   UndoRedoButtons(this.appModel, this.game);
 
   @override
@@ -27,17 +35,13 @@ class UndoRedoButtons extends StatelessWidget {
             onPressed: undoEnabled ? () => undo() : null,
           ),
         ),
-        !appModel.playingWithAI ? SizedBox(width: 10) : Container(),
-        !appModel.playingWithAI
-            ? Expanded(
-                child: RoundedIconButton(
-                  CupertinoIcons.arrow_clockwise,
-                  onPressed: game.board.redoStack.isNotEmpty
-                      ? () => game.redoMove()
-                      : null,
-                ),
-              )
-            : Container(),
+        SizedBox(width: 10),
+        Expanded(
+          child: RoundedIconButton(
+            CupertinoIcons.arrow_clockwise,
+            onPressed: redoEnabled ? () => redo() : null,
+          ),
+        ),
       ],
     );
   }
@@ -47,6 +51,14 @@ class UndoRedoButtons extends StatelessWidget {
       game.undoTwoMoves();
     } else {
       game.undoMove();
+    }
+  }
+
+  void redo() {
+    if (appModel.playingWithAI) {
+      game.redoTwoMoves();
+    } else {
+      game.redoMove();
     }
   }
 }

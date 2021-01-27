@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/chess_view/loading_animation.dart';
+import 'package:en_passant/views/components/chess_view/promotion_dialog.dart';
 import 'package:en_passant/views/components/chess_view/rounded_alert_button.dart';
 import 'package:en_passant/views/components/chess_view/undo_redo_buttons.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,8 +45,13 @@ class _ChessViewState extends State<ChessView> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
-    return Consumer<AppModel>(builder: (context, appModel, child) {
-      return WillPopScope(
+    return Consumer<AppModel>(
+      builder: (context, appModel, child) {
+        if (appModel.promotion) {
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => showPromotionDialog(appModel));
+        }
+        return WillPopScope(
           child: Container(
             decoration: BoxDecoration(gradient: appModel.theme.background),
             padding: EdgeInsets.all(30),
@@ -154,8 +160,19 @@ class _ChessViewState extends State<ChessView> {
               ],
             ),
           ),
-          onWillPop: _willPopCallback);
-    });
+          onWillPop: _willPopCallback,
+        );
+      },
+    );
+  }
+
+  void showPromotionDialog(AppModel appModel) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PromotionDialog(appModel, game);
+      },
+    );
   }
 
   void scrollToBottom() {

@@ -75,7 +75,9 @@ int boardValue(ChessBoard board) {
   return value;
 }
 
-MoveMeta push(Move move, ChessBoard board, {bool getMeta = false}) {
+MoveMeta push(Move move, ChessBoard board,
+    {bool getMeta = false,
+    ChessPieceType promotionType = ChessPieceType.promotion}) {
   var mso = MoveStackObject(move, board.tiles[move.from], board.tiles[move.to],
       board.enPassantPiece, List.from(board.possibleOpenings));
   var meta = MoveMeta(move, mso.movedPiece.player, mso.movedPiece.type);
@@ -91,6 +93,8 @@ MoveMeta push(Move move, ChessBoard board, {bool getMeta = false}) {
     _standardMove(board, mso, meta);
     if (mso.movedPiece.type == ChessPieceType.pawn) {
       if (_promotion(mso.movedPiece)) {
+        mso.promotionType = promotionType;
+        meta.promotionType = promotionType;
         _promote(board, mso, meta);
       }
       _checkEnPassant(board, mso, meta);
@@ -107,6 +111,10 @@ MoveMeta push(Move move, ChessBoard board, {bool getMeta = false}) {
   board.moveStack.add(mso);
   board.moveCount++;
   return meta;
+}
+
+MoveMeta pushMSO(MoveStackObject mso, ChessBoard board) {
+  return push(mso.move, board, promotionType: mso.promotionType);
 }
 
 MoveStackObject pop(ChessBoard board) {
@@ -185,15 +193,47 @@ void _undoCastle(ChessBoard board, MoveStackObject mso) {
 }
 
 void _promote(ChessBoard board, MoveStackObject mso, MoveMeta meta) {
-  mso.movedPiece.type = ChessPieceType.queen;
-  _queensForPlayer(mso.movedPiece.player, board).add(mso.movedPiece);
+  mso.movedPiece.type = mso.promotionType;
+  if (mso.promotionType != ChessPieceType.promotion) {
+    addPromotedPiece(board, mso);
+  }
   meta.promotion = true;
   mso.promotion = true;
 }
 
+void addPromotedPiece(ChessBoard board, MoveStackObject mso) {
+  switch (mso.promotionType) {
+    case ChessPieceType.queen:
+      {
+        _queensForPlayer(mso.movedPiece.player, board).add(mso.movedPiece);
+      }
+      break;
+    case ChessPieceType.rook:
+      {
+        rooksForPlayer(mso.movedPiece.player, board).add(mso.movedPiece);
+      }
+      break;
+    default:
+      {}
+  }
+}
+
 void _undoPromote(ChessBoard board, MoveStackObject mso) {
   mso.movedPiece.type = ChessPieceType.pawn;
-  _queensForPlayer(mso.movedPiece.player, board).remove(mso.movedPiece);
+  switch (mso.promotionType) {
+    case ChessPieceType.queen:
+      {
+        _queensForPlayer(mso.movedPiece.player, board).remove(mso.movedPiece);
+      }
+      break;
+    case ChessPieceType.rook:
+      {
+        rooksForPlayer(mso.movedPiece.player, board).remove(mso.movedPiece);
+      }
+      break;
+    default:
+      {}
+  }
 }
 
 void _checkEnPassant(ChessBoard board, MoveStackObject mso, MoveMeta meta) {

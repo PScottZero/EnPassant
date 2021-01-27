@@ -15,6 +15,20 @@ class MainMenuView extends StatefulWidget {
 }
 
 class _MainMenuViewState extends State<MainMenuView> {
+  Image logo;
+
+  @override
+  void initState() {
+    super.initState();
+    logo = Image.asset('assets/images/logo.png');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(logo.image, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
@@ -26,7 +40,7 @@ class _MainMenuViewState extends State<MainMenuView> {
             Container(
               padding: EdgeInsets.fromLTRB(
                   10, MediaQuery.of(context).padding.top + 10, 10, 0),
-              child: Image(image: AssetImage('assets/images/logo.png')),
+              child: Image(image: logo.image),
             ),
             SizedBox(height: 20),
             Expanded(

@@ -11,6 +11,7 @@ class MoveMeta {
   bool kingCastle = false;
   bool queenCastle = false;
   bool promotion = false;
+  ChessPieceType promotionType;
   bool isCheck = false;
   bool isCheckmate = false;
   bool isStalemate = false;

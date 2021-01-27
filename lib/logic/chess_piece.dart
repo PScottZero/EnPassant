@@ -1,6 +1,6 @@
 import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
 
-enum ChessPieceType { pawn, rook, knight, bishop, king, queen }
+enum ChessPieceType { pawn, rook, knight, bishop, king, queen, promotion }
 
 class ChessPiece {
   int id;

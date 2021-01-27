@@ -30,27 +30,37 @@ class ChessPieceSprite {
     }
     if (piece.tile != this.tile) {
       this.tile = piece.tile;
-    }
-    var currX = getXFromTile(tile, tileSize, appModel);
-    var currY = getYFromTile(tile, tileSize, appModel);
-    if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
-      spriteX = currX;
-      spriteY = currY;
       offsetX = 0;
       offsetY = 0;
+    }
+    var destX = getXFromTile(tile, tileSize, appModel);
+    var destY = getYFromTile(tile, tileSize, appModel);
+    if ((destX - spriteX).abs() <= 0.1) {
+      spriteX = destX;
+      offsetX = 0;
     } else {
       if (offsetX == 0) {
-        offsetX = (currX - spriteX) / 10;
-      }
-      if (offsetY == 0) {
-        offsetY = (currY - spriteY) / 10;
+        offsetX = (destX - spriteX) / 10;
       }
       spriteX += offsetX;
+      playSound(destX, destY, appModel);
+    }
+    if ((destY - spriteY).abs() <= 0.1) {
+      spriteY = destY;
+      offsetY = 0;
+    } else {
+      if (offsetY == 0) {
+        offsetY += (destY - spriteY) / 10;
+      }
       spriteY += offsetY;
-      if ((currX - spriteX).abs() <= 0.1 && (currY - spriteY).abs() <= 0.1) {
-        if (appModel.soundEnabled) {
-          Flame.audio.play('piece_moved.ogg');
-        }
+      playSound(destX, destY, appModel);
+    }
+  }
+
+  void playSound(double destX, double destY, AppModel appModel) {
+    if ((destX - spriteX).abs() <= 0.1 && (destY - spriteY).abs() <= 0.1) {
+      if (appModel.soundEnabled) {
+        Flame.audio.play('piece_moved.ogg');
       }
     }
   }
@@ -59,6 +69,9 @@ class ChessPieceSprite {
     String color = piece.player == Player.player1 ? 'white' : 'black';
     String pieceName =
         type.toString().substring(type.toString().indexOf('.') + 1);
+    if (piece.type == ChessPieceType.promotion) {
+      pieceName = 'pawn';
+    }
     sprite = Sprite(
         'pieces/${pieceThemeFormat(pieceTheme)}/${pieceName}_$color.png');
   }

@@ -20,11 +20,11 @@ class MoveList extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(15)),
           color: Color(0x20000000),
         ),
-        child: ListView(
+        child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           controller: scrollController,
           padding: EdgeInsets.only(left: 15, right: 15),
-          children: [Center(child: TextRegular(allMoves(appModel)))],
+          child: Center(child: TextRegular(allMoves(appModel))),
         ),
       ),
     );
@@ -71,7 +71,8 @@ class MoveList extends StatelessWidget {
       ambiguity +=
           meta.colIsAmbiguous ? '${8 - tileToRow(meta.move.from)}' : '';
       String takeString = meta.took ? 'x' : '';
-      String promotion = meta.promotion ? '=Q' : '';
+      String promotion =
+          meta.promotion ? '=${pieceToChar(meta.promotionType)}' : '';
       String row = '${8 - tileToRow(meta.move.to)}';
       String col = '${colToChar(tileToCol(meta.move.to))}';
       move = '${pieceToChar(meta.type)}$ambiguity$takeString' +
@@ -104,9 +105,13 @@ class MoveList extends StatelessWidget {
         {
           return 'N';
         }
-      default:
+      case ChessPieceType.pawn:
         {
           return '';
+        }
+      default:
+        {
+          return '?';
         }
     }
   }

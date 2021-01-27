@@ -8,6 +8,7 @@ class MoveStackObject {
   ChessPiece enPassantPiece;
   bool castled = false;
   bool promotion = false;
+  ChessPieceType promotionType;
   bool enPassant = false;
   List<List<Move>> possibleOpenings;
   MoveStackObject(this.move, this.movedPiece, this.takenPiece,

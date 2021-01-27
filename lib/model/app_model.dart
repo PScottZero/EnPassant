@@ -43,6 +43,8 @@ class AppModel extends ChangeNotifier {
 
   bool gameOver = false;
   bool stalemate = false;
+  bool promotion = false;
+  bool moveListUpdated = false;
   Player turn = Player.player1;
   List<MoveMeta> moveMetaList = [];
   Duration player1TimeLeft = Duration.zero;
@@ -86,11 +88,13 @@ class AppModel extends ChangeNotifier {
 
   void pushMoveMeta(MoveMeta meta) {
     moveMetaList.add(meta);
+    moveListUpdated = true;
     notifyListeners();
   }
 
   void popMoveMeta() {
     moveMetaList.removeLast();
+    moveListUpdated = true;
     notifyListeners();
   }
 
@@ -120,6 +124,16 @@ class AppModel extends ChangeNotifier {
       playerSide =
           Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
     }
+  }
+
+  void requestPromotion() {
+    promotion = true;
+    notifyListeners();
+  }
+
+  void endPromotionRequest() {
+    promotion = false;
+    notifyListeners();
   }
 
   void setPlayerCount(int count) {
