@@ -32,7 +32,7 @@ MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move, int depth,
   var bestMove = MoveAndValue(
       null, player == Player.player1 ? INITIAL_ALPHA : INITIAL_BETA);
   for (var move in allMoves(player, board, maxDepth)) {
-    push(move, board);
+    push(move, board, promotionType: move.promotionType);
     var result = _alphaBeta(
         board, oppositePlayer(player), move, depth + 1, maxDepth, alpha, beta);
     result.move = move;

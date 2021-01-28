@@ -140,7 +140,7 @@ class ChessGame extends Game with TapDetector {
         var meta = push(move, board, getMeta: true);
         _moveCompletion(meta, changeTurn: !meta.promotion);
         if (meta.promotion) {
-          promote(ChessPieceType.queen);
+          promote(move.promotionType);
         }
       }
     });

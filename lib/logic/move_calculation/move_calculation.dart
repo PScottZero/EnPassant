@@ -7,6 +7,13 @@ import '../chess_board.dart';
 import '../chess_piece.dart';
 import 'move_classes/move.dart';
 
+const PROMOTIONS = [
+  ChessPieceType.queen,
+  ChessPieceType.rook,
+  ChessPieceType.bishop,
+  ChessPieceType.knight
+];
+
 const PAWN_DIAGONALS_1 = [DOWN_LEFT, DOWN_RIGHT];
 const PAWN_DIAGONALS_2 = [UP_LEFT, UP_RIGHT];
 const KNIGHT_MOVES = [
@@ -38,11 +45,23 @@ List<Move> allMoves(Player player, ChessBoard board, int aiDifficulty) {
   for (var piece in pieces) {
     var tiles = movesForPiece(piece, board);
     for (var tile in tiles) {
-      var move = MoveAndValue(Move(piece.tile, tile), 0);
-      push(move.move, board);
-      move.value = boardValue(board);
-      pop(board);
-      moves.add(move);
+      if (piece.type == ChessPieceType.pawn &&
+          (tileToRow(tile) == 0 || tileToRow(tile) == 7)) {
+        for (var promotion in PROMOTIONS) {
+          var move =
+              MoveAndValue(Move(piece.tile, tile, promotionType: promotion), 0);
+          push(move.move, board, promotionType: promotion);
+          move.value = boardValue(board);
+          pop(board);
+          moves.add(move);
+        }
+      } else {
+        var move = MoveAndValue(Move(piece.tile, tile), 0);
+        push(move.move, board);
+        move.value = boardValue(board);
+        pop(board);
+        moves.add(move);
+      }
     }
   }
   moves.sort((a, b) => _compareMoves(a, b, player, board));
