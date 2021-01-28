@@ -308,7 +308,6 @@ List<AppTheme> get themeList {
       darkTile: Color(0xffb734eb),
       moveHint: Color(0xdd34eb62),
       latestMove: Color(0xddd9eb34),
-      border: Color(0xffd9eb34),
     )
   ];
   themeList.sort((a, b) => a.name.compareTo(b.name));
