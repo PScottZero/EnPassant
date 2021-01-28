@@ -19,7 +19,7 @@ void _loadFlameAssets() {
     for (var color in ['black', 'white']) {
       for (var piece in ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']) {
         pieceImages
-            .add('pieces/${pieceThemeFormat(theme)}/${piece}_$color.png');
+            .add('pieces/${formatPieceTheme(theme)}/${piece}_$color.png');
       }
     }
   }

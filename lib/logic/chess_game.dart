@@ -1,13 +1,13 @@
 import 'dart:ui';
 
 import 'package:async/async.dart';
-import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
 import 'package:en_passant/logic/chess_piece_sprite.dart';
+import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 import 'package:flame/game/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +32,6 @@ class ChessGame extends Game with TapDetector {
   Move latestMove;
 
   ChessGame(this.appModel, this.context) {
-    appModel.resetGame();
     width = MediaQuery.of(context).size.width - 68;
     tileSize = width / 8;
     resize(Size(width, width));
@@ -50,19 +49,24 @@ class ChessGame extends Game with TapDetector {
     if (appModel.gameOver || !(appModel.isAIsTurn)) {
       var tile = _offsetToTile(details.localPosition);
       var touchedPiece = board.tiles[tile];
-      if (selectedPiece != null &&
-          touchedPiece != null &&
-          touchedPiece.player == selectedPiece.player) {
-        if (validMoves.contains(tile)) {
-          _movePiece(tile);
-        } else {
-          validMoves = [];
-          _selectPiece(touchedPiece);
-        }
-      } else if (selectedPiece == null) {
-        _selectPiece(touchedPiece);
+      if (touchedPiece == selectedPiece) {
+        validMoves = [];
+        selectedPiece = null;
       } else {
-        _movePiece(tile);
+        if (selectedPiece != null &&
+            touchedPiece != null &&
+            touchedPiece.player == selectedPiece.player) {
+          if (validMoves.contains(tile)) {
+            _movePiece(tile);
+          } else {
+            validMoves = [];
+            _selectPiece(touchedPiece);
+          }
+        } else if (selectedPiece == null) {
+          _selectPiece(touchedPiece);
+        } else {
+          _movePiece(tile);
+        }
       }
     }
   }
@@ -190,9 +194,9 @@ class ChessGame extends Game with TapDetector {
 
   void redoTwoMoves() {
     _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
-        clearRedo: false, changeTurn: false, updateMetaList: true);
+        clearRedo: false, updateMetaList: true);
     _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
-        clearRedo: false, changeTurn: false, updateMetaList: true);
+        clearRedo: false, updateMetaList: true);
   }
 
   void promote(ChessPieceType type) {
@@ -232,7 +236,7 @@ class ChessGame extends Game with TapDetector {
     }
     if (undoing) {
       appModel.popMoveMeta();
-      appModel.unendGame();
+      appModel.undoEndGame();
     } else if (updateMetaList) {
       appModel.pushMoveMeta(meta);
     }
@@ -240,7 +244,7 @@ class ChessGame extends Game with TapDetector {
       appModel.changeTurn();
     }
     selectedPiece = null;
-    if (appModel.isAIsTurn && changeTurn) {
+    if (appModel.isAIsTurn && clearRedo && changeTurn) {
       _aiMove();
     }
   }

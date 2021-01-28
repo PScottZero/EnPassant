@@ -1,4 +1,4 @@
-import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 
 import '../../chess_piece.dart';
 import 'move.dart';
@@ -17,5 +17,6 @@ class MoveMeta {
   bool isStalemate = false;
   bool rowIsAmbiguous = false;
   bool colIsAmbiguous = false;
+
   MoveMeta(this.move, this.player, this.type);
 }

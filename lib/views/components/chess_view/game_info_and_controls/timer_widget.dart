@@ -38,7 +38,7 @@ class TimerWidget extends StatelessWidget {
           duration.inSeconds.remainder(60).toString().padLeft(2, '0');
       return '$minutes:$seconds';
     } else {
-      String seconds = duration.inSeconds.toString().padLeft(2, '0');
+      String seconds = duration.inSeconds.toString();
       return '$seconds';
     }
   }

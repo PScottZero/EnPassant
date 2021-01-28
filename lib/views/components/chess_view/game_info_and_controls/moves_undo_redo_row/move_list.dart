@@ -2,39 +2,42 @@ import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class MoveList extends StatelessWidget {
+  final AppModel appModel;
   final ScrollController scrollController = ScrollController();
+
+  MoveList(this.appModel);
 
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
-    return Consumer<AppModel>(
-      builder: (context, appModel, child) => Container(
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          color: Color(0x20000000),
-        ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          controller: scrollController,
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: Center(child: TextRegular(allMoves(appModel))),
-        ),
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        color: Color(0x20000000),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        controller: scrollController,
+        padding: EdgeInsets.only(left: 15, right: 15),
+        child: Center(child: TextRegular(allMoves())),
       ),
     );
   }
 
   void scrollToBottom() {
-    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    if (appModel.moveListUpdated) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      appModel.moveListUpdated = false;
+    }
   }
 
-  String allMoves(AppModel appModel) {
+  String allMoves() {
     var moveString = '';
     appModel.moveMetaList.asMap().forEach((index, move) {
       var turnNumber = ((index + 1) / 2).ceil();

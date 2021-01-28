@@ -1,11 +1,11 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/settings_view/piece_theme_picker.dart';
-import 'package:en_passant/views/components/settings_view/toggle.dart';
 import 'package:en_passant/views/components/shared/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'components/settings_view/app_theme_picker.dart';
+import 'components/settings_view/toggles.dart';
 import 'components/shared/bottom_padding.dart';
 import 'components/shared/text_variable.dart';
 
@@ -30,31 +30,7 @@ class SettingsView extends StatelessWidget {
                   SizedBox(height: 20),
                   PieceThemePicker(),
                   SizedBox(height: 10),
-                  Toggle(
-                    'Show Hints',
-                    toggle: appModel.showHints,
-                    setFunc: appModel.setShowHints,
-                  ),
-                  Toggle(
-                    'Allow Undo/Redo',
-                    toggle: appModel.allowUndoRedo,
-                    setFunc: appModel.setAllowUndoRedo,
-                  ),
-                  Toggle(
-                    'Show Move History',
-                    toggle: appModel.showMoveHistory,
-                    setFunc: appModel.setShowMoveHistory,
-                  ),
-                  Toggle(
-                    'Flip Board For Black',
-                    toggle: appModel.flip,
-                    setFunc: appModel.setFlipBoard,
-                  ),
-                  Toggle(
-                    'Sound Enabled',
-                    toggle: appModel.soundEnabled,
-                    setFunc: appModel.setSoundEnabled,
-                  ),
+                  Toggles(appModel),
                 ],
               ),
             ),

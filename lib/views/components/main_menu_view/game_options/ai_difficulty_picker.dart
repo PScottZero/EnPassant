@@ -1,5 +1,6 @@
-import 'package:en_passant/views/components/main_menu_view/picker.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'picker.dart';
 
 class AIDifficultyPicker extends StatelessWidget {
   final Map<int, Text> difficultyOptions = {

@@ -1,5 +1,6 @@
-import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
+
+import '../shared/text_variable.dart';
 
 class Toggle extends StatelessWidget {
   final String label;

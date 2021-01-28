@@ -1,17 +1,17 @@
 import 'dart:math';
 
 import 'package:en_passant/logic/move_calculation/move_classes/move_and_value.dart';
-import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 
 import '../chess_board.dart';
-import 'move_calculation.dart';
 import '../shared_functions.dart';
+import 'move_calculation.dart';
 import 'move_classes/move.dart';
 
 const INITIAL_ALPHA = -40000;
-const STALEMATE_ALPHA = -20000;
+const STALEMATE_ALPHA = 20000;
 const INITIAL_BETA = 40000;
-const STALEMATE_BETA = 20000;
+const STALEMATE_BETA = -20000;
 
 Move calculateAIMove(Map args) {
   ChessBoard board = args['board'];

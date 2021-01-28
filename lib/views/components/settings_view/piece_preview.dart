@@ -8,14 +8,15 @@ import 'package:flutter/cupertino.dart';
 
 class PiecePreview extends Game {
   AppModel appModel;
+
   Map<int, String> get imageMap {
     return {
-      0: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/king_black.png',
-      1: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/queen_white.png',
-      2: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/rook_white.png',
-      3: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/bishop_black.png',
-      4: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/knight_black.png',
-      5: 'pieces/${pieceThemeFormat(appModel.pieceTheme)}/pawn_white.png',
+      0: 'pieces/${formatPieceTheme(appModel.pieceTheme)}/king_black.png',
+      1: 'pieces/${formatPieceTheme(appModel.pieceTheme)}/queen_white.png',
+      2: 'pieces/${formatPieceTheme(appModel.pieceTheme)}/rook_white.png',
+      3: 'pieces/${formatPieceTheme(appModel.pieceTheme)}/bishop_black.png',
+      4: 'pieces/${formatPieceTheme(appModel.pieceTheme)}/knight_black.png',
+      5: 'pieces/${formatPieceTheme(appModel.pieceTheme)}/pawn_white.png',
     };
   }
 

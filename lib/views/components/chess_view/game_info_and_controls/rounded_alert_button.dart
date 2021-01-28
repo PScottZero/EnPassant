@@ -1,7 +1,8 @@
-import 'package:en_passant/views/components/shared/rounded_button.dart';
-import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../shared/rounded_button.dart';
+import '../../shared/text_variable.dart';
 
 class RoundedAlertButton extends StatelessWidget {
   final String label;

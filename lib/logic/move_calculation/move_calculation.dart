@@ -1,18 +1,12 @@
 import 'package:en_passant/logic/move_calculation/move_classes/direction.dart';
 import 'package:en_passant/logic/move_calculation/move_classes/move_and_value.dart';
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:en_passant/views/components/chess_view/promotion_dialog.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 
 import '../chess_board.dart';
 import '../chess_piece.dart';
 import 'move_classes/move.dart';
-
-const PROMOTIONS = [
-  ChessPieceType.queen,
-  ChessPieceType.rook,
-  ChessPieceType.bishop,
-  ChessPieceType.knight
-];
 
 const PAWN_DIAGONALS_1 = [DOWN_LEFT, DOWN_RIGHT];
 const PAWN_DIAGONALS_2 = [UP_LEFT, UP_RIGHT];
@@ -230,7 +224,7 @@ List<int> _movesFromDirections(ChessPiece piece, ChessBoard board,
   for (var direction in directions) {
     var row = tileToRow(piece.tile);
     var col = tileToCol(piece.tile);
-    while (_inBounds(row, col)) {
+    do {
       row += direction.up;
       col += direction.right;
       if (_inBounds(row, col)) {
@@ -247,7 +241,7 @@ List<int> _movesFromDirections(ChessPiece piece, ChessBoard board,
       if (!repeat) {
         break;
       }
-    }
+    } while (_inBounds(row, col));
   }
   return moves;
 }

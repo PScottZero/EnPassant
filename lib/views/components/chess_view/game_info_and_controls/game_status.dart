@@ -1,5 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 import 'package:en_passant/views/components/shared/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,15 @@ class GameStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
-      builder: (context, appModel, child) => TextRegular(getStatus(appModel)),
+      builder: (context, appModel, child) => Row(
+        children: [
+          TextRegular(getStatus(appModel)),
+          !appModel.gameOver && appModel.playerCount == 1 && appModel.isAIsTurn
+              ? CupertinoActivityIndicator(radius: 12)
+              : Container()
+        ],
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
     );
   }
 

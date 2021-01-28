@@ -1,8 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
-import 'package:en_passant/views/components/main_menu_view/game_mode_picker.dart';
-import 'package:en_passant/views/components/main_menu_view/ai_difficulty_picker.dart';
-import 'package:en_passant/views/components/main_menu_view/time_limit_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options.dart';
 import 'package:en_passant/views/components/shared/bottom_padding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -43,39 +40,7 @@ class _MainMenuViewState extends State<MainMenuView> {
               child: Image(image: logo.image),
             ),
             SizedBox(height: 20),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                physics: ClampingScrollPhysics(),
-                children: [
-                  GameModePicker(
-                    appModel.playerCount,
-                    appModel.setPlayerCount,
-                  ),
-                  SizedBox(height: 20),
-                  appModel.playerCount == 1
-                      ? Column(
-                          children: [
-                            AIDifficultyPicker(
-                              appModel.aiDifficulty,
-                              appModel.setAIDifficulty,
-                            ),
-                            SizedBox(height: 20),
-                            SidePicker(
-                              appModel.selectedSide,
-                              appModel.setPlayerSide,
-                            ),
-                            SizedBox(height: 20),
-                          ],
-                        )
-                      : Container(),
-                  TimeLimitPicker(
-                    selectedTime: appModel.timeLimit,
-                    setTime: appModel.setTimeLimit,
-                  ),
-                ],
-              ),
-            ),
+            GameOptions(appModel),
             SizedBox(height: 10),
             MainMenuButtons(appModel),
             BottomPadding(),

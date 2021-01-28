@@ -1,6 +1,7 @@
 class Direction {
   final int up;
   final int right;
+
   const Direction(this.up, this.right);
 }
 

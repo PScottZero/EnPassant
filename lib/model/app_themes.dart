@@ -54,10 +54,10 @@ List<AppTheme> get themeList {
         ],
       ),
       lightTile: Color(0xff0088ff),
-      darkTile: Color(0xff8800aa),
+      darkTile: Color(0xff8934eb),
       moveHint: Color(0xdddb70eb),
       checkHint: Color(0x88ff0000),
-      latestMove: Color(0xcc25804f),
+      latestMove: Color(0xcc2dba6f),
       border: Color(0xffdb70eb),
     ),
     AppTheme(
@@ -292,6 +292,23 @@ List<AppTheme> get themeList {
       moveHint: Color(0xdd800b0b),
       latestMove: Color(0xddcc9c6c),
       border: Color(0xffbdaa8c),
+    ),
+    AppTheme(
+      name: 'Neon',
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xffb734eb),
+          Color(0xff34d3eb),
+          Color(0xff34eb62),
+        ],
+      ),
+      lightTile: Color(0xff34d3eb),
+      darkTile: Color(0xffb734eb),
+      moveHint: Color(0xdd34eb62),
+      latestMove: Color(0xddd9eb34),
+      border: Color(0xffd9eb34),
     )
   ];
   themeList.sort((a, b) => a.name.compareTo(b.name));

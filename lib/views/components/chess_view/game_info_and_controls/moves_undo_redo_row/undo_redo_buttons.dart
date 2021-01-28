@@ -1,29 +1,27 @@
-import 'package:en_passant/logic/chess_game.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/components/chess_view/rounded_icon_button.dart';
+import 'package:en_passant/views/components/chess_view/game_info_and_controls/moves_undo_redo_row/rounded_icon_button.dart';
 import 'package:flutter/cupertino.dart';
 
 class UndoRedoButtons extends StatelessWidget {
   final AppModel appModel;
-  final ChessGame game;
 
   bool get undoEnabled {
     if (appModel.playingWithAI) {
-      return game.board.moveStack.length > 1 && !appModel.isAIsTurn;
+      return appModel.game.board.moveStack.length > 1 && !appModel.isAIsTurn;
     } else {
-      return game.board.moveStack.isNotEmpty;
+      return appModel.game.board.moveStack.isNotEmpty;
     }
   }
 
   bool get redoEnabled {
     if (appModel.playingWithAI) {
-      return game.board.redoStack.length > 1 && !appModel.isAIsTurn;
+      return appModel.game.board.redoStack.length > 1 && !appModel.isAIsTurn;
     } else {
-      return game.board.redoStack.isNotEmpty;
+      return appModel.game.board.redoStack.isNotEmpty;
     }
   }
 
-  UndoRedoButtons(this.appModel, this.game);
+  UndoRedoButtons(this.appModel);
 
   @override
   Widget build(BuildContext context) {
@@ -48,17 +46,17 @@ class UndoRedoButtons extends StatelessWidget {
 
   void undo() {
     if (appModel.playingWithAI) {
-      game.undoTwoMoves();
+      appModel.game.undoTwoMoves();
     } else {
-      game.undoMove();
+      appModel.game.undoMove();
     }
   }
 
   void redo() {
     if (appModel.playingWithAI) {
-      game.redoTwoMoves();
+      appModel.game.redoTwoMoves();
     } else {
-      game.redoMove();
+      appModel.game.redoMove();
     }
   }
 }

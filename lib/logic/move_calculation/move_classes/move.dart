@@ -4,6 +4,7 @@ class Move {
   int from;
   int to;
   ChessPieceType promotionType;
+
   Move(this.from, this.to, {this.promotionType = ChessPieceType.promotion});
 
   @override

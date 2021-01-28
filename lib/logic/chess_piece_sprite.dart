@@ -1,5 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/components/main_menu_view/side_picker.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 
@@ -67,13 +67,12 @@ class ChessPieceSprite {
 
   void initSprite(ChessPiece piece) {
     String color = piece.player == Player.player1 ? 'white' : 'black';
-    String pieceName =
-        type.toString().substring(type.toString().indexOf('.') + 1);
+    String pieceName = pieceTypeToString(piece.type);
     if (piece.type == ChessPieceType.promotion) {
       pieceName = 'pawn';
     }
     sprite = Sprite(
-        'pieces/${pieceThemeFormat(pieceTheme)}/${pieceName}_$color.png');
+        'pieces/${formatPieceTheme(pieceTheme)}/${pieceName}_$color.png');
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {
