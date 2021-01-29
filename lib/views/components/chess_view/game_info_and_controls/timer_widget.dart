@@ -13,7 +13,7 @@ class TimerWidget extends StatelessWidget {
       child: Container(
         height: 60,
         child: Center(
-          child: TextRegular(durationToString(timeLeft)),
+          child: TextRegular(_durationToString(timeLeft)),
         ),
         decoration: BoxDecoration(
           border: Border.all(color: color, width: 2),
@@ -24,7 +24,7 @@ class TimerWidget extends StatelessWidget {
     );
   }
 
-  String durationToString(Duration duration) {
+  String _durationToString(Duration duration) {
     if (duration.inHours > 0) {
       String hours = duration.inHours.toString();
       String minutes =

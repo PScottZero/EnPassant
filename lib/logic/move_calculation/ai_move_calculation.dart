@@ -9,9 +9,9 @@ import 'move_calculation.dart';
 import 'move_classes/move.dart';
 
 const INITIAL_ALPHA = -40000;
-const STALEMATE_ALPHA = 20000;
+const STALEMATE_ALPHA = -20000;
 const INITIAL_BETA = 40000;
-const STALEMATE_BETA = -20000;
+const STALEMATE_BETA = 20000;
 
 Move calculateAIMove(Map args) {
   ChessBoard board = args['board'];
@@ -56,8 +56,13 @@ MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move, int depth,
     }
   }
   if (bestMove.value.abs() == INITIAL_BETA && !kingInCheck(player, board)) {
-    bestMove.value =
-        player == Player.player1 ? STALEMATE_ALPHA : STALEMATE_BETA;
+    if (piecesForPlayer(player, board).length == 1) {
+      bestMove.value =
+          player == Player.player1 ? STALEMATE_BETA : STALEMATE_ALPHA;
+    } else {
+      bestMove.value =
+          player == Player.player1 ? STALEMATE_ALPHA : STALEMATE_BETA;
+    }
   }
   return bestMove;
 }

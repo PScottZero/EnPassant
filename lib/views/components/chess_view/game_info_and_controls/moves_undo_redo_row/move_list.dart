@@ -14,7 +14,7 @@ class MoveList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) => scrollToBottom());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     return Container(
       height: 60,
       decoration: BoxDecoration(
@@ -25,26 +25,26 @@ class MoveList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         controller: scrollController,
         padding: EdgeInsets.only(left: 15, right: 15),
-        child: Center(child: TextRegular(allMoves())),
+        child: Center(child: TextRegular(_allMoves())),
       ),
     );
   }
 
-  void scrollToBottom() {
+  void _scrollToBottom() {
     if (appModel.moveListUpdated) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent);
       appModel.moveListUpdated = false;
     }
   }
 
-  String allMoves() {
+  String _allMoves() {
     var moveString = '';
     appModel.moveMetaList.asMap().forEach((index, move) {
       var turnNumber = ((index + 1) / 2).ceil();
       if (index % 2 == 0) {
         moveString += index == 0 ? '$turnNumber. ' : '   $turnNumber. ';
       }
-      moveString += moveToString(move);
+      moveString += _moveToString(move);
       if (index % 2 == 0) {
         moveString += ' ';
       }
@@ -62,7 +62,7 @@ class MoveList extends StatelessWidget {
     return moveString;
   }
 
-  String moveToString(MoveMeta meta) {
+  String _moveToString(MoveMeta meta) {
     String move;
     if (meta.kingCastle) {
       move = 'O-O';
@@ -70,15 +70,15 @@ class MoveList extends StatelessWidget {
       move = 'O-O-O';
     } else {
       String ambiguity =
-          meta.rowIsAmbiguous ? '${colToChar(tileToCol(meta.move.from))}' : '';
+          meta.rowIsAmbiguous ? '${_colToChar(tileToCol(meta.move.from))}' : '';
       ambiguity +=
           meta.colIsAmbiguous ? '${8 - tileToRow(meta.move.from)}' : '';
       String takeString = meta.took ? 'x' : '';
       String promotion =
-          meta.promotion ? '=${pieceToChar(meta.promotionType)}' : '';
+          meta.promotion ? '=${_pieceToChar(meta.promotionType)}' : '';
       String row = '${8 - tileToRow(meta.move.to)}';
-      String col = '${colToChar(tileToCol(meta.move.to))}';
-      move = '${pieceToChar(meta.type)}$ambiguity$takeString' +
+      String col = '${_colToChar(tileToCol(meta.move.to))}';
+      move = '${_pieceToChar(meta.type)}$ambiguity$takeString' +
           '$col$row$promotion';
     }
     String check = meta.isCheck ? '+' : '';
@@ -86,7 +86,7 @@ class MoveList extends StatelessWidget {
     return move + '$check$checkmate';
   }
 
-  String pieceToChar(ChessPieceType type) {
+  String _pieceToChar(ChessPieceType type) {
     switch (type) {
       case ChessPieceType.king:
         {
@@ -119,7 +119,7 @@ class MoveList extends StatelessWidget {
     }
   }
 
-  String colToChar(int col) {
+  String _colToChar(int col) {
     return String.fromCharCode(97 + col);
   }
 }

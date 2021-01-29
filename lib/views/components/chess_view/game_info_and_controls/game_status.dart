@@ -11,7 +11,7 @@ class GameStatus extends StatelessWidget {
     return Consumer<AppModel>(
       builder: (context, appModel, child) => Row(
         children: [
-          TextRegular(getStatus(appModel)),
+          TextRegular(_getStatus(appModel)),
           !appModel.gameOver && appModel.playerCount == 1 && appModel.isAIsTurn
               ? CupertinoActivityIndicator(radius: 12)
               : Container()
@@ -21,7 +21,7 @@ class GameStatus extends StatelessWidget {
     );
   }
 
-  String getStatus(AppModel appModel) {
+  String _getStatus(AppModel appModel) {
     if (!appModel.gameOver) {
       if (appModel.playerCount == 1) {
         if (appModel.isAIsTurn) {

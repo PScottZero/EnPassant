@@ -38,7 +38,7 @@ class MainMenuButtons extends StatelessWidget {
                 child: RoundedButton(
                   'GitHub',
                   onPressed: () {
-                    openGitHub();
+                    _openGitHub();
                   },
                 ),
               ),
@@ -63,7 +63,7 @@ class MainMenuButtons extends StatelessWidget {
     );
   }
 
-  void openGitHub() async {
+  void _openGitHub() async {
     const url = 'https://github.com/PScottZero/EnPassant';
     if (await canLaunch(url)) {
       await launch(url);
