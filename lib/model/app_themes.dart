@@ -308,7 +308,23 @@ List<AppTheme> get themeList {
       darkTile: Color(0xffb734eb),
       moveHint: Color(0xdd34eb62),
       latestMove: Color(0xddd9eb34),
-    )
+    ),
+    AppTheme(
+      name: 'Pink Marble',
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xff45a881),
+          Color(0xff2782b0),
+        ],
+      ),
+      lightTile: Color(0xffebc0c0),
+      darkTile: Color(0xff472d22),
+      moveHint: Color(0xaa45a881),
+      latestMove: Color(0xaa2782b0),
+      border: Color(0xffebc0c0),
+    ),
   ];
   themeList.sort((a, b) => a.name.compareTo(b.name));
   return themeList;

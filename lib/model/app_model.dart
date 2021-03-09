@@ -17,7 +17,8 @@ const PIECE_THEMES = [
   '8-Bit',
   'Letters',
   'Video Chess',
-  'Lewis Chessmen'
+  'Lewis Chessmen',
+  'Mexico City'
 ];
 
 class AppModel extends ChangeNotifier {
