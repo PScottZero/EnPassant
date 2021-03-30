@@ -1,4 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
+import 'package:flame/game.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChessBoardWidget extends StatelessWidget {
@@ -29,7 +30,7 @@ class ChessBoardWidget extends StatelessWidget {
             ? BorderRadius.circular(10)
             : BorderRadius.zero,
         child: Container(
-          child: appModel.game.widget,
+          child: GameWidget(game: appModel.game),
           width: MediaQuery.of(context).size.width - 68,
           height: MediaQuery.of(context).size.width - 68,
         ),

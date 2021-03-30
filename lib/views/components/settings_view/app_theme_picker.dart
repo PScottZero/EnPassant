@@ -8,17 +8,24 @@ class AppThemePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
-      builder: (context, appModel, child) => Container(
-        child: Stack(
-          alignment: AlignmentDirectional.topStart,
-          children: [
-            Container(
-              child: TextSmall('App Theme'),
-              padding: EdgeInsets.all(10),
+      builder: (context, appModel, child) => Column(
+        children: [
+          Container(
+            child: TextSmall('App Theme'),
+            padding: EdgeInsets.all(10),
+          ),
+          Container(
+            height: 120,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              color: Color(0x20000000),
             ),
-            CupertinoPicker(
+            child: CupertinoPicker(
               scrollController: FixedExtentScrollController(
                 initialItem: appModel.themeIndex,
+              ),
+              selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+                background: Color(0x20000000),
               ),
               itemExtent: 50,
               onSelectedItemChanged: appModel.setTheme,
@@ -31,13 +38,8 @@ class AppThemePicker extends StatelessWidget {
                   )
                   .toList(),
             ),
-          ],
-        ),
-        height: 120,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          color: Color(0x20000000),
-        ),
+          ),
+        ],
       ),
     );
   }

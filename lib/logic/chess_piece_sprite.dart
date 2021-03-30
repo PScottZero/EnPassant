@@ -1,5 +1,8 @@
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
+import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 
@@ -16,11 +19,21 @@ class ChessPieceSprite {
   double offsetX = 0;
   double offsetY = 0;
 
+  AudioPlayer audioPlayer = AudioPlayer();
+  AudioCache audioCache = AudioCache();
+  var pieceMovedSound;
+
   ChessPieceSprite(ChessPiece piece, String pieceTheme) {
     this.tile = piece.tile;
     this.type = piece.type;
     this.pieceTheme = pieceTheme;
     initSprite(piece);
+    loadAudio();
+  }
+
+  void loadAudio() async {
+    pieceMovedSound =
+        await (await audioCache.load('audio/piece_moved.ogg')).readAsBytes();
   }
 
   void update(double tileSize, AppModel appModel, ChessPiece piece) {
@@ -57,22 +70,22 @@ class ChessPieceSprite {
     }
   }
 
-  void playSound(double destX, double destY, AppModel appModel) {
+  void playSound(double destX, double destY, AppModel appModel) async {
     if ((destX - spriteX).abs() <= 0.1 && (destY - spriteY).abs() <= 0.1) {
       if (appModel.soundEnabled) {
-        Flame.audio.play('piece_moved.ogg');
+        await audioPlayer.playBytes(pieceMovedSound);
       }
     }
   }
 
-  void initSprite(ChessPiece piece) {
+  void initSprite(ChessPiece piece) async {
     String color = piece.player == Player.player1 ? 'white' : 'black';
     String pieceName = pieceTypeToString(piece.type);
     if (piece.type == ChessPieceType.promotion) {
       pieceName = 'pawn';
     }
-    sprite = Sprite(
-        'pieces/${formatPieceTheme(pieceTheme)}/${pieceName}_$color.png');
+    sprite = Sprite(await Flame.images.load(
+        'pieces/${formatPieceTheme(pieceTheme)}/${pieceName}_$color.png'));
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {

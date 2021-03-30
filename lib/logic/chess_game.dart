@@ -8,7 +8,7 @@ import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
-import 'package:flame/game/game.dart';
+import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -34,7 +34,6 @@ class ChessGame extends Game with TapDetector {
   ChessGame(this.appModel, this.context) {
     width = MediaQuery.of(context).size.width - 68;
     tileSize = width / 8;
-    resize(Size(width, width));
     for (var piece in board.player1Pieces + board.player2Pieces) {
       spriteMap[piece] = ChessPieceSprite(piece, appModel.pieceTheme);
     }
@@ -280,14 +279,14 @@ class ChessGame extends Game with TapDetector {
 
   void _drawPieces(Canvas canvas) {
     for (var piece in board.player1Pieces + board.player2Pieces) {
-      spriteMap[piece].sprite.renderRect(
-          canvas,
-          Rect.fromLTWH(
-            spriteMap[piece].spriteX + 5,
-            spriteMap[piece].spriteY + 5,
-            tileSize - 10,
-            tileSize - 10,
-          ));
+      spriteMap[piece].sprite.render(
+            canvas,
+            size: Vector2(tileSize - 10, tileSize - 10),
+            position: Vector2(
+              spriteMap[piece].spriteX + 5,
+              spriteMap[piece].spriteY + 5,
+            ),
+          );
     }
   }
 

@@ -18,6 +18,8 @@ class TimeLimitPicker extends StatelessWidget {
             initialTimerDuration: selectedTime,
             mode: CupertinoTimerPickerMode.hm,
             onTimerDurationChanged: setTime,
+            backgroundColor: Color(0x00000000),
+            alignment: Alignment.topCenter,
           ),
           height: 120,
           decoration: BoxDecoration(

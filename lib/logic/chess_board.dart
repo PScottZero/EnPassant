@@ -21,7 +21,7 @@ const KING_ROW_PIECES = [
 ];
 
 class ChessBoard {
-  List<ChessPiece> tiles = List(64);
+  List<ChessPiece> tiles = List.filled(64, null);
   List<MoveStackObject> moveStack = [];
   List<MoveStackObject> redoStack = [];
   List<ChessPiece> player1Pieces = [];

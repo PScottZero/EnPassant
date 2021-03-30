@@ -2,7 +2,8 @@ import 'dart:ui';
 
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:flame/game/game.dart';
+import 'package:flame/flame.dart';
+import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -24,9 +25,12 @@ class PiecePreview extends Game {
   bool rendered = false;
 
   PiecePreview(this.appModel) {
-    resize(Size(80, 120));
+    loadSpriteImages();
+  }
+
+  loadSpriteImages() async {
     for (var index = 0; index < 6; index++) {
-      spriteMap[index] = Sprite(imageMap[index]);
+      spriteMap[index] = Sprite(await Flame.images.load(imageMap[index]));
     }
   }
 
@@ -40,10 +44,13 @@ class PiecePreview extends Game {
               ? appModel.theme.lightTile
               : appModel.theme.darkTile,
       );
-      spriteMap[index].renderRect(
+      spriteMap[index].render(
         canvas,
-        Rect.fromLTWH(
-            (index % 2) * 40.0 + 5, (index / 2).floor() * 40.0 + 5, 30, 30),
+        size: Vector2(30, 30),
+        position: Vector2(
+          (index % 2) * 40.0 + 5,
+          (index / 2).floor() * 40.0 + 5,
+        ),
       );
     }
   }
