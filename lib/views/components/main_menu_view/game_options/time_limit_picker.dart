@@ -1,33 +1,28 @@
-import 'package:en_passant/views/components/shared/text_variable.dart';
+import 'package:en_passant/views/components/main_menu_view/game_options/picker.dart';
 import 'package:flutter/cupertino.dart';
 
 class TimeLimitPicker extends StatelessWidget {
-  final Duration selectedTime;
+  final int selectedTime;
   final Function setTime;
 
   TimeLimitPicker({this.selectedTime, this.setTime});
 
+  final Map<int, Text> timeOptions = const <int, Text>{
+    0: Text('None'),
+    15: Text('15m'),
+    30: Text('30m'),
+    60: Text('1h'),
+    90: Text('1.5h'),
+    120: Text('2h')
+  };
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextSmall('Time Limit'),
-        SizedBox(height: 10),
-        Container(
-          child: CupertinoTimerPicker(
-            initialTimerDuration: selectedTime,
-            mode: CupertinoTimerPickerMode.hm,
-            onTimerDurationChanged: setTime,
-            backgroundColor: Color(0x00000000),
-            alignment: Alignment.topCenter,
-          ),
-          height: 120,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            color: Color(0x20000000),
-          ),
-        ),
-      ],
+    return Picker<int>(
+      label: 'Time Limit',
+      options: timeOptions,
+      selection: selectedTime,
+      setFunc: setTime,
     );
   }
 }

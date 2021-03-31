@@ -10,7 +10,7 @@ class Timers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return appModel.timeLimit != Duration.zero
+    return appModel.timeLimit != 0
         ? Column(
             children: [
               Container(

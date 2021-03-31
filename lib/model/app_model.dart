@@ -26,7 +26,7 @@ class AppModel extends ChangeNotifier {
   int aiDifficulty = 3;
   Player selectedSide = Player.player1;
   Player playerSide = Player.player1;
-  Duration timeLimit = Duration.zero;
+  int timeLimit = 0;
   String pieceTheme = 'Classic';
   String themeName = 'Green';
   bool showMoveHistory = true;
@@ -103,8 +103,8 @@ class AppModel extends ChangeNotifier {
     stalemate = false;
     turn = Player.player1;
     moveMetaList = [];
-    player1TimeLeft = timeLimit;
-    player2TimeLeft = timeLimit;
+    player1TimeLeft = Duration(minutes: timeLimit);
+    player2TimeLeft = Duration(minutes: timeLimit);
     if (selectedSide == Player.random) {
       playerSide =
           Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
@@ -116,7 +116,7 @@ class AppModel extends ChangeNotifier {
           : decrementPlayer2Timer();
       if ((player1TimeLeft == Duration.zero ||
               player2TimeLeft == Duration.zero) &&
-          timeLimit != Duration.zero) {
+          timeLimit != 0) {
         endGame();
       }
     });
@@ -181,10 +181,10 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTimeLimit(Duration duration) {
+  void setTimeLimit(int duration) {
     timeLimit = duration;
-    player1TimeLeft = duration;
-    player2TimeLeft = duration;
+    player1TimeLeft = Duration(minutes: timeLimit);
+    player2TimeLeft = Duration(minutes: timeLimit);
     notifyListeners();
   }
 

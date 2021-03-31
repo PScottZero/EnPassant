@@ -35,7 +35,6 @@ class EnPassantApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return CupertinoApp(
       title: 'En Passant',
       theme: CupertinoThemeData(
