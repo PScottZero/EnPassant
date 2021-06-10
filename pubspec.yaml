@@ -102,4 +102,4 @@ flutter:
     - assets/images/pieces/videochess/
     - assets/images/pieces/lewischessmen/
     - assets/images/pieces/mexicocity/
-    - assets/audio/piece_moved.ogg
+    - assets/audio/piece_moved.mp3

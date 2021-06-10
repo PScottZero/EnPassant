@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 import 'package:flame/components.dart';
@@ -18,10 +17,6 @@ class ChessPieceSprite {
   double spriteY;
   double offsetX = 0;
   double offsetY = 0;
-
-  AudioPlayer audioPlayer = AudioPlayer();
-  AudioCache audioCache = AudioCache();
-  var pieceMovedSound;
 
   ChessPieceSprite(ChessPiece piece, String pieceTheme) {
     this.tile = piece.tile;
@@ -67,7 +62,7 @@ class ChessPieceSprite {
   void playSound(double destX, double destY, AppModel appModel) async {
     if ((destX - spriteX).abs() <= 0.1 && (destY - spriteY).abs() <= 0.1) {
       if (appModel.soundEnabled) {
-        FlameAudio.play('piece_moved.ogg');
+        FlameAudio.play('piece_moved.mp3');
       }
     }
   }
