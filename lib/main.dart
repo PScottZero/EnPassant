@@ -37,7 +37,6 @@ class EnPassantApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return CupertinoApp(
       title: 'En Passant',
-      debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
         brightness: Brightness.dark,
         textTheme: CupertinoTextThemeData(

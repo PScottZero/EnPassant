@@ -44,9 +44,9 @@ class ChessGame extends Game with TapDetector {
   }
 
   @override
-  void onTapDown(TapDownDetails details) {
+  void onTapDown(TapDownInfo details) {
     if (appModel.gameOver || !(appModel.isAIsTurn)) {
-      var tile = _offsetToTile(details.localPosition);
+      var tile = _vector2ToTile(details.eventPosition.widget);
       var touchedPiece = board.tiles[tile];
       if (touchedPiece == selectedPiece) {
         validMoves = [];
@@ -248,15 +248,15 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  int _offsetToTile(Offset offset) {
+  int _vector2ToTile(Vector2 vector2) {
     if (appModel.flip &&
         appModel.playingWithAI &&
         appModel.playerSide == Player.player2) {
-      return (7 - (offset.dy / tileSize).floor()) * 8 +
-          (7 - (offset.dx / tileSize).floor());
+      return (7 - (vector2.y / tileSize).floor()) * 8 +
+          (7 - (vector2.x / tileSize).floor());
     } else {
-      return (offset.dy / tileSize).floor() * 8 +
-          (offset.dx / tileSize).floor();
+      return (vector2.y / tileSize).floor() * 8 +
+          (vector2.x / tileSize).floor();
     }
   }
 
