@@ -23,7 +23,7 @@ packages:
     source: hosted
     version: "2.6.1"
   audioplayers:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: audioplayers
       url: "https://pub.dartlang.org"
@@ -106,13 +106,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0-releasecandidate.11"
-  flame_audio:
-    dependency: "direct main"
-    description:
-      name: flame_audio
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0-rc.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -350,13 +343,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  synchronized:
-    dependency: transitive
-    description:
-      name: synchronized
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0"
   term_glyph:
     dependency: transitive
     description:
@@ -440,7 +426,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.5"
+    version: "2.0.5"
   xdg_directories:
     dependency: transitive
     description:
@@ -463,5 +449,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.13.0 <3.0.0"
+  dart: ">=2.12.0 <3.0.0"
   flutter: ">=2.0.0"

@@ -325,6 +325,22 @@ List<AppTheme> get themeList {
       latestMove: Color(0xaa2782b0),
       border: Color(0xffebc0c0),
     ),
+    AppTheme(
+      name: 'Cherry-Coloured Funk',
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xff434783),
+          Color(0xffdc3b39),
+        ],
+      ),
+      lightTile: Color(0xffdb5e5c),
+      darkTile: Color(0xff645183),
+      moveHint: Color(0xaabdacce),
+      latestMove: Color(0xaaf0b35d),
+      border: Color(0xff434783),
+    ),
   ];
   themeList.sort((a, b) => a.name.compareTo(b.name));
   return themeList;

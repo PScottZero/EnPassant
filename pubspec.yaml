@@ -25,8 +25,8 @@ dependencies:
     sdk: flutter
   provider: ^5.0.0
   flame: ^1.0.0-releasecandidate.11
-  flame_audio: ^1.0.0-rc.1
   url_launcher: ^6.0.2
+  audioplayers: ^0.19.0
   shared_preferences:
   async:
 

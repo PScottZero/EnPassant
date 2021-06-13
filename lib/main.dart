@@ -18,7 +18,7 @@ void main() {
   _loadFlameAssets();
 }
 
-void _loadFlameAssets() {
+void _loadFlameAssets() async {
   List<String> pieceImages = [];
   for (var theme in PIECE_THEMES) {
     for (var color in ['black', 'white']) {
@@ -28,7 +28,7 @@ void _loadFlameAssets() {
       }
     }
   }
-  Flame.images.loadAll(pieceImages);
+  await Flame.images.loadAll(pieceImages);
 }
 
 class EnPassantApp extends StatelessWidget {
