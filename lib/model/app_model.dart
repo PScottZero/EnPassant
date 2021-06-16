@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:en_passant/logic/chess_game.dart';
-import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
+import 'package:en_passant/logic/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 import 'package:flutter/material.dart';

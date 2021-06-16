@@ -2,20 +2,19 @@ import 'dart:ui';
 
 import 'package:async/async.dart';
 import 'package:en_passant/logic/chess_piece_sprite.dart';
-import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
-import 'package:en_passant/logic/move_calculation/move_calculation.dart';
-import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
+import 'package:en_passant/logic/move_calculation.dart';
 import 'package:en_passant/logic/shared_functions.dart';
+import 'package:en_passant/logic/stockfish_ai.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 
 import 'chess_board.dart';
 import 'chess_piece.dart';
-import 'move_calculation/move_classes/move.dart';
+import 'move_classes/move.dart';
+import 'move_classes/move_meta.dart';
 
 class ChessGame extends Game with TapDetector {
   double width;
@@ -23,6 +22,7 @@ class ChessGame extends Game with TapDetector {
   AppModel appModel;
   BuildContext context;
   ChessBoard board = ChessBoard();
+  StockfishAI stockfishAI = StockfishAI();
   Map<ChessPiece, ChessPieceSprite> spriteMap = Map();
 
   CancelableOperation aiOperation;
@@ -41,6 +41,19 @@ class ChessGame extends Game with TapDetector {
     if (appModel.isAIsTurn) {
       _aiMove();
     }
+    this.stockfishAI.output.listen((String event) {
+      if (event.contains('bestmove')) {
+        final bestMove = event.split(' ')[1];
+        print(bestMove);
+        final move = stockfishAI.moveStringToMove(bestMove);
+        validMoves = [];
+        var meta = push(move, board, getMeta: true);
+        _moveCompletion(meta, changeTurn: !meta.promotion);
+        if (meta.promotion) {
+          promote(move.promotionType);
+        }
+      }
+    });
   }
 
   @override
@@ -124,29 +137,12 @@ class ChessGame extends Game with TapDetector {
       }
       _moveCompletion(meta, changeTurn: !meta.promotion);
     }
+    stockfishAI.sendPosition(board.moveStack);
   }
 
   void _aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
-    var args = Map();
-    args['aiPlayer'] = appModel.aiTurn;
-    args['aiDifficulty'] = appModel.aiDifficulty;
-    args['board'] = board;
-    aiOperation = CancelableOperation.fromFuture(
-      compute(calculateAIMove, args),
-    );
-    aiOperation.value.then((move) {
-      if (move == null || appModel.gameOver) {
-        appModel.endGame();
-      } else {
-        validMoves = [];
-        var meta = push(move, board, getMeta: true);
-        _moveCompletion(meta, changeTurn: !meta.promotion);
-        if (meta.promotion) {
-          promote(move.promotionType);
-        }
-      }
-    });
+    stockfishAI.aiMove();
   }
 
   void cancelAIMove() {

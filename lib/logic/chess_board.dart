@@ -1,13 +1,11 @@
-import 'package:en_passant/logic/move_calculation/move_classes/move_stack_object.dart';
-import 'package:en_passant/logic/move_calculation/openings.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 
 import 'chess_piece.dart';
-import 'move_calculation/move_calculation.dart';
-import 'move_calculation/move_classes/move.dart';
-import 'move_calculation/move_classes/move_meta.dart';
-import 'move_calculation/piece_square_tables.dart';
+import 'move_calculation.dart';
+import 'move_classes/move.dart';
+import 'move_classes/move_meta.dart';
+import 'move_classes/move_stack_object.dart';
 
 const KING_ROW_PIECES = [
   ChessPieceType.rook,
@@ -35,7 +33,6 @@ class ChessBoard {
   ChessPiece enPassantPiece;
   bool player1KingInCheck = false;
   bool player2KingInCheck = false;
-  List<List<Move>> possibleOpenings = List.from(openings);
   int moveCount = 0;
 
   ChessBoard() {
@@ -67,23 +64,12 @@ class ChessBoard {
   }
 }
 
-int boardValue(ChessBoard board) {
-  int value = 0;
-  for (var piece in board.player1Pieces + board.player2Pieces) {
-    value += piece.value + squareValue(piece, _inEndGame(board));
-  }
-  return value;
-}
-
 MoveMeta push(Move move, ChessBoard board,
     {bool getMeta = false,
     ChessPieceType promotionType = ChessPieceType.promotion}) {
   var mso = MoveStackObject(move, board.tiles[move.from], board.tiles[move.to],
-      board.enPassantPiece, List.from(board.possibleOpenings));
+      board.enPassantPiece, []);
   var meta = MoveMeta(move, mso.movedPiece.player, mso.movedPiece.type);
-  if (board.possibleOpenings.isNotEmpty) {
-    _filterPossibleOpenings(board, move);
-  }
   if (getMeta) {
     _checkMoveAmbiguity(move, meta, board);
   }
@@ -120,7 +106,6 @@ MoveMeta pushMSO(MoveStackObject mso, ChessBoard board) {
 MoveStackObject pop(ChessBoard board) {
   var mso = board.moveStack.removeLast();
   board.enPassantPiece = mso.enPassantPiece;
-  board.possibleOpenings = mso.possibleOpenings;
   if (mso.castled) {
     _undoCastle(board, mso);
   } else {
@@ -261,14 +246,6 @@ void _checkMoveAmbiguity(Move move, MoveMeta moveMeta, ChessBoard board) {
       }
     }
   }
-}
-
-void _filterPossibleOpenings(ChessBoard board, Move move) {
-  board.possibleOpenings = board.possibleOpenings
-      .where((opening) =>
-          opening[board.moveCount] == move &&
-          opening.length > board.moveCount + 1)
-      .toList();
 }
 
 void _setTile(int tile, ChessPiece piece, ChessBoard board) {

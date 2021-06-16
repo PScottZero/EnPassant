@@ -10,6 +10,14 @@ int tileToCol(int tile) {
   return tile % 8;
 }
 
+String colToChar(int col) {
+  return String.fromCharCode(97 + col);
+}
+
+int charToCol(String char) {
+  return char.codeUnitAt(0) - 97;
+}
+
 double getXFromTile(int tile, double tileSize, AppModel appModel) {
   return appModel.flip &&
           appModel.playingWithAI &&

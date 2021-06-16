@@ -1,11 +1,9 @@
-import 'package:en_passant/logic/move_calculation/move_classes/direction.dart';
-import 'package:en_passant/logic/move_calculation/move_classes/move_and_value.dart';
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/views/components/chess_view/promotion_dialog.dart';
 import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 
-import '../chess_board.dart';
-import '../chess_piece.dart';
+import 'chess_board.dart';
+import 'chess_piece.dart';
+import 'move_classes/direction.dart';
 import 'move_classes/move.dart';
 
 const PAWN_DIAGONALS_1 = [DOWN_LEFT, DOWN_RIGHT];
@@ -32,42 +30,6 @@ const KING_QUEEN_MOVES = [
   LEFT,
   UP_LEFT
 ];
-
-List<Move> allMoves(Player player, ChessBoard board, int aiDifficulty) {
-  List<MoveAndValue> moves = [];
-  var pieces = List.from(piecesForPlayer(player, board));
-  for (var piece in pieces) {
-    var tiles = movesForPiece(piece, board);
-    for (var tile in tiles) {
-      if (piece.type == ChessPieceType.pawn &&
-          (tileToRow(tile) == 0 || tileToRow(tile) == 7)) {
-        for (var promotion in PROMOTIONS) {
-          var move =
-              MoveAndValue(Move(piece.tile, tile, promotionType: promotion), 0);
-          push(move.move, board, promotionType: promotion);
-          move.value = boardValue(board);
-          pop(board);
-          moves.add(move);
-        }
-      } else {
-        var move = MoveAndValue(Move(piece.tile, tile), 0);
-        push(move.move, board);
-        move.value = boardValue(board);
-        pop(board);
-        moves.add(move);
-      }
-    }
-  }
-  moves.sort((a, b) => _compareMoves(a, b, player, board));
-  return moves.map((move) => move.move).toList();
-}
-
-int _compareMoves(
-    MoveAndValue a, MoveAndValue b, Player player, ChessBoard board) {
-  return player == Player.player1
-      ? b.value.compareTo(a.value)
-      : a.value.compareTo(b.value);
-}
 
 List<int> movesForPiece(ChessPiece piece, ChessBoard board,
     {bool legal = true}) {
