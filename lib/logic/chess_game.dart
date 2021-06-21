@@ -116,7 +116,7 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  void _movePiece(int tile) {
+  void _movePiece(int tile) async {
     if (validMoves.contains(tile)) {
       validMoves = [];
       var meta = push(Move(selectedPiece.tile, tile), board, getMeta: true);
@@ -125,11 +125,13 @@ class ChessGame extends Game with TapDetector {
       }
       moveCompletion(meta, changeTurn: !meta.promotion);
     }
+    await stockfishAI.waitUntilReady();
     stockfishAI.sendPosition(board.moveStack);
   }
 
   void _aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
+    await stockfishAI.waitUntilReady();
     stockfishAI.aiMove(appModel.aiDifficulty);
   }
 

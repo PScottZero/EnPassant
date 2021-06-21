@@ -15,15 +15,17 @@ class StockfishAI {
     ChessPieceType.knight: 'n',
   };
   final stockfish = Stockfish();
+  ChessBoard board;
   get output {
     return stockfish.stdout;
   }
 
   StockfishAI(ChessGame game) {
+    board = game.board;
     stockfish.stdout.listen((event) {
       if (event.contains('bestmove')) {
         final bestMove = event.split(' ')[1];
-        print(bestMove);
+        print('BESTMOVE: $bestMove');
         final move = _moveStringToMove(bestMove);
         game.validMoves = [];
         var meta = push(move, game.board, getMeta: true);
@@ -35,16 +37,22 @@ class StockfishAI {
     });
   }
 
+  Future<void> waitUntilReady() async {
+    while (stockfish.state.value != StockfishState.ready) {
+      await Future.delayed(Duration(seconds: 1));
+    }
+  }
+
   void dispose() {
     stockfish.dispose();
   }
 
   void sendPosition(List<MoveStackObject> moveStack) {
-    var moveString = UCICommands.POSITION;
+    var moveString = '${UCICommands.POSITION} ';
     for (final mso in moveStack) {
-      moveString += '${_toMoveString(mso)} ';
+      moveString += '${_msoToMoveString(mso)} ';
     }
-    print(moveString);
+    print('SENT TO STOCKFISH: $moveString');
     stockfish.stdin = moveString;
   }
 
@@ -53,11 +61,22 @@ class StockfishAI {
   }
 
   Move _moveStringToMove(String moveString) {
-    final from = _tileStringToTile(moveString.substring(0, 2));
-    final to = _tileStringToTile(moveString.substring(2, 4));
+    final fromString = moveString.substring(0, 2);
+    final toString = moveString.substring(2, 4);
+    final from = _tileStringToTile(fromString);
+    var to = _tileStringToTile(toString);
     final promoteType = moveString.length > 4
         ? _promotionStringToChessPiece(moveString[4])
         : ChessPieceType.promotion;
+    if (fromString[0] == 'e' && 
+      board.tiles[from] != null &&
+      board.tiles[from].type == ChessPieceType.king) {
+      if (moveString[0] == 'g') {
+        to += 1;
+      } else if (moveString[0] == 'c') {
+        to -= 2;
+      }
+    }
     return Move(from, to, promotionType: promoteType);
   }
 
@@ -67,7 +86,7 @@ class StockfishAI {
     return row * 8 + col;
   }
 
-  String _toMoveString(MoveStackObject mso) {
+  String _msoToMoveString(MoveStackObject mso) {
     var fromCol = colToChar(tileToCol(mso.move.from));
     final fromRow = 8 - tileToRow(mso.move.from);
     var toCol = colToChar(tileToCol(mso.move.to));
@@ -102,8 +121,6 @@ class StockfishAI {
 }
 
 class UCICommands {
-  static const READY = 'isready';
-  static const NEW_GAME = 'ucinewgame';
-  static const POSITION = 'position startpos moves ';
+  static const POSITION = 'position startpos moves';
   static const GO = 'go movetime';
 }
