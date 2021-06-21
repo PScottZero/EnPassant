@@ -22,7 +22,7 @@ class ChessGame extends Game with TapDetector {
   AppModel appModel;
   BuildContext context;
   ChessBoard board = ChessBoard();
-  StockfishAI stockfishAI = StockfishAI();
+  StockfishAI stockfishAI;
   Map<ChessPiece, ChessPieceSprite> spriteMap = Map();
 
   CancelableOperation aiOperation;
@@ -32,6 +32,7 @@ class ChessGame extends Game with TapDetector {
   Move latestMove;
 
   ChessGame(this.appModel, this.context) {
+    stockfishAI = StockfishAI(this);
     width = MediaQuery.of(context).size.width - 68;
     tileSize = width / 8;
     for (var piece in board.player1Pieces + board.player2Pieces) {
@@ -41,19 +42,6 @@ class ChessGame extends Game with TapDetector {
     if (appModel.isAIsTurn) {
       _aiMove();
     }
-    this.stockfishAI.output.listen((String event) {
-      if (event.contains('bestmove')) {
-        final bestMove = event.split(' ')[1];
-        print(bestMove);
-        final move = stockfishAI.moveStringToMove(bestMove);
-        validMoves = [];
-        var meta = push(move, board, getMeta: true);
-        _moveCompletion(meta, changeTurn: !meta.promotion);
-        if (meta.promotion) {
-          promote(move.promotionType);
-        }
-      }
-    });
   }
 
   @override
@@ -135,14 +123,14 @@ class ChessGame extends Game with TapDetector {
       if (meta.promotion) {
         appModel.requestPromotion();
       }
-      _moveCompletion(meta, changeTurn: !meta.promotion);
+      moveCompletion(meta, changeTurn: !meta.promotion);
     }
     stockfishAI.sendPosition(board.moveStack);
   }
 
   void _aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
-    stockfishAI.aiMove();
+    stockfishAI.aiMove(appModel.aiDifficulty);
   }
 
   void cancelAIMove() {
@@ -155,7 +143,7 @@ class ChessGame extends Game with TapDetector {
     board.redoStack.add(pop(board));
     if (appModel.moveMetaList.length > 1) {
       var meta = appModel.moveMetaList[appModel.moveMetaList.length - 2];
-      _moveCompletion(meta, clearRedo: false, undoing: true);
+      moveCompletion(meta, clearRedo: false, undoing: true);
     } else {
       _undoOpeningMove();
       appModel.changeTurn();
@@ -167,7 +155,7 @@ class ChessGame extends Game with TapDetector {
     board.redoStack.add(pop(board));
     appModel.popMoveMeta();
     if (appModel.moveMetaList.length > 1) {
-      _moveCompletion(appModel.moveMetaList[appModel.moveMetaList.length - 2],
+      moveCompletion(appModel.moveMetaList[appModel.moveMetaList.length - 2],
           clearRedo: false, undoing: true, changeTurn: false);
     } else {
       _undoOpeningMove();
@@ -183,14 +171,14 @@ class ChessGame extends Game with TapDetector {
   }
 
   void redoMove() {
-    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
+    moveCompletion(pushMSO(board.redoStack.removeLast(), board),
         clearRedo: false);
   }
 
   void redoTwoMoves() {
-    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
+    moveCompletion(pushMSO(board.redoStack.removeLast(), board),
         clearRedo: false, updateMetaList: true);
-    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
+    moveCompletion(pushMSO(board.redoStack.removeLast(), board),
         clearRedo: false, updateMetaList: true);
   }
 
@@ -199,10 +187,10 @@ class ChessGame extends Game with TapDetector {
     board.moveStack.last.promotionType = type;
     addPromotedPiece(board, board.moveStack.last);
     appModel.moveMetaList.last.promotionType = type;
-    _moveCompletion(appModel.moveMetaList.last, updateMetaList: false);
+    moveCompletion(appModel.moveMetaList.last, updateMetaList: false);
   }
 
-  void _moveCompletion(
+  void moveCompletion(
     MoveMeta meta, {
     bool clearRedo = true,
     bool undoing = false,

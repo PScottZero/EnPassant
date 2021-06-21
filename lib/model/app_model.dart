@@ -127,6 +127,7 @@ class AppModel extends ChangeNotifier {
 
   void exitChessView() {
     game.cancelAIMove();
+    game.stockfishAI.dispose();
     timer.cancel();
     notifyListeners();
   }

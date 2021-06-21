@@ -1,14 +1,42 @@
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:stockfish/stockfish.dart';
 
+import 'chess_board.dart';
+import 'chess_game.dart';
 import 'chess_piece.dart';
 import 'move_classes/move.dart';
 import 'move_classes/move_stack_object.dart';
 
 class StockfishAI {
+  final pieceCharMap = {
+    ChessPieceType.queen: 'q',
+    ChessPieceType.rook: 'r',
+    ChessPieceType.bishop: 'b',
+    ChessPieceType.knight: 'n',
+  };
   final stockfish = Stockfish();
   get output {
     return stockfish.stdout;
+  }
+
+  StockfishAI(ChessGame game) {
+    stockfish.stdout.listen((event) {
+      if (event.contains('bestmove')) {
+        final bestMove = event.split(' ')[1];
+        print(bestMove);
+        final move = _moveStringToMove(bestMove);
+        game.validMoves = [];
+        var meta = push(move, game.board, getMeta: true);
+        game.moveCompletion(meta, changeTurn: !meta.promotion);
+        if (meta.promotion) {
+          game.promote(move.promotionType);
+        }
+      }
+    });
+  }
+
+  void dispose() {
+    stockfish.dispose();
   }
 
   void sendPosition(List<MoveStackObject> moveStack) {
@@ -20,25 +48,17 @@ class StockfishAI {
     stockfish.stdin = moveString;
   }
 
-  stockfishOutput() {
-    return stockfish.stdout.listen;
+  void aiMove(int difficulty) {
+    stockfish.stdin = '${UCICommands.GO} ${difficulty * 1000}';
   }
 
-  void aiMove() {
-    stockfish.stdin = UCICommands.GO;
-  }
-
-  Move moveStringToMove(String moveString) {
-    final from = moveString.substring(0, 2);
-    final to = moveString.substring(2, 4);
+  Move _moveStringToMove(String moveString) {
+    final from = _tileStringToTile(moveString.substring(0, 2));
+    final to = _tileStringToTile(moveString.substring(2, 4));
     final promoteType = moveString.length > 4
         ? _promotionStringToChessPiece(moveString[4])
         : ChessPieceType.promotion;
-    return Move(
-      _tileStringToTile(from),
-      _tileStringToTile(to),
-      promotionType: promoteType,
-    );
+    return Move(from, to, promotionType: promoteType);
   }
 
   int _tileStringToTile(String tileString) {
@@ -64,39 +84,26 @@ class StockfishAI {
   }
 
   String _promotionString(ChessPieceType type) {
-    switch (type) {
-      case ChessPieceType.queen:
-        return 'q';
-      case ChessPieceType.rook:
-        return 'r';
-      case ChessPieceType.bishop:
-        return 'b';
-      case ChessPieceType.knight:
-        return 'n';
-      default:
-        return '';
+    if (pieceCharMap.containsKey(type)) {
+      return pieceCharMap[type];
+    } else {
+      return '';
     }
   }
 
   ChessPieceType _promotionStringToChessPiece(String promotion) {
-    switch (promotion) {
-      case 'q':
-        return ChessPieceType.queen;
-      case 'r':
-        return ChessPieceType.rook;
-      case 'b':
-        return ChessPieceType.bishop;
-      case 'n':
-        return ChessPieceType.knight;
-      default:
-        return ChessPieceType.promotion;
+    if (pieceCharMap.containsValue(promotion)) {
+      return pieceCharMap.keys
+          .firstWhere((type) => pieceCharMap[type] == promotion);
+    } else {
+      return ChessPieceType.promotion;
     }
   }
 }
 
 class UCICommands {
-  static const READY = 'is_ready';
+  static const READY = 'isready';
   static const NEW_GAME = 'ucinewgame';
   static const POSITION = 'position startpos moves ';
-  static const GO = 'go movetime 3000';
+  static const GO = 'go movetime';
 }

@@ -316,10 +316,3 @@ bool _canTakeEnPassant(ChessPiece movedPiece) {
       movedPiece.type == ChessPieceType.pawn &&
       (tileToRow(movedPiece.tile) == 3 || tileToRow(movedPiece.tile) == 4);
 }
-
-bool _inEndGame(ChessBoard board) {
-  return (_queensForPlayer(Player.player1, board).isEmpty &&
-          _queensForPlayer(Player.player2, board).isEmpty) ||
-      piecesForPlayer(Player.player1, board).length <= 3 ||
-      piecesForPlayer(Player.player2, board).length <= 3;
-}
