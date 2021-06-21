@@ -99,7 +99,7 @@ class StockfishAI {
         toCol = 'g';
       }
     }
-    return '$fromCol$fromRow$toCol$toRow${_promotionString(mso.move.promotionType)}';
+    return '$fromCol$fromRow$toCol$toRow${_promotionString(mso.promotionType)}';
   }
 
   String _promotionString(ChessPieceType type) {
