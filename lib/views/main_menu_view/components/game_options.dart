@@ -1,6 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/gap.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'game_options/ai_difficulty_segmented_control.dart';
