@@ -6,6 +6,7 @@ import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_calculation.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
@@ -169,7 +170,7 @@ class ChessGame extends Game with TapDetector {
   void undoTwoMoves() {
     board.redoStack.add(pop(board));
     board.redoStack.add(pop(board));
-    appModel.jumpToEndOfMoveList();
+    appModel.gameData.jumpToEndOfMoveList();
     if (board.moveStack.length > 1) {
       _moveCompletion(board.moveStack[board.moveStack.length - 2],
           clearRedo: false, undoing: true, changeTurn: false);
@@ -183,7 +184,7 @@ class ChessGame extends Game with TapDetector {
     validMoves = [];
     latestMove = null;
     checkHintTile = null;
-    appModel.jumpToEndOfMoveList();
+    appModel.gameData.jumpToEndOfMoveList();
   }
 
   void redoMove() {
@@ -218,7 +219,7 @@ class ChessGame extends Game with TapDetector {
     validMoves = [];
     latestMove = move;
     checkHintTile = null;
-    var oppositeTurn = oppositePlayer(appModel.gameData.turn);
+    var oppositeTurn = appModel.gameData.turn.opposite;
     if (kingInCheck(oppositeTurn, board)) {
       move.meta.flags.isCheck = true;
       checkHintTile = kingForPlayer(oppositeTurn, board).tile;
@@ -233,10 +234,10 @@ class ChessGame extends Game with TapDetector {
       appModel.gameData.endGame();
     }
     if (undoing) {
-      appModel.jumpToEndOfMoveList();
+      appModel.gameData.jumpToEndOfMoveList();
       appModel.gameData.undoEndGame();
     } else if (updateMetaList) {
-      appModel.jumpToEndOfMoveList();
+      appModel.gameData.jumpToEndOfMoveList();
     }
     if (changeTurn) {
       appModel.gameData.changeTurn();

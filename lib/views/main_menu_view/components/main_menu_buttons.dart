@@ -1,8 +1,9 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/chess_view/chess_view.dart';
+import 'package:en_passant/views/components/gap.dart';
 import 'package:en_passant/views/components/rounded_button.dart';
 import 'package:en_passant/views/settings_view/settings_view.dart';
-import 'package:en_passant/views/view_constants.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,7 +19,7 @@ class MainMenuButtons extends StatelessWidget {
       child: Column(
         children: [
           RoundedButton(
-            ViewConstants.START_BUTTON,
+            ViewConstants.START_STRING,
             onPressed: () {
               Navigator.push(
                 context,
@@ -31,21 +32,21 @@ class MainMenuButtons extends StatelessWidget {
               );
             },
           ),
-          SizedBox(height: ViewConstants.SMALL_GAP),
+          GapColumnSmall(),
           Row(
             children: [
               Expanded(
                 child: RoundedButton(
-                  ViewConstants.GITHUB_BUTTON,
+                  ViewConstants.GITHUB_STRING,
                   onPressed: () {
                     _openGitHub();
                   },
                 ),
               ),
-              SizedBox(width: ViewConstants.SMALL_GAP),
+              GapRowSmall(),
               Expanded(
                 child: RoundedButton(
-                  ViewConstants.SETTINGS_BUTTON,
+                  ViewConstants.SETTINGS_STRING,
                   onPressed: () {
                     Navigator.push(
                       context,

@@ -1,11 +1,12 @@
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/view_constants.dart';
+import 'package:en_passant/views/components/gap.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'game_options/ai_difficulty_picker.dart';
-import 'game_options/game_mode_picker.dart';
-import 'game_options/side_picker.dart';
-import 'game_options/time_limit_picker.dart';
+import 'game_options/ai_difficulty_segmented_control.dart';
+import 'game_options/game_mode_segmented_control.dart';
+import 'game_options/side_segmented_control.dart';
+import 'game_options/time_limit_segmented_control.dart';
 
 class GameOptions extends StatelessWidget {
   final AppModel appModel;
@@ -23,7 +24,7 @@ class GameOptions extends StatelessWidget {
             appModel.gameData.playerCount,
             appModel.gameData.setPlayerCount,
           ),
-          SizedBox(height: ViewConstants.SMALL_GAP),
+          GapColumnSmall(),
           appModel.gameData.playerCount == 1
               ? Column(
                   children: [
@@ -31,12 +32,12 @@ class GameOptions extends StatelessWidget {
                       appModel.gameData.aiDifficulty,
                       appModel.gameData.setAIDifficulty,
                     ),
-                    SizedBox(height: ViewConstants.SMALL_GAP),
+                    GapColumnSmall(),
                     SidePicker(
                       appModel.gameData.selectedSide,
                       appModel.gameData.setPlayerSide,
                     ),
-                    SizedBox(height: ViewConstants.SMALL_GAP),
+                    GapColumnSmall(),
                   ],
                 )
               : Container(),

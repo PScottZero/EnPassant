@@ -1,4 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/components/gap.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'rounded_icon_button.dart';
@@ -8,7 +9,8 @@ class UndoRedoButtons extends StatelessWidget {
 
   bool get undoEnabled {
     if (appModel.gameData.playingWithAI) {
-      return appModel.gameData.game.board.moveStack.length > 1 && !appModel.gameData.isAIsTurn;
+      return appModel.gameData.game.board.moveStack.length > 1 &&
+          !appModel.gameData.isAIsTurn;
     } else {
       return appModel.gameData.game.board.moveStack.isNotEmpty;
     }
@@ -16,7 +18,8 @@ class UndoRedoButtons extends StatelessWidget {
 
   bool get redoEnabled {
     if (appModel.gameData.playingWithAI) {
-      return appModel.gameData.game.board.redoStack.length > 1 && !appModel.gameData.isAIsTurn;
+      return appModel.gameData.game.board.redoStack.length > 1 &&
+          !appModel.gameData.isAIsTurn;
     } else {
       return appModel.gameData.game.board.redoStack.isNotEmpty;
     }
@@ -34,7 +37,7 @@ class UndoRedoButtons extends StatelessWidget {
             onPressed: undoEnabled ? () => undo() : null,
           ),
         ),
-        SizedBox(width: 10),
+        GapRowSmall(),
         Expanded(
           child: RoundedIconButton(
             CupertinoIcons.arrow_clockwise,

@@ -4,15 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'game_data.dart';
 import 'theme_preferences.dart';
 
-enum Player { player1, player2, random }
-
 class AppModel extends ChangeNotifier {
   bool showMoveHistory = true;
   bool allowUndoRedo = true;
   bool soundEnabled = true;
   bool showHints = true;
   bool flip = true;
-  bool moveListUpdated = false;
   GameData gameData = GameData();
   ThemePreferences themePrefs = ThemePreferences();
 
@@ -43,11 +40,6 @@ class AppModel extends ChangeNotifier {
   void exitChessView() {
     gameData.game.cancelAIMove();
     gameData.timer.cancel();
-    notifyListeners();
-  }
-
-  void jumpToEndOfMoveList() {
-    moveListUpdated = true;
     notifyListeners();
   }
 

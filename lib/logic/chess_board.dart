@@ -1,6 +1,6 @@
 import 'package:en_passant/logic/move_calculation/openings.dart';
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
 
 import 'chess_piece.dart';
 import 'move_calculation/move_calculation.dart';
@@ -73,7 +73,7 @@ int boardValue(ChessBoard board) {
   return value;
 }
 
-push(Move move, ChessBoard board, { bool getMeta = false }) {
+push(Move move, ChessBoard board, {bool getMeta = false}) {
   move.meta.movedPiece = board.tiles[move.from];
   move.meta.takenPiece = board.tiles[move.to];
   move.meta.enPassantPiece = board.enPassantPiece;
@@ -160,8 +160,9 @@ void _castle(ChessBoard board, Move move) {
   var rookCol = tileToCol(rook.tile) == 0 ? 3 : 5;
   _setTile(tileToRow(king.tile) * 8 + kingCol, king, board);
   _setTile(tileToRow(rook.tile) * 8 + rookCol, rook, board);
-  tileToCol(rook.tile) == 3 ?
-    move.meta.flags.queenCastle = true : move.meta.flags.kingCastle = true;
+  tileToCol(rook.tile) == 3
+      ? move.meta.flags.queenCastle = true
+      : move.meta.flags.kingCastle = true;
   king.moveCount++;
   rook.moveCount++;
   move.meta.flags.castled = true;
@@ -195,18 +196,14 @@ void addPromotedPiece(ChessBoard board, Move move) {
   switch (move.meta.promotionType) {
     case ChessPieceType.queen:
       {
-        _queensForPlayer(
-          move.meta.movedPiece.player,
-          board
-        ).add(move.meta.movedPiece);
+        _queensForPlayer(move.meta.movedPiece.player, board)
+            .add(move.meta.movedPiece);
       }
       break;
     case ChessPieceType.rook:
       {
-        rooksForPlayer(
-          move.meta.movedPiece.player,
-          board
-        ).add(move.meta.movedPiece);
+        rooksForPlayer(move.meta.movedPiece.player, board)
+            .add(move.meta.movedPiece);
       }
       break;
     default:
@@ -216,21 +213,17 @@ void addPromotedPiece(ChessBoard board, Move move) {
 
 void _undoPromote(ChessBoard board, Move move) {
   move.meta.movedPiece.type = ChessPieceType.pawn;
-  switch ( move.meta.promotionType) {
+  switch (move.meta.promotionType) {
     case ChessPieceType.queen:
       {
-        _queensForPlayer(
-          move.meta.movedPiece.player,
-          board
-        ).remove(move.meta.movedPiece);
+        _queensForPlayer(move.meta.movedPiece.player, board)
+            .remove(move.meta.movedPiece);
       }
       break;
     case ChessPieceType.rook:
       {
-        rooksForPlayer(
-          move.meta.movedPiece.player,
-          board
-        ).remove(move.meta.movedPiece);
+        rooksForPlayer(move.meta.movedPiece.player, board)
+            .remove(move.meta.movedPiece);
       }
       break;
     default:

@@ -1,7 +1,8 @@
-import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'picker.dart';
+import '../../../components/segmented_control.dart';
 
 class SidePicker extends StatelessWidget {
   final Map<Player, Text> colorOptions = const <Player, Text>{
@@ -17,8 +18,8 @@ class SidePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Picker<Player>(
-      label: 'Side',
+    return SegmentedControl<Player>(
+      label: ViewConstants.SIDE_STRING,
       options: colorOptions,
       selection: playerSide,
       setFunc: setFunc,

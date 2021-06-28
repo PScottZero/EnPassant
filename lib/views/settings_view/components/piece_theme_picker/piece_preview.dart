@@ -12,12 +12,12 @@ class PiecePreview extends Game {
 
   Map<int, String> get imageMap {
     return {
-      0: 'pieces/${formatPieceTheme(appModel.themePrefs.pieceTheme)}/king_black.png',
-      1: 'pieces/${formatPieceTheme(appModel.themePrefs.pieceTheme)}/queen_white.png',
-      2: 'pieces/${formatPieceTheme(appModel.themePrefs.pieceTheme)}/rook_white.png',
-      3: 'pieces/${formatPieceTheme(appModel.themePrefs.pieceTheme)}/bishop_black.png',
-      4: 'pieces/${formatPieceTheme(appModel.themePrefs.pieceTheme)}/knight_black.png',
-      5: 'pieces/${formatPieceTheme(appModel.themePrefs.pieceTheme)}/pawn_white.png',
+      0: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/king_black.png',
+      1: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/queen_white.png',
+      2: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/rook_white.png',
+      3: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/bishop_black.png',
+      4: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/knight_black.png',
+      5: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/pawn_white.png',
     };
   }
 
@@ -46,10 +46,10 @@ class PiecePreview extends Game {
       );
       spriteMap[index].render(
         canvas,
-        size: Vector2(30, 30),
+        size: Vector2(28, 28),
         position: Vector2(
-          (index % 2) * 40.0 + 5,
-          (index / 2).floor() * 40.0 + 5,
+          (index % 2) * 40.0 + 6,
+          (index / 2).floor() * 40.0 + 6,
         ),
       );
     }

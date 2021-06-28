@@ -1,4 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/components/gap.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'moves_undo_redo_row/move_list.dart';
@@ -19,7 +20,7 @@ class MovesUndoRedoRow extends StatelessWidget {
                 ? Expanded(child: MoveList(appModel))
                 : Container(),
             appModel.showMoveHistory && appModel.allowUndoRedo
-                ? SizedBox(width: 10)
+                ? GapRowSmall()
                 : Container(),
             appModel.allowUndoRedo
                 ? Expanded(child: UndoRedoButtons(appModel))
@@ -27,7 +28,7 @@ class MovesUndoRedoRow extends StatelessWidget {
           ],
         ),
         appModel.showMoveHistory || appModel.allowUndoRedo
-            ? SizedBox(height: 10)
+            ? GapColumnSmall()
             : Container(),
       ],
     );

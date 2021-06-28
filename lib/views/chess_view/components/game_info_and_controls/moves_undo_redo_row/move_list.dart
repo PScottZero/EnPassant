@@ -2,6 +2,7 @@ import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/logic/move_calculation/move_classes.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
 import 'package:en_passant/views/components/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -66,9 +67,9 @@ class MoveList extends StatelessWidget {
   }
 
   void _scrollToRight() {
-    if (appModel.moveListUpdated) {
+    if (appModel.gameData.moveListUpdated) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent);
-      appModel.moveListUpdated = false;
+      appModel.gameData.moveListUpdated = false;
     }
   }
 

@@ -341,6 +341,23 @@ List<AppTheme> get themeList {
       latestMove: Color(0xaaf0b35d),
       border: Color(0xff434783),
     ),
+    AppTheme(
+      name: 'Oceanic',
+      background: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xff001f52),
+          Color(0xff00378f),
+          Color(0xff009168),
+        ],
+      ),
+      lightTile: Color(0xff009168),
+      darkTile: Color(0xff00378f),
+      moveHint: Color(0xaa8cb8ff),
+      latestMove: Color(0xaaffff8c),
+      border: Color(0xff0dd4ac),
+    ),
   ];
   themeList.sort((a, b) => a.name.compareTo(b.name));
   return themeList;

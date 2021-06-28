@@ -1,5 +1,5 @@
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
 import 'package:en_passant/views/chess_view/components/promotion_dialog.dart';
 
 import '../chess_board.dart';
@@ -111,8 +111,7 @@ List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
     var col = tileToCol(pawn.tile) + diagonal.right;
     if (_inBounds(row, col)) {
       var takenPiece = board.tiles[_rowColToTile(row, col)];
-      if ((takenPiece != null &&
-              takenPiece.player == oppositePlayer(pawn.player)) ||
+      if ((takenPiece != null && takenPiece.player == pawn.player.opposite) ||
           _canTakeEnPassant(pawn.player, _rowColToTile(row, col), board)) {
         moves.add(_rowColToTile(row, col));
       }
@@ -226,7 +225,7 @@ bool _movePutsKingInCheck(ChessPiece piece, int move, ChessBoard board) {
 }
 
 bool _kingInCheckAtTile(int tile, Player player, ChessBoard board) {
-  for (var piece in piecesForPlayer(oppositePlayer(player), board)) {
+  for (var piece in piecesForPlayer(player.opposite, board)) {
     if (movesForPiece(piece, board, legal: false).contains(tile)) {
       return true;
     }
@@ -235,7 +234,7 @@ bool _kingInCheckAtTile(int tile, Player player, ChessBoard board) {
 }
 
 bool kingInCheck(Player player, ChessBoard board) {
-  for (var piece in piecesForPlayer(oppositePlayer(player), board)) {
+  for (var piece in piecesForPlayer(player.opposite, board)) {
     if (movesForPiece(piece, board, legal: false)
         .contains(kingForPlayer(player, board).tile)) {
       return true;

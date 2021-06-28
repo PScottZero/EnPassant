@@ -1,5 +1,6 @@
 import 'package:en_passant/views/components/rounded_button.dart';
 import 'package:en_passant/views/components/text_variable.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,10 @@ class RoundedAlertButton extends StatelessWidget {
                 },
               ),
               CupertinoButton(
-                child: TextDefault('Cancel', color: CupertinoColors.activeBlue),
+                child: TextDefault(
+                  ViewConstants.CANCEL_STRING,
+                  color: CupertinoColors.activeBlue,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },

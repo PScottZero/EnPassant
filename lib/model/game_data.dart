@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:en_passant/logic/chess_game.dart';
-import 'package:en_passant/logic/shared_functions.dart';
+import 'package:en_passant/model/player.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'app_model.dart';
@@ -15,6 +15,7 @@ class GameData extends ChangeNotifier {
   bool gameOver = false;
   bool stalemate = false;
   bool promotionRequested = false;
+  bool moveListUpdated = false;
   int playerCount = 1;
   int aiDifficulty = 3;
   Player selectedSide = Player.player1;
@@ -25,7 +26,7 @@ class GameData extends ChangeNotifier {
   int timeLimit = 0;
 
   Player get aiTurn {
-    return oppositePlayer(playerSide);
+    return playerSide.opposite;
   }
 
   bool get isAIsTurn {
@@ -95,7 +96,7 @@ class GameData extends ChangeNotifier {
   }
 
   void changeTurn() {
-    turn = oppositePlayer(turn);
+    turn = turn.opposite;
     notifyListeners();
   }
 
@@ -126,6 +127,11 @@ class GameData extends ChangeNotifier {
     timeLimit = duration;
     player1TimeLeft = Duration(minutes: timeLimit);
     player2TimeLeft = Duration(minutes: timeLimit);
+    notifyListeners();
+  }
+
+  void jumpToEndOfMoveList() {
+    moveListUpdated = true;
     notifyListeners();
   }
 }

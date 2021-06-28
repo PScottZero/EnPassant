@@ -1,8 +1,8 @@
-import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
 
 enum ChessPieceType { pawn, rook, knight, bishop, king, queen, promotion }
 
-const PIECE_VALUES = <ChessPieceType, int> {
+const PIECE_VALUES = <ChessPieceType, int>{
   ChessPieceType.pawn: 100,
   ChessPieceType.knight: 320,
   ChessPieceType.bishop: 330,
@@ -19,8 +19,9 @@ class ChessPiece {
   int tile;
 
   int get value {
-    return (player == Player.player1) ?
-      PIECE_VALUES[type] : -PIECE_VALUES[type];
+    return (player == Player.player1)
+        ? PIECE_VALUES[type]
+        : -PIECE_VALUES[type];
   }
 
   ChessPiece(this.id, this.type, this.player, this.tile);

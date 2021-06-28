@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/material.dart';
 
-import 'toggle.dart';
+import '../../components/toggle.dart';
 
 class Toggles extends StatelessWidget {
   final AppModel appModel;
@@ -15,28 +16,28 @@ class Toggles extends StatelessWidget {
     return Column(
       children: [
         Toggle(
-          'Show Hints',
+          ViewConstants.SHOW_HINTS_STRING,
           toggle: appModel.showHints,
           setFunc: appModel.setShowHints,
         ),
         Toggle(
-          'Allow Undo/Redo',
+          ViewConstants.UNDO_REDO_STRING,
           toggle: appModel.allowUndoRedo,
           setFunc: appModel.setAllowUndoRedo,
         ),
         Toggle(
-          'Show Move History',
+          ViewConstants.MOVE_HISTORY_STRING,
           toggle: appModel.showMoveHistory,
           setFunc: appModel.setShowMoveHistory,
         ),
         Toggle(
-          'Flip Board For Black',
+          ViewConstants.FLIP_STRING,
           toggle: appModel.flip,
           setFunc: appModel.setFlipBoard,
         ),
         Platform.isAndroid
             ? Toggle(
-                'Sound Enabled',
+                ViewConstants.SOUND_ENABLED_STRING,
                 toggle: appModel.soundEnabled,
                 setFunc: appModel.setSoundEnabled,
               )

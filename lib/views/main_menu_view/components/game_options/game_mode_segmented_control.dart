@@ -1,6 +1,7 @@
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'picker.dart';
+import '../../../components/segmented_control.dart';
 
 class GameModePicker extends StatelessWidget {
   final Map<int, Text> playerCountOptions = const <int, Text>{
@@ -15,8 +16,8 @@ class GameModePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Picker<int>(
-      label: 'Game Mode',
+    return SegmentedControl<int>(
+      label: ViewConstants.GAME_MODE_STRING,
       options: playerCountOptions,
       selection: playerCount,
       setFunc: setFunc,

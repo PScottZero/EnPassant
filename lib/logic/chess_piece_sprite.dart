@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
@@ -64,7 +65,9 @@ class ChessPieceSprite {
   void playSound(double destX, double destY, AppModel appModel) async {
     if ((destX - spriteX).abs() <= 0.1 && (destY - spriteY).abs() <= 0.1) {
       if (appModel.soundEnabled) {
-        final bytes = await (await audioCache.loadAsFile('audio/piece_moved.mp3')).readAsBytes();
+        final bytes =
+            await (await audioCache.loadAsFile('audio/piece_moved.mp3'))
+                .readAsBytes();
         audioPlayer.playBytes(bytes);
       }
     }
@@ -76,8 +79,8 @@ class ChessPieceSprite {
     if (piece.type == ChessPieceType.promotion) {
       pieceName = 'pawn';
     }
-    sprite = Sprite(await Flame.images.load(
-        'pieces/${formatPieceTheme(pieceTheme)}/${pieceName}_$color.png'));
+    sprite = Sprite(await Flame.images
+        .load('pieces/${themeNameToDir(pieceTheme)}/${pieceName}_$color.png'));
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {

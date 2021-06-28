@@ -1,4 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
 import 'package:en_passant/views/components/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,9 @@ class GameStatus extends StatelessWidget {
       builder: (context, appModel, child) => Row(
         children: [
           TextRegular(_getStatus(appModel)),
-          !appModel.gameData.gameOver && appModel.gameData.playerCount == 1 && appModel.gameData.isAIsTurn
+          !appModel.gameData.gameOver &&
+                  appModel.gameData.playerCount == 1 &&
+                  appModel.gameData.isAIsTurn
               ? CupertinoActivityIndicator(radius: 12)
               : Container()
         ],

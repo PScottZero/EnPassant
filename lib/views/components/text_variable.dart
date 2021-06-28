@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../view_constants.dart';
+import '../constants/view_constants.dart';
 
 class TextDefault extends StatelessWidget {
   final String text;
@@ -9,7 +9,7 @@ class TextDefault extends StatelessWidget {
 
   TextDefault(
     this.text, {
-    this.fontSize = ViewConstants.TEXT_DEFAULT,
+    this.fontSize = ViewConstants.TEXT_DIALOG,
     this.color = CupertinoColors.white,
   });
 

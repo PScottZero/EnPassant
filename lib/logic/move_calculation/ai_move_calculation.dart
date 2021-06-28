@@ -1,10 +1,9 @@
 import 'dart:math';
 
 import 'package:en_passant/logic/move_calculation/move_classes.dart';
-import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/model/player.dart';
 
 import '../chess_board.dart';
-import '../shared_functions.dart';
 import 'move_calculation.dart';
 
 const INITIAL_ALPHA = -40000;
@@ -17,50 +16,29 @@ Move calculateAIMove(Map args) {
   if (board.possibleOpenings.isNotEmpty) {
     return _openingMove(board, args['aiPlayer']);
   } else {
-    return _alphaBeta(
-      board,
-      args['aiPlayer'],
-      null,
-      0,
-      args['aiDifficulty'],
-      INITIAL_ALPHA,
-      INITIAL_BETA
-    );
+    return _alphaBeta(board, args['aiPlayer'], null, 0, args['aiDifficulty'],
+        INITIAL_ALPHA, INITIAL_BETA);
   }
 }
 
-Move _alphaBeta(
-  ChessBoard board,
-  Player player,
-  Move move,
-  int depth,
-  int maxDepth,
-  int alpha,
-  int beta
-) {
+Move _alphaBeta(ChessBoard board, Player player, Move move, int depth,
+    int maxDepth, int alpha, int beta) {
   if (depth == maxDepth) {
     move.meta.value = boardValue(board);
     return move;
   }
   var bestMove = Move.invalidMove();
   bestMove.meta.value = player == Player.player1 ? INITIAL_ALPHA : INITIAL_BETA;
-  
+
   for (var move in allMoves(player, board, maxDepth)) {
     push(move, board);
     var result = _alphaBeta(
-      board,
-      oppositePlayer(player),
-      move,
-      depth + 1,
-      maxDepth,
-      alpha,
-      beta
-    );
+        board, player.opposite, move, depth + 1, maxDepth, alpha, beta);
     result.from = move.from;
     result.to = move.to;
     result.meta.promotionType = move.meta.promotionType;
     pop(board);
-    
+
     if (player == Player.player1) {
       if (result.meta.value > bestMove.meta.value) {
         bestMove = result;
@@ -79,7 +57,8 @@ Move _alphaBeta(
       }
     }
   }
-  if (bestMove.meta.value.abs() == INITIAL_BETA && !kingInCheck(player, board)) {
+  if (bestMove.meta.value.abs() == INITIAL_BETA &&
+      !kingInCheck(player, board)) {
     if (piecesForPlayer(player, board).length == 1) {
       bestMove.meta.value =
           player == Player.player1 ? STALEMATE_BETA : STALEMATE_ALPHA;

@@ -1,4 +1,5 @@
 import 'package:en_passant/views/components/text_variable.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class TimerWidget extends StatelessWidget {
@@ -11,14 +12,19 @@ class TimerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        height: 60,
+        height: ViewConstants.BUTTON_HEIGHT,
         child: Center(
           child: TextRegular(_durationToString(timeLeft)),
         ),
         decoration: BoxDecoration(
-          border: Border.all(color: color, width: 2),
-          borderRadius: BorderRadius.circular(30),
-          color: Color(0x20000000),
+          border: Border.all(
+            color: color,
+            width: ViewConstants.BORDER_WIDTH_SMALL,
+          ),
+          borderRadius: BorderRadius.circular(
+            ViewConstants.BORDER_RADIUS,
+          ),
+          color: ViewConstants.BACKGROUND_COLOR,
         ),
       ),
     );

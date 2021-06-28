@@ -1,6 +1,9 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/model/app_themes.dart';
+import 'package:en_passant/views/components/rounded_background.dart';
 import 'package:en_passant/views/components/text_variable.dart';
+import 'package:en_passant/views/components/picker.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -11,35 +14,16 @@ class AppThemePicker extends StatelessWidget {
       builder: (context, appModel, child) => Column(
         children: [
           Container(
-            child: TextSmall('App Theme'),
-            padding: EdgeInsets.all(10),
+            child: TextSmall(ViewConstants.APP_THEME_STRING),
+            padding: EdgeInsets.all(ViewConstants.PADDING_SMALL),
           ),
-          Container(
-            height: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Color(0x20000000),
+          RoundedBackground(
+            Picker(
+              options: themeList.map((theme) => theme.name).toList(),
+              selectionIndex: appModel.themePrefs.themeIndex,
+              setFunc: appModel.themePrefs.setTheme,
             ),
-            child: CupertinoPicker(
-              scrollController: FixedExtentScrollController(
-                initialItem: appModel.themePrefs.themeIndex,
-              ),
-              selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-                background: Color(0x20000000),
-                capLeftEdge: false,
-                capRightEdge: false,
-              ),
-              itemExtent: 50,
-              onSelectedItemChanged: appModel.themePrefs.setTheme,
-              children: themeList
-                  .map(
-                    (theme) => Container(
-                      padding: EdgeInsets.all(10),
-                      child: TextRegular(theme.name),
-                    ),
-                  )
-                  .toList(),
-            ),
+            height: ViewConstants.PICKER_HEIGHT,
           ),
         ],
       ),

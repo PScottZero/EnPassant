@@ -1,4 +1,5 @@
 import 'package:en_passant/views/components/text_variable.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class Toggle extends StatelessWidget {
@@ -11,7 +12,7 @@ class Toggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 55,
+      height: ViewConstants.TOGGLE_HEIGHT,
       child: Row(
         children: [
           TextRegular(label),
