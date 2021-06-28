@@ -1,53 +1,42 @@
 import 'package:flutter/cupertino.dart';
 
+import '../view_constants.dart';
+
 class TextDefault extends StatelessWidget {
   final String text;
   final Color color;
+  final double fontSize;
 
-  TextDefault(this.text, {this.color = CupertinoColors.white});
+  TextDefault(
+    this.text, {
+    this.fontSize = ViewConstants.TEXT_DEFAULT,
+    this.color = CupertinoColors.white,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
       style: TextStyle(
-        fontSize: 16,
-        fontFamily: 'Jura',
+        fontSize: fontSize,
+        fontFamily: ViewConstants.FONT_NAME,
         color: color,
       ),
     );
   }
 }
 
-class TextSmall extends StatelessWidget {
-  final String text;
-
-  TextSmall(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(fontSize: 20));
-  }
+class TextSmall extends TextDefault {
+  TextSmall(String text, {Color color = CupertinoColors.white})
+      : super(text, fontSize: ViewConstants.TEXT_SMALL, color: color);
 }
 
-class TextRegular extends StatelessWidget {
-  final String text;
-
-  TextRegular(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(fontSize: 24));
-  }
+class TextRegular extends TextDefault {
+  TextRegular(String text, {Color color = CupertinoColors.white})
+      : super(text, fontSize: ViewConstants.TEXT_REGULAR, color: color);
 }
 
-class TextLarge extends StatelessWidget {
-  final String text;
-
-  TextLarge(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(fontSize: 36));
-  }
+class TextLarge extends TextDefault {
+  TextLarge(String text, {Color color = CupertinoColors.white})
+      : super(text, fontSize: ViewConstants.TEXT_LARGE, color: color);
 }

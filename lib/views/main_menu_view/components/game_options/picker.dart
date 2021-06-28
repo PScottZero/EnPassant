@@ -1,4 +1,5 @@
 import 'package:en_passant/views/components/text_variable.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class Picker<T> extends StatelessWidget {
@@ -14,14 +15,17 @@ class Picker<T> extends StatelessWidget {
     return Column(
       children: [
         TextSmall(label),
-        SizedBox(height: 10),
+        SizedBox(height: ViewConstants.SMALL_GAP),
         ClipRRect(
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(ViewConstants.BORDER_RADIUS),
           child: Container(
             child: CupertinoTheme(
               data: CupertinoThemeData(
                 textTheme: CupertinoTextThemeData(
-                  textStyle: TextStyle(fontFamily: 'Jura', fontSize: 8),
+                  textStyle: TextStyle(
+                    fontFamily: ViewConstants.FONT_NAME,
+                    fontSize: ViewConstants.TEXT_PICKER,
+                  ),
                 ),
               ),
               child: CupertinoSlidingSegmentedControl<T>(
@@ -30,9 +34,14 @@ class Picker<T> extends StatelessWidget {
                 onValueChanged: (T val) {
                   setFunc(val);
                 },
-                padding: EdgeInsets.all(8),
-                thumbColor: Color(0x66FFFFFF),
-                backgroundColor: Color(0x20000000),
+                padding: EdgeInsets.fromLTRB(
+                  ViewConstants.PICKER_PADDING_LR,
+                  ViewConstants.PICKER_PADDING_TB,
+                  ViewConstants.PICKER_PADDING_LR,
+                  ViewConstants.PICKER_PADDING_TB,
+                ),
+                thumbColor: ViewConstants.PICKER_THUMB_COLOR,
+                backgroundColor: ViewConstants.BACKGROUND_COLOR,
               ),
             ),
             width: double.infinity,

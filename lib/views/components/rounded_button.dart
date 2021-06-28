@@ -1,5 +1,8 @@
+import 'package:en_passant/views/components/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../view_constants.dart';
 
 class RoundedButton extends StatelessWidget {
   final String label;
@@ -12,19 +15,15 @@ class RoundedButton extends StatelessWidget {
     return Container(
       child: CupertinoButton(
         padding: EdgeInsets.zero,
-        color: Color(0x20000000),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-          ),
+        color: ViewConstants.BACKGROUND_COLOR,
+        child: TextRegular(label),
+        borderRadius: BorderRadius.circular(
+          ViewConstants.BORDER_RADIUS,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(30)),
         onPressed: onPressed,
       ),
       width: double.infinity,
-      height: 60,
+      height: ViewConstants.BUTTON_HEIGHT,
     );
   }
 }

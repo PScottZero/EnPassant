@@ -1,4 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'game_options/ai_difficulty_picker.dart';
@@ -22,7 +23,7 @@ class GameOptions extends StatelessWidget {
             appModel.gameData.playerCount,
             appModel.gameData.setPlayerCount,
           ),
-          SizedBox(height: 20),
+          SizedBox(height: ViewConstants.SMALL_GAP),
           appModel.gameData.playerCount == 1
               ? Column(
                   children: [
@@ -30,12 +31,12 @@ class GameOptions extends StatelessWidget {
                       appModel.gameData.aiDifficulty,
                       appModel.gameData.setAIDifficulty,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: ViewConstants.SMALL_GAP),
                     SidePicker(
                       appModel.gameData.selectedSide,
                       appModel.gameData.setPlayerSide,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: ViewConstants.SMALL_GAP),
                   ],
                 )
               : Container(),

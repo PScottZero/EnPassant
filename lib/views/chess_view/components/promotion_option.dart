@@ -1,6 +1,7 @@
 import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class PromotionOption extends StatelessWidget {
@@ -27,6 +28,8 @@ class PromotionOption extends StatelessWidget {
   }
 
   String _playerColor() {
-    return appModel.gameData.turn == Player.player1 ? 'white' : 'black';
+    return appModel.gameData.turn == Player.player1
+        ? ViewConstants.WHITE_COLOR
+        : ViewConstants.BLACK_COLOR;
   }
 }

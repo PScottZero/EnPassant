@@ -1,4 +1,5 @@
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'game_info_and_controls/moves_undo_redo_row.dart';
@@ -16,7 +17,7 @@ class GameInfoAndControls extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     return Container(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height > 700 ? 204 : 134,
+        maxHeight: _maxHeight(context),
       ),
       child: ListView(
         controller: scrollController,
@@ -30,6 +31,13 @@ class GameInfoAndControls extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  double _maxHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height >
+            ViewConstants.SMALL_SCREEN_CUTOFF
+        ? ViewConstants.GAME_INFO_MAX_HEIGHT
+        : ViewConstants.GAME_INFO_MIN_HEIGHT;
   }
 
   void _scrollToBottom() {

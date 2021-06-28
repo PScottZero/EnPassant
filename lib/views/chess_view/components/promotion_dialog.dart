@@ -1,5 +1,6 @@
 import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'promotion_option.dart';
@@ -21,7 +22,7 @@ class PromotionDialog extends StatelessWidget {
     return CupertinoAlertDialog(
       actions: [
         Container(
-          height: 66,
+          height: ViewConstants.PROMOTION_DIALOG_HEIGHT,
           child: Row(
             children: PROMOTIONS
                 .map(

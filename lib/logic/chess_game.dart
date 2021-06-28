@@ -33,7 +33,8 @@ class ChessGame extends Game with TapDetector {
     width = MediaQuery.of(context).size.width - 68;
     tileSize = width / 8;
     for (var piece in board.player1Pieces + board.player2Pieces) {
-      spriteMap[piece] = ChessPieceSprite(piece, appModel.themePrefs.pieceTheme);
+      spriteMap[piece] =
+          ChessPieceSprite(piece, appModel.themePrefs.pieceTheme);
     }
     _initSpritePositions();
     if (appModel.gameData.isAIsTurn) {
@@ -157,11 +158,8 @@ class ChessGame extends Game with TapDetector {
   void undoMove() {
     board.redoStack.add(pop(board));
     if (board.moveStack.length > 1) {
-      _moveCompletion(
-        board.moveStack[board.moveStack.length - 2],
-        clearRedo: false,
-        undoing: true
-      );
+      _moveCompletion(board.moveStack[board.moveStack.length - 2],
+          clearRedo: false, undoing: true);
     } else {
       _undoOpeningMove();
       appModel.gameData.changeTurn();
@@ -173,12 +171,8 @@ class ChessGame extends Game with TapDetector {
     board.redoStack.add(pop(board));
     appModel.jumpToEndOfMoveList();
     if (board.moveStack.length > 1) {
-      _moveCompletion(
-        board.moveStack[board.moveStack.length - 2],
-        clearRedo: false,
-        undoing: true,
-        changeTurn: false
-      );
+      _moveCompletion(board.moveStack[board.moveStack.length - 2],
+          clearRedo: false, undoing: true, changeTurn: false);
     } else {
       _undoOpeningMove();
     }
@@ -193,10 +187,8 @@ class ChessGame extends Game with TapDetector {
   }
 
   void redoMove() {
-    _moveCompletion(
-      push(board.redoStack.removeLast(), board),
-      clearRedo: false
-    );
+    _moveCompletion(push(board.redoStack.removeLast(), board),
+        clearRedo: false);
   }
 
   void redoTwoMoves() {
@@ -288,10 +280,10 @@ class ChessGame extends Game with TapDetector {
     for (var piece in board.player1Pieces + board.player2Pieces) {
       spriteMap[piece].sprite.render(
             canvas,
-            size: Vector2(tileSize - 10, tileSize - 10),
+            size: Vector2(tileSize - 12, tileSize - 12),
             position: Vector2(
-              spriteMap[piece].spriteX + 5,
-              spriteMap[piece].spriteY + 5,
+              spriteMap[piece].spriteX + 6,
+              spriteMap[piece].spriteY + 6,
             ),
           );
     }

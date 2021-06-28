@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class BottomPadding extends StatelessWidget {
@@ -10,7 +11,7 @@ class BottomPadding extends StatelessWidget {
       height: Platform.isAndroid
           ? max(MediaQuery.of(context).viewInsets.bottom,
               MediaQuery.of(context).padding.bottom)
-          : 0,
+          : ViewConstants.ZERO,
     );
   }
 }

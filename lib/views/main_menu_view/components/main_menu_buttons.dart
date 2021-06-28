@@ -2,6 +2,7 @@ import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/chess_view/chess_view.dart';
 import 'package:en_passant/views/components/rounded_button.dart';
 import 'package:en_passant/views/settings_view/settings_view.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,7 +18,7 @@ class MainMenuButtons extends StatelessWidget {
       child: Column(
         children: [
           RoundedButton(
-            'Start',
+            ViewConstants.START_BUTTON,
             onPressed: () {
               Navigator.push(
                 context,
@@ -30,21 +31,21 @@ class MainMenuButtons extends StatelessWidget {
               );
             },
           ),
-          SizedBox(height: 10),
+          SizedBox(height: ViewConstants.SMALL_GAP),
           Row(
             children: [
               Expanded(
                 child: RoundedButton(
-                  'GitHub',
+                  ViewConstants.GITHUB_BUTTON,
                   onPressed: () {
                     _openGitHub();
                   },
                 ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: ViewConstants.SMALL_GAP),
               Expanded(
                 child: RoundedButton(
-                  'Settings',
+                  ViewConstants.SETTINGS_BUTTON,
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -63,11 +64,10 @@ class MainMenuButtons extends StatelessWidget {
   }
 
   void _openGitHub() async {
-    const url = 'https://github.com/PScottZero/EnPassant';
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunch(ViewConstants.GITHUB_URL)) {
+      await launch(ViewConstants.GITHUB_URL);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch ${ViewConstants.GITHUB_URL}';
     }
   }
 }
