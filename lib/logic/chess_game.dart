@@ -4,10 +4,8 @@ import 'package:async/async.dart';
 import 'package:en_passant/logic/chess_piece_sprite.dart';
 import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_calculation.dart';
-import 'package:en_passant/logic/move_calculation/move_classes/move_meta.dart';
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +13,7 @@ import 'package:flutter/foundation.dart';
 
 import 'chess_board.dart';
 import 'chess_piece.dart';
-import 'move_calculation/move_classes/move.dart';
+import 'move_calculation/move_classes.dart';
 
 class ChessGame extends Game with TapDetector {
   double width;
@@ -35,17 +33,17 @@ class ChessGame extends Game with TapDetector {
     width = MediaQuery.of(context).size.width - 68;
     tileSize = width / 8;
     for (var piece in board.player1Pieces + board.player2Pieces) {
-      spriteMap[piece] = ChessPieceSprite(piece, appModel.pieceTheme);
+      spriteMap[piece] = ChessPieceSprite(piece, appModel.themePrefs.pieceTheme);
     }
     _initSpritePositions();
-    if (appModel.isAIsTurn) {
+    if (appModel.gameData.isAIsTurn) {
       _aiMove();
     }
   }
 
   @override
   void onTapDown(TapDownInfo details) {
-    if (appModel.gameOver || !(appModel.isAIsTurn)) {
+    if (appModel.gameData.gameOver || !(appModel.gameData.isAIsTurn)) {
       var tile = _vector2ToTile(details.eventPosition.widget);
       var touchedPiece = board.tiles[tile];
       if (touchedPiece == selectedPiece) {
@@ -103,7 +101,7 @@ class ChessGame extends Game with TapDetector {
 
   void _selectPiece(ChessPiece piece) {
     if (piece != null) {
-      if (piece.player == appModel.turn) {
+      if (piece.player == appModel.gameData.turn) {
         selectedPiece = piece;
         if (selectedPiece != null) {
           validMoves = movesForPiece(piece, board);
@@ -118,32 +116,33 @@ class ChessGame extends Game with TapDetector {
   void _movePiece(int tile) {
     if (validMoves.contains(tile)) {
       validMoves = [];
-      var meta = push(Move(selectedPiece.tile, tile), board, getMeta: true);
-      if (meta.promotion) {
-        appModel.requestPromotion();
+      var move = Move(selectedPiece.tile, tile);
+      push(move, board, getMeta: true);
+      if (move.meta.flags.promotion) {
+        appModel.gameData.requestPromotion();
       }
-      _moveCompletion(meta, changeTurn: !meta.promotion);
+      _moveCompletion(move, changeTurn: !move.meta.flags.promotion);
     }
   }
 
   void _aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
     var args = Map();
-    args['aiPlayer'] = appModel.aiTurn;
-    args['aiDifficulty'] = appModel.aiDifficulty;
+    args['aiPlayer'] = appModel.gameData.aiTurn;
+    args['aiDifficulty'] = appModel.gameData.aiDifficulty;
     args['board'] = board;
     aiOperation = CancelableOperation.fromFuture(
       compute(calculateAIMove, args),
     );
     aiOperation.value.then((move) {
-      if (move == null || appModel.gameOver) {
-        appModel.endGame();
+      if (move == null || appModel.gameData.gameOver) {
+        appModel.gameData.endGame();
       } else {
         validMoves = [];
-        var meta = push(move, board, getMeta: true);
-        _moveCompletion(meta, changeTurn: !meta.promotion);
-        if (meta.promotion) {
-          promote(move.promotionType);
+        push(move, board, getMeta: true);
+        _moveCompletion(move, changeTurn: !move.meta.flags.promotion);
+        if (move.meta.flags.promotion) {
+          promote(move.meta.promotionType);
         }
       }
     });
@@ -157,22 +156,29 @@ class ChessGame extends Game with TapDetector {
 
   void undoMove() {
     board.redoStack.add(pop(board));
-    if (appModel.moveMetaList.length > 1) {
-      var meta = appModel.moveMetaList[appModel.moveMetaList.length - 2];
-      _moveCompletion(meta, clearRedo: false, undoing: true);
+    if (board.moveStack.length > 1) {
+      _moveCompletion(
+        board.moveStack[board.moveStack.length - 2],
+        clearRedo: false,
+        undoing: true
+      );
     } else {
       _undoOpeningMove();
-      appModel.changeTurn();
+      appModel.gameData.changeTurn();
     }
   }
 
   void undoTwoMoves() {
     board.redoStack.add(pop(board));
     board.redoStack.add(pop(board));
-    appModel.popMoveMeta();
-    if (appModel.moveMetaList.length > 1) {
-      _moveCompletion(appModel.moveMetaList[appModel.moveMetaList.length - 2],
-          clearRedo: false, undoing: true, changeTurn: false);
+    appModel.jumpToEndOfMoveList();
+    if (board.moveStack.length > 1) {
+      _moveCompletion(
+        board.moveStack[board.moveStack.length - 2],
+        clearRedo: false,
+        undoing: true,
+        changeTurn: false
+      );
     } else {
       _undoOpeningMove();
     }
@@ -183,31 +189,32 @@ class ChessGame extends Game with TapDetector {
     validMoves = [];
     latestMove = null;
     checkHintTile = null;
-    appModel.popMoveMeta();
+    appModel.jumpToEndOfMoveList();
   }
 
   void redoMove() {
-    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
-        clearRedo: false);
+    _moveCompletion(
+      push(board.redoStack.removeLast(), board),
+      clearRedo: false
+    );
   }
 
   void redoTwoMoves() {
-    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
+    _moveCompletion(push(board.redoStack.removeLast(), board),
         clearRedo: false, updateMetaList: true);
-    _moveCompletion(pushMSO(board.redoStack.removeLast(), board),
+    _moveCompletion(push(board.redoStack.removeLast(), board),
         clearRedo: false, updateMetaList: true);
   }
 
   void promote(ChessPieceType type) {
-    board.moveStack.last.movedPiece.type = type;
-    board.moveStack.last.promotionType = type;
+    board.moveStack.last.meta.movedPiece.type = type;
+    board.moveStack.last.meta.promotionType = type;
     addPromotedPiece(board, board.moveStack.last);
-    appModel.moveMetaList.last.promotionType = type;
-    _moveCompletion(appModel.moveMetaList.last, updateMetaList: false);
+    _moveCompletion(board.moveStack.last, updateMetaList: false);
   }
 
   void _moveCompletion(
-    MoveMeta meta, {
+    Move move, {
     bool clearRedo = true,
     bool undoing = false,
     bool changeTurn = true,
@@ -217,41 +224,41 @@ class ChessGame extends Game with TapDetector {
       board.redoStack = [];
     }
     validMoves = [];
-    latestMove = meta.move;
+    latestMove = move;
     checkHintTile = null;
-    var oppositeTurn = oppositePlayer(appModel.turn);
+    var oppositeTurn = oppositePlayer(appModel.gameData.turn);
     if (kingInCheck(oppositeTurn, board)) {
-      meta.isCheck = true;
+      move.meta.flags.isCheck = true;
       checkHintTile = kingForPlayer(oppositeTurn, board).tile;
     }
     if (kingInCheckmate(oppositeTurn, board)) {
-      if (!meta.isCheck) {
-        appModel.stalemate = true;
-        meta.isStalemate = true;
+      if (!move.meta.flags.isCheck) {
+        appModel.gameData.stalemate = true;
+        move.meta.flags.isStalemate = true;
       }
-      meta.isCheck = false;
-      meta.isCheckmate = true;
-      appModel.endGame();
+      move.meta.flags.isCheck = false;
+      move.meta.flags.isCheckmate = true;
+      appModel.gameData.endGame();
     }
     if (undoing) {
-      appModel.popMoveMeta();
-      appModel.undoEndGame();
+      appModel.jumpToEndOfMoveList();
+      appModel.gameData.undoEndGame();
     } else if (updateMetaList) {
-      appModel.pushMoveMeta(meta);
+      appModel.jumpToEndOfMoveList();
     }
     if (changeTurn) {
-      appModel.changeTurn();
+      appModel.gameData.changeTurn();
     }
     selectedPiece = null;
-    if (appModel.isAIsTurn && clearRedo && changeTurn) {
+    if (appModel.gameData.isAIsTurn && clearRedo && changeTurn) {
       _aiMove();
     }
   }
 
   int _vector2ToTile(Vector2 vector2) {
     if (appModel.flip &&
-        appModel.playingWithAI &&
-        appModel.playerSide == Player.player2) {
+        appModel.gameData.playingWithAI &&
+        appModel.gameData.playerSide == Player.player2) {
       return (7 - (vector2.y / tileSize).floor()) * 8 +
           (7 - (vector2.x / tileSize).floor());
     } else {
@@ -271,8 +278,8 @@ class ChessGame extends Game with TapDetector {
         ),
         Paint()
           ..color = (tileNo + (tileNo / 8).floor()) % 2 == 0
-              ? appModel.theme.lightTile
-              : appModel.theme.darkTile,
+              ? appModel.themePrefs.theme.lightTile
+              : appModel.themePrefs.theme.darkTile,
       );
     }
   }
@@ -298,7 +305,7 @@ class ChessGame extends Game with TapDetector {
           getYFromTile(tile, tileSize, appModel) + (tileSize / 2),
         ),
         tileSize / 5,
-        Paint()..color = appModel.theme.moveHint,
+        Paint()..color = appModel.themePrefs.theme.moveHint,
       );
     }
   }
@@ -312,7 +319,7 @@ class ChessGame extends Game with TapDetector {
           tileSize,
           tileSize,
         ),
-        Paint()..color = appModel.theme.latestMove,
+        Paint()..color = appModel.themePrefs.theme.latestMove,
       );
       canvas.drawRect(
         Rect.fromLTWH(
@@ -321,7 +328,7 @@ class ChessGame extends Game with TapDetector {
           tileSize,
           tileSize,
         ),
-        Paint()..color = appModel.theme.latestMove,
+        Paint()..color = appModel.themePrefs.theme.latestMove,
       );
     }
   }
@@ -335,7 +342,7 @@ class ChessGame extends Game with TapDetector {
           tileSize,
           tileSize,
         ),
-        Paint()..color = appModel.theme.checkHint,
+        Paint()..color = appModel.themePrefs.theme.checkHint,
       );
     }
   }
@@ -349,7 +356,7 @@ class ChessGame extends Game with TapDetector {
           tileSize,
           tileSize,
         ),
-        Paint()..color = appModel.theme.moveHint,
+        Paint()..color = appModel.themePrefs.theme.moveHint,
       );
     }
   }

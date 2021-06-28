@@ -1,12 +1,11 @@
 import 'dart:math';
 
-import 'package:en_passant/logic/move_calculation/move_classes/move_and_value.dart';
-import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
+import 'package:en_passant/logic/move_calculation/move_classes.dart';
+import 'package:en_passant/model/app_model.dart';
 
 import '../chess_board.dart';
 import '../shared_functions.dart';
 import 'move_calculation.dart';
-import 'move_classes/move.dart';
 
 const INITIAL_ALPHA = -40000;
 const STALEMATE_ALPHA = -20000;
@@ -18,49 +17,74 @@ Move calculateAIMove(Map args) {
   if (board.possibleOpenings.isNotEmpty) {
     return _openingMove(board, args['aiPlayer']);
   } else {
-    return _alphaBeta(board, args['aiPlayer'], null, 0, args['aiDifficulty'],
-            INITIAL_ALPHA, INITIAL_BETA)
-        .move;
+    return _alphaBeta(
+      board,
+      args['aiPlayer'],
+      null,
+      0,
+      args['aiDifficulty'],
+      INITIAL_ALPHA,
+      INITIAL_BETA
+    );
   }
 }
 
-MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move, int depth,
-    int maxDepth, int alpha, int beta) {
+Move _alphaBeta(
+  ChessBoard board,
+  Player player,
+  Move move,
+  int depth,
+  int maxDepth,
+  int alpha,
+  int beta
+) {
   if (depth == maxDepth) {
-    return MoveAndValue(move, boardValue(board));
+    move.meta.value = boardValue(board);
+    return move;
   }
-  var bestMove = MoveAndValue(
-      null, player == Player.player1 ? INITIAL_ALPHA : INITIAL_BETA);
+  var bestMove = Move.invalidMove();
+  bestMove.meta.value = player == Player.player1 ? INITIAL_ALPHA : INITIAL_BETA;
+  
   for (var move in allMoves(player, board, maxDepth)) {
-    push(move, board, promotionType: move.promotionType);
+    push(move, board);
     var result = _alphaBeta(
-        board, oppositePlayer(player), move, depth + 1, maxDepth, alpha, beta);
-    result.move = move;
+      board,
+      oppositePlayer(player),
+      move,
+      depth + 1,
+      maxDepth,
+      alpha,
+      beta
+    );
+    result.from = move.from;
+    result.to = move.to;
+    result.meta.promotionType = move.meta.promotionType;
     pop(board);
+    
     if (player == Player.player1) {
-      if (result.value > bestMove.value) {
+      if (result.meta.value > bestMove.meta.value) {
         bestMove = result;
       }
-      alpha = max(alpha, bestMove.value);
+      alpha = max(alpha, bestMove.meta.value);
       if (alpha >= beta) {
         break;
       }
     } else {
-      if (result.value < bestMove.value) {
+      if (result.meta.value < bestMove.meta.value) {
         bestMove = result;
       }
-      beta = min(beta, bestMove.value);
+      beta = min(beta, bestMove.meta.value);
       if (beta <= alpha) {
         break;
       }
     }
   }
-  if (bestMove.value.abs() == INITIAL_BETA && !kingInCheck(player, board)) {
+  if (bestMove.meta.value.abs() == INITIAL_BETA && !kingInCheck(player, board)) {
     if (piecesForPlayer(player, board).length == 1) {
-      bestMove.value =
+      bestMove.meta.value =
           player == Player.player1 ? STALEMATE_BETA : STALEMATE_ALPHA;
     } else {
-      bestMove.value =
+      bestMove.meta.value =
           player == Player.player1 ? STALEMATE_ALPHA : STALEMATE_BETA;
     }
   }

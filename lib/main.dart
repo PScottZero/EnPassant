@@ -1,5 +1,4 @@
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/main_menu_view.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'logic/shared_functions.dart';
+import 'model/theme_preferences.dart';
+import 'views/main_menu_view/main_menu_view.dart';
 
 void main() {
   runApp(

@@ -1,6 +1,15 @@
-import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
+import 'package:en_passant/model/app_model.dart';
 
 enum ChessPieceType { pawn, rook, knight, bishop, king, queen, promotion }
+
+const PIECE_VALUES = <ChessPieceType, int> {
+  ChessPieceType.pawn: 100,
+  ChessPieceType.knight: 320,
+  ChessPieceType.bishop: 330,
+  ChessPieceType.rook: 500,
+  ChessPieceType.queen: 900,
+  ChessPieceType.king: 20000
+};
 
 class ChessPiece {
   int id;
@@ -10,44 +19,8 @@ class ChessPiece {
   int tile;
 
   int get value {
-    int value = 0;
-    switch (type) {
-      case ChessPieceType.pawn:
-        {
-          value = 100;
-        }
-        break;
-      case ChessPieceType.knight:
-        {
-          value = 320;
-        }
-        break;
-      case ChessPieceType.bishop:
-        {
-          value = 330;
-        }
-        break;
-      case ChessPieceType.rook:
-        {
-          value = 500;
-        }
-        break;
-      case ChessPieceType.queen:
-        {
-          value = 900;
-        }
-        break;
-      case ChessPieceType.king:
-        {
-          value = 20000;
-        }
-        break;
-      default:
-        {
-          value = 0;
-        }
-    }
-    return (player == Player.player1) ? value : -value;
+    return (player == Player.player1) ?
+      PIECE_VALUES[type] : -PIECE_VALUES[type];
   }
 
   ChessPiece(this.id, this.type, this.player, this.tile);

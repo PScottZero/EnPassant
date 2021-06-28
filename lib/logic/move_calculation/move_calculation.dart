@@ -1,40 +1,13 @@
-import 'package:en_passant/logic/move_calculation/move_classes/direction.dart';
-import 'package:en_passant/logic/move_calculation/move_classes/move_and_value.dart';
 import 'package:en_passant/logic/shared_functions.dart';
-import 'package:en_passant/views/components/chess_view/promotion_dialog.dart';
-import 'package:en_passant/views/components/main_menu_view/game_options/side_picker.dart';
+import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/chess_view/components/promotion_dialog.dart';
 
 import '../chess_board.dart';
 import '../chess_piece.dart';
-import 'move_classes/move.dart';
-
-const PAWN_DIAGONALS_1 = [DOWN_LEFT, DOWN_RIGHT];
-const PAWN_DIAGONALS_2 = [UP_LEFT, UP_RIGHT];
-const KNIGHT_MOVES = [
-  Direction(1, 2),
-  Direction(-1, 2),
-  Direction(1, -2),
-  Direction(-1, -2),
-  Direction(2, 1),
-  Direction(-2, 1),
-  Direction(2, -1),
-  Direction(-2, -1)
-];
-const BISHOP_MOVES = [UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT];
-const ROOK_MOVES = [UP, RIGHT, DOWN, LEFT];
-const KING_QUEEN_MOVES = [
-  UP,
-  UP_RIGHT,
-  RIGHT,
-  DOWN_RIGHT,
-  DOWN,
-  DOWN_LEFT,
-  LEFT,
-  UP_LEFT
-];
+import 'move_classes.dart';
 
 List<Move> allMoves(Player player, ChessBoard board, int aiDifficulty) {
-  List<MoveAndValue> moves = [];
+  List<Move> moves = [];
   var pieces = List.from(piecesForPlayer(player, board));
   for (var piece in pieces) {
     var tiles = movesForPiece(piece, board);
@@ -42,31 +15,30 @@ List<Move> allMoves(Player player, ChessBoard board, int aiDifficulty) {
       if (piece.type == ChessPieceType.pawn &&
           (tileToRow(tile) == 0 || tileToRow(tile) == 7)) {
         for (var promotion in PROMOTIONS) {
-          var move =
-              MoveAndValue(Move(piece.tile, tile, promotionType: promotion), 0);
-          push(move.move, board, promotionType: promotion);
-          move.value = boardValue(board);
+          var move = Move(piece.tile, tile);
+          move.meta.promotionType = promotion;
+          push(move, board);
+          move.meta.value = boardValue(board);
           pop(board);
           moves.add(move);
         }
       } else {
-        var move = MoveAndValue(Move(piece.tile, tile), 0);
-        push(move.move, board);
-        move.value = boardValue(board);
+        var move = Move(piece.tile, tile);
+        push(move, board);
+        move.meta.value = boardValue(board);
         pop(board);
         moves.add(move);
       }
     }
   }
-  moves.sort((a, b) => _compareMoves(a, b, player, board));
-  return moves.map((move) => move.move).toList();
+  moves.sort((a, b) => _compareMoves(a, b, player));
+  return moves;
 }
 
-int _compareMoves(
-    MoveAndValue a, MoveAndValue b, Player player, ChessBoard board) {
+int _compareMoves(Move a, Move b, Player player) {
   return player == Player.player1
-      ? b.value.compareTo(a.value)
-      : a.value.compareTo(b.value);
+      ? b.meta.value.compareTo(a.meta.value)
+      : a.meta.value.compareTo(b.meta.value);
 }
 
 List<int> movesForPiece(ChessPiece piece, ChessBoard board,
