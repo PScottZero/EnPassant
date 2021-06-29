@@ -283,8 +283,8 @@ class ChessGame extends Game with TapDetector {
             canvas,
             size: Vector2(tileSize - 12, tileSize - 12),
             position: Vector2(
-              spriteMap[piece].spriteX + 6,
-              spriteMap[piece].spriteY + 6,
+              spriteMap[piece].spritePosition.x + 6,
+              spriteMap[piece].spritePosition.y + 6,
             ),
           );
     }

@@ -41,9 +41,9 @@ class ViewConstants {
   static const double GAME_WIDGET_SIZE_TRIM = 68;
   static const double GAP_LARGE = 30;
   static const double GAP_SMALL = 10;
-  static const double PADDING_LARGE = 30;
+  static const double PADDING_LARGE = 20;
   static const double PADDING_SMALL = 10;
-  static const double PICKER_HEIGHT = 120;
+  static const double PICKER_HEIGHT = 140;
   static const double PICKER_ITEM_EXTENT = 50;
   static const double PIECE_PREVIEW_WIDTH = 80;
   static const double PROMOTION_DIALOG_HEIGHT = 66;

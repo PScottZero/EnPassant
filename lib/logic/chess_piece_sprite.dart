@@ -8,18 +8,18 @@ import 'package:flame/sprite.dart';
 import 'chess_piece.dart';
 import 'shared_functions.dart';
 
+const ACCURACY = 0.1;
+
 class ChessPieceSprite {
   ChessPieceType type;
   String pieceTheme;
   int tile;
   Sprite sprite;
-  double spriteX;
-  double spriteY;
-  double offsetX = 0;
-  double offsetY = 0;
+  Vector2 spritePosition;
+  Vector2 _offset = Vector2(0, 0);
 
-  AudioCache audioCache = AudioCache();
-  AudioPlayer audioPlayer = AudioPlayer();
+  AudioCache _audioCache = AudioCache();
+  AudioPlayer _audioPlayer = AudioPlayer();
 
   ChessPieceSprite(ChessPiece piece, String pieceTheme) {
     this.tile = piece.tile;
@@ -35,42 +35,40 @@ class ChessPieceSprite {
     }
     if (piece.tile != this.tile) {
       this.tile = piece.tile;
-      offsetX = 0;
-      offsetY = 0;
+      _offset = Vector2(0, 0);
     }
-    var destX = getXFromTile(tile, tileSize, appModel);
-    var destY = getYFromTile(tile, tileSize, appModel);
-    if ((destX - spriteX).abs() <= 0.1) {
-      spriteX = destX;
-      offsetX = 0;
-    } else {
-      if (offsetX == 0) {
-        offsetX = (destX - spriteX) / 10;
+    var destination = Vector2(
+      getXFromTile(tile, tileSize, appModel),
+      getYFromTile(tile, tileSize, appModel),
+    );
+    var difference = destination.clone();
+    difference.sub(spritePosition);
+    if (difference != Vector2.zero()) {
+      if (_isApproxZero(difference.x)) {
+        spritePosition.x = destination.x;
+        _offset.x = 0;
+      } else {
+        if (_offset.x == 0) _offset.x = difference.x / 10;
       }
-      spriteX += offsetX;
-      playSound(destX, destY, appModel);
-    }
-    if ((destY - spriteY).abs() <= 0.1) {
-      spriteY = destY;
-      offsetY = 0;
-    } else {
-      if (offsetY == 0) {
-        offsetY += (destY - spriteY) / 10;
+      if (_isApproxZero(difference.y)) {
+        spritePosition.y = destination.y;
+        _offset.y = 0;
+      } else {
+        if (_offset.y == 0) _offset.y = difference.y / 10;
       }
-      spriteY += offsetY;
-      playSound(destX, destY, appModel);
+      spritePosition.add(_offset);
+      if (_offset == Vector2.zero()) _playSound();
     }
   }
 
-  void playSound(double destX, double destY, AppModel appModel) async {
-    if ((destX - spriteX).abs() <= 0.1 && (destY - spriteY).abs() <= 0.1) {
-      if (appModel.soundEnabled) {
-        final bytes =
-            await (await audioCache.loadAsFile('audio/piece_moved.mp3'))
-                .readAsBytes();
-        audioPlayer.playBytes(bytes);
-      }
-    }
+  bool _isApproxZero(double value) {
+    return value <= ACCURACY;
+  }
+
+  void _playSound() async {
+    final bytes = await (await _audioCache.loadAsFile('audio/piece_moved.mp3'))
+        .readAsBytes();
+    _audioPlayer.playBytes(bytes);
   }
 
   void initSprite(ChessPiece piece) async {
@@ -84,7 +82,9 @@ class ChessPieceSprite {
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {
-    spriteX = getXFromTile(tile, tileSize, appModel);
-    spriteY = getYFromTile(tile, tileSize, appModel);
+    spritePosition = Vector2(
+      getXFromTile(tile, tileSize, appModel),
+      getYFromTile(tile, tileSize, appModel),
+    );
   }
 }
