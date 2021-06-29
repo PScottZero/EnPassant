@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
+import 'package:en_passant/views/constants/view_constants.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
@@ -38,7 +39,12 @@ class PiecePreview extends Game {
   void render(Canvas canvas) {
     for (var index = 0; index < 6; index++) {
       canvas.drawRect(
-        Rect.fromLTWH((index % 2) * 40.0, (index / 2).floor() * 40.0, 40, 40),
+        Rect.fromLTWH(
+          (index % 2) * ViewConstants.PIECE_PREVIEW_TILE_WIDTH,
+          (index / 2).floor() * ViewConstants.PIECE_PREVIEW_TILE_WIDTH,
+          ViewConstants.PIECE_PREVIEW_TILE_WIDTH,
+          ViewConstants.PIECE_PREVIEW_TILE_WIDTH,
+        ),
         Paint()
           ..color = (index + (index / 2).floor()) % 2 == 0
               ? appModel.themePrefs.theme.lightTile
@@ -46,10 +52,13 @@ class PiecePreview extends Game {
       );
       spriteMap[index].render(
         canvas,
-        size: Vector2(28, 28),
+        size: Vector2(
+          ViewConstants.PIECE_PREVIEW_TILE_WIDTH - 16,
+          ViewConstants.PIECE_PREVIEW_TILE_WIDTH - 16,
+        ),
         position: Vector2(
-          (index % 2) * 40.0 + 6,
-          (index / 2).floor() * 40.0 + 6,
+          (index % 2) * ViewConstants.PIECE_PREVIEW_TILE_WIDTH + 8,
+          (index / 2).floor() * ViewConstants.PIECE_PREVIEW_TILE_WIDTH + 8,
         ),
       );
     }

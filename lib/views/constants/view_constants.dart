@@ -45,7 +45,8 @@ class ViewConstants {
   static const double PADDING_SMALL = 10;
   static const double PICKER_HEIGHT = 140;
   static const double PICKER_ITEM_EXTENT = 50;
-  static const double PIECE_PREVIEW_WIDTH = 80;
+  static const double PIECE_PREVIEW_TILE_WIDTH = PIECE_PREVIEW_WIDTH / 2;
+  static const double PIECE_PREVIEW_WIDTH = PICKER_HEIGHT * 2 / 3;
   static const double PROMOTION_DIALOG_HEIGHT = 66;
   static const double SEGMENTED_CONTROL_PADDING_LR = 16;
   static const double SEGMENTED_CONTROL_PADDING_TB = 8;

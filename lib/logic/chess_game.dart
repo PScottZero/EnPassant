@@ -1,10 +1,9 @@
 import 'dart:ui';
 
 import 'package:async/async.dart';
-import 'package:en_passant/logic/chess_piece_sprite.dart';
+import 'package:en_passant/logic/board_renderer.dart';
 import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_calculation.dart';
-import 'package:en_passant/logic/shared_functions.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/model/player.dart';
 import 'package:flame/game.dart';
@@ -17,51 +16,37 @@ import 'chess_piece.dart';
 import 'move_calculation/move_classes.dart';
 
 class ChessGame extends Game with TapDetector {
-  double width;
-  double tileSize;
-  AppModel appModel;
-  BuildContext context;
+  AppModel model;
+  BoardRenderer renderer;
   ChessBoard board = ChessBoard();
-  Map<ChessPiece, ChessPieceSprite> spriteMap = Map();
 
   CancelableOperation aiOperation;
   List<int> validMoves = [];
-  ChessPiece selectedPiece;
-  int checkHintTile;
-  Move latestMove;
 
-  ChessGame(this.appModel, this.context) {
-    width = MediaQuery.of(context).size.width - 68;
-    tileSize = width / 8;
-    for (var piece in board.player1Pieces + board.player2Pieces) {
-      spriteMap[piece] =
-          ChessPieceSprite(piece, appModel.themePrefs.pieceTheme);
-    }
-    _initSpritePositions();
-    if (appModel.gameData.isAIsTurn) {
-      _aiMove();
-    }
+  ChessGame(this.model, BuildContext context) {
+    renderer = BoardRenderer(this, context);
+    if (model.gameData.isAIsTurn) _aiMove();
   }
 
   @override
   void onTapDown(TapDownInfo details) {
-    if (appModel.gameData.gameOver || !(appModel.gameData.isAIsTurn)) {
+    if (model.gameData.gameOver || !(model.gameData.isAIsTurn)) {
       var tile = _vector2ToTile(details.eventPosition.widget);
       var touchedPiece = board.tiles[tile];
-      if (touchedPiece == selectedPiece) {
+      if (touchedPiece == renderer.selectedPiece) {
         validMoves = [];
-        selectedPiece = null;
+        renderer.selectedPiece = null;
       } else {
-        if (selectedPiece != null &&
+        if (renderer.selectedPiece != null &&
             touchedPiece != null &&
-            touchedPiece.player == selectedPiece.player) {
+            touchedPiece.player == renderer.selectedPiece.player) {
           if (validMoves.contains(tile)) {
             _movePiece(tile);
           } else {
             validMoves = [];
             _selectPiece(touchedPiece);
           }
-        } else if (selectedPiece == null) {
+        } else if (renderer.selectedPiece == null) {
           _selectPiece(touchedPiece);
         } else {
           _movePiece(tile);
@@ -70,46 +55,15 @@ class ChessGame extends Game with TapDetector {
     }
   }
 
-  @override
-  void render(Canvas canvas) {
-    if (appModel != null) {
-      _drawBoard(canvas);
-      if (appModel.showHints) {
-        _drawCheckHint(canvas);
-        _drawLatestMove(canvas);
-      }
-      _drawSelectedPieceHint(canvas);
-      _drawPieces(canvas);
-      if (appModel.showHints) {
-        _drawMoveHints(canvas);
-      }
-    }
-  }
-
-  @override
-  void update(double t) {
-    if (appModel != null) {
-      for (var piece in board.player1Pieces + board.player2Pieces) {
-        spriteMap[piece].update(tileSize, appModel, piece);
-      }
-    }
-  }
-
-  void _initSpritePositions() {
-    for (var piece in board.player1Pieces + board.player2Pieces) {
-      spriteMap[piece].initSpritePosition(tileSize, appModel);
-    }
-  }
-
   void _selectPiece(ChessPiece piece) {
     if (piece != null) {
-      if (piece.player == appModel.gameData.turn) {
-        selectedPiece = piece;
-        if (selectedPiece != null) {
+      if (piece.player == model.gameData.turn) {
+        renderer.selectedPiece = piece;
+        if (renderer.selectedPiece != null) {
           validMoves = movesForPiece(piece, board);
         }
         if (validMoves.isEmpty) {
-          selectedPiece = null;
+          renderer.selectedPiece = null;
         }
       }
     }
@@ -118,10 +72,10 @@ class ChessGame extends Game with TapDetector {
   void _movePiece(int tile) {
     if (validMoves.contains(tile)) {
       validMoves = [];
-      var move = Move(selectedPiece.tile, tile);
+      var move = Move(renderer.selectedPiece.tile, tile);
       push(move, board, getMeta: true);
       if (move.meta.flags.promotion) {
-        appModel.gameData.requestPromotion();
+        model.gameData.requestPromotion();
       }
       _moveCompletion(move, changeTurn: !move.meta.flags.promotion);
     }
@@ -130,15 +84,15 @@ class ChessGame extends Game with TapDetector {
   void _aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
     var args = Map();
-    args['aiPlayer'] = appModel.gameData.aiTurn;
-    args['aiDifficulty'] = appModel.gameData.aiDifficulty;
+    args['aiPlayer'] = model.gameData.aiTurn;
+    args['aiDifficulty'] = model.gameData.aiDifficulty;
     args['board'] = board;
     aiOperation = CancelableOperation.fromFuture(
       compute(calculateAIMove, args),
     );
     aiOperation.value.then((move) {
-      if (move == null || appModel.gameData.gameOver) {
-        appModel.gameData.endGame();
+      if (move == null || model.gameData.gameOver) {
+        model.gameData.endGame();
       } else {
         validMoves = [];
         push(move, board, getMeta: true);
@@ -163,14 +117,14 @@ class ChessGame extends Game with TapDetector {
           clearRedo: false, undoing: true);
     } else {
       _undoOpeningMove();
-      appModel.gameData.changeTurn();
+      model.gameData.changeTurn();
     }
   }
 
   void undoTwoMoves() {
     board.redoStack.add(pop(board));
     board.redoStack.add(pop(board));
-    appModel.gameData.jumpToEndOfMoveList();
+    model.gameData.jumpToEndOfMoveList();
     if (board.moveStack.length > 1) {
       _moveCompletion(board.moveStack[board.moveStack.length - 2],
           clearRedo: false, undoing: true, changeTurn: false);
@@ -180,11 +134,11 @@ class ChessGame extends Game with TapDetector {
   }
 
   void _undoOpeningMove() {
-    selectedPiece = null;
     validMoves = [];
-    latestMove = null;
-    checkHintTile = null;
-    appModel.gameData.jumpToEndOfMoveList();
+    renderer.selectedPiece = null;
+    renderer.latestMove = null;
+    renderer.checkHintTile = null;
+    model.gameData.jumpToEndOfMoveList();
   }
 
   void redoMove() {
@@ -217,140 +171,56 @@ class ChessGame extends Game with TapDetector {
       board.redoStack = [];
     }
     validMoves = [];
-    latestMove = move;
-    checkHintTile = null;
-    var oppositeTurn = appModel.gameData.turn.opposite;
+    renderer.latestMove = move;
+    renderer.checkHintTile = null;
+    var oppositeTurn = model.gameData.turn.opposite;
     if (kingInCheck(oppositeTurn, board)) {
       move.meta.flags.isCheck = true;
-      checkHintTile = kingForPlayer(oppositeTurn, board).tile;
+      renderer.checkHintTile = kingForPlayer(oppositeTurn, board).tile;
     }
     if (kingInCheckmate(oppositeTurn, board)) {
       if (!move.meta.flags.isCheck) {
-        appModel.gameData.stalemate = true;
+        model.gameData.stalemate = true;
         move.meta.flags.isStalemate = true;
       }
       move.meta.flags.isCheck = false;
       move.meta.flags.isCheckmate = true;
-      appModel.gameData.endGame();
+      model.gameData.endGame();
     }
     if (undoing) {
-      appModel.gameData.jumpToEndOfMoveList();
-      appModel.gameData.undoEndGame();
+      model.gameData.jumpToEndOfMoveList();
+      model.gameData.undoEndGame();
     } else if (updateMetaList) {
-      appModel.gameData.jumpToEndOfMoveList();
+      model.gameData.jumpToEndOfMoveList();
     }
     if (changeTurn) {
-      appModel.gameData.changeTurn();
+      model.gameData.changeTurn();
     }
-    selectedPiece = null;
-    if (appModel.gameData.isAIsTurn && clearRedo && changeTurn) {
+    renderer.selectedPiece = null;
+    if (model.gameData.isAIsTurn && clearRedo && changeTurn) {
       _aiMove();
     }
   }
 
   int _vector2ToTile(Vector2 vector2) {
-    if (appModel.flip &&
-        appModel.gameData.playingWithAI &&
-        appModel.gameData.playerSide == Player.player2) {
-      return (7 - (vector2.y / tileSize).floor()) * 8 +
-          (7 - (vector2.x / tileSize).floor());
+    if (model.flip &&
+        model.gameData.playingWithAI &&
+        model.gameData.playerSide == Player.player2) {
+      return (7 - (vector2.y / renderer.tileSize).floor()) * 8 +
+          (7 - (vector2.x / renderer.tileSize).floor());
     } else {
-      return (vector2.y / tileSize).floor() * 8 +
-          (vector2.x / tileSize).floor();
+      return (vector2.y / renderer.tileSize).floor() * 8 +
+          (vector2.x / renderer.tileSize).floor();
     }
   }
 
-  void _drawBoard(Canvas canvas) {
-    for (int tileNo = 0; tileNo < 64; tileNo++) {
-      canvas.drawRect(
-        Rect.fromLTWH(
-          (tileNo % 8) * tileSize,
-          (tileNo / 8).floor() * tileSize,
-          tileSize,
-          tileSize,
-        ),
-        Paint()
-          ..color = (tileNo + (tileNo / 8).floor()) % 2 == 0
-              ? appModel.themePrefs.theme.lightTile
-              : appModel.themePrefs.theme.darkTile,
-      );
-    }
+  @override
+  void render(Canvas canvas) {
+    renderer.render(canvas);
   }
 
-  void _drawPieces(Canvas canvas) {
-    for (var piece in board.player1Pieces + board.player2Pieces) {
-      spriteMap[piece].sprite.render(
-            canvas,
-            size: Vector2(tileSize - 12, tileSize - 12),
-            position: Vector2(
-              spriteMap[piece].spritePosition.x + 6,
-              spriteMap[piece].spritePosition.y + 6,
-            ),
-          );
-    }
-  }
-
-  void _drawMoveHints(Canvas canvas) {
-    for (var tile in validMoves) {
-      canvas.drawCircle(
-        Offset(
-          getXFromTile(tile, tileSize, appModel) + (tileSize / 2),
-          getYFromTile(tile, tileSize, appModel) + (tileSize / 2),
-        ),
-        tileSize / 5,
-        Paint()..color = appModel.themePrefs.theme.moveHint,
-      );
-    }
-  }
-
-  void _drawLatestMove(Canvas canvas) {
-    if (latestMove != null) {
-      canvas.drawRect(
-        Rect.fromLTWH(
-          getXFromTile(latestMove.from, tileSize, appModel),
-          getYFromTile(latestMove.from, tileSize, appModel),
-          tileSize,
-          tileSize,
-        ),
-        Paint()..color = appModel.themePrefs.theme.latestMove,
-      );
-      canvas.drawRect(
-        Rect.fromLTWH(
-          getXFromTile(latestMove.to, tileSize, appModel),
-          getYFromTile(latestMove.to, tileSize, appModel),
-          tileSize,
-          tileSize,
-        ),
-        Paint()..color = appModel.themePrefs.theme.latestMove,
-      );
-    }
-  }
-
-  void _drawCheckHint(Canvas canvas) {
-    if (checkHintTile != null) {
-      canvas.drawRect(
-        Rect.fromLTWH(
-          getXFromTile(checkHintTile, tileSize, appModel),
-          getYFromTile(checkHintTile, tileSize, appModel),
-          tileSize,
-          tileSize,
-        ),
-        Paint()..color = appModel.themePrefs.theme.checkHint,
-      );
-    }
-  }
-
-  void _drawSelectedPieceHint(Canvas canvas) {
-    if (selectedPiece != null) {
-      canvas.drawRect(
-        Rect.fromLTWH(
-          getXFromTile(selectedPiece.tile, tileSize, appModel),
-          getYFromTile(selectedPiece.tile, tileSize, appModel),
-          tileSize,
-          tileSize,
-        ),
-        Paint()..color = appModel.themePrefs.theme.moveHint,
-      );
-    }
+  @override
+  void update(double t) {
+    renderer.updateSpritePositions();
   }
 }
