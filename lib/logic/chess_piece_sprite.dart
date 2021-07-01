@@ -44,13 +44,13 @@ class ChessPieceSprite {
     var difference = destination.clone();
     difference.sub(spritePosition);
     if (difference != Vector2.zero()) {
-      if (_isApproxZero(difference.x)) {
+      if (_isApproxZero(difference.x.abs())) {
         spritePosition.x = destination.x;
         _offset.x = 0;
       } else {
         if (_offset.x == 0) _offset.x = difference.x / 10;
       }
-      if (_isApproxZero(difference.y)) {
+      if (_isApproxZero(difference.y.abs())) {
         spritePosition.y = destination.y;
         _offset.y = 0;
       } else {

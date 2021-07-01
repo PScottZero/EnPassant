@@ -14,6 +14,7 @@ const PIECE_VALUES = <ChessPieceType, int>{
 class ChessPiece {
   int id;
   ChessPieceType type;
+  ChessPieceType startType;
   Player player;
   int moveCount = 0;
   int tile;
@@ -24,5 +25,7 @@ class ChessPiece {
         : -PIECE_VALUES[type];
   }
 
-  ChessPiece(this.id, this.type, this.player, this.tile);
+  ChessPiece(this.id, this.startType, this.player, this.tile) {
+    this.type = this.startType;
+  }
 }

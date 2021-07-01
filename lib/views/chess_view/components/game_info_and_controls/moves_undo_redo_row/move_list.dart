@@ -19,6 +19,7 @@ const PIECE_TYPE_TO_CHAR = <ChessPieceType, String>{
 class MoveList extends StatelessWidget {
   final AppModel appModel;
   final ScrollController scrollController = ScrollController();
+  final List<ChessPiece> promotedList = [];
 
   String get moveString {
     var moveString = '';
@@ -92,13 +93,18 @@ class MoveList extends StatelessWidget {
       String row = '${8 - tileToRow(move.to)}';
       String col = '${_colToChar(tileToCol(move.to))}';
       moveString =
-          '${PIECE_TYPE_TO_CHAR[move.meta.type]}$ambiguity$takeString' +
+          '${PIECE_TYPE_TO_CHAR[getPieceType(move.meta.movedPiece)]}$ambiguity$takeString' +
               '$col$row$promotion';
     }
     String check = move.meta.flags.isCheck ? '+' : '';
     String checkmate =
         move.meta.flags.isCheckmate && !move.meta.flags.isStalemate ? '#' : '';
+    if (move.meta.flags.promotion) promotedList.add(move.meta.movedPiece);
     return moveString + '$check$checkmate';
+  }
+
+  ChessPieceType getPieceType(ChessPiece piece) {
+    return promotedList.contains(piece) ? piece.type : piece.startType;
   }
 
   String _colToChar(int col) {

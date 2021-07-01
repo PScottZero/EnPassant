@@ -3,6 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_themes.dart';
 
+const DEFAULT_APP_THEME = 'Oceanic';
+const DEFAULT_PIECE_THEME = 'Classic';
+const APP_THEME_PREF = 'themeName';
+const PIECE_THEME_PREF = 'pieceTheme';
 const PIECE_THEMES = [
   'Classic',
   'Angular',
@@ -14,8 +18,8 @@ const PIECE_THEMES = [
 ];
 
 class ThemePreferences extends ChangeNotifier {
-  String pieceTheme = 'Classic';
-  String themeName = 'Green';
+  String pieceTheme = DEFAULT_PIECE_THEME;
+  String themeName = DEFAULT_APP_THEME;
 
   ThemePreferences() {
     loadThemeSharedPreferences();
@@ -54,21 +58,21 @@ class ThemePreferences extends ChangeNotifier {
   void setTheme(int index) async {
     themeName = themeList[index].name;
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('themeName', themeName);
+    prefs.setString(APP_THEME_PREF, themeName);
     notifyListeners();
   }
 
   void setPieceTheme(int index) async {
     pieceTheme = pieceThemes[index];
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('pieceTheme', pieceTheme);
+    prefs.setString(PIECE_THEME_PREF, pieceTheme);
     notifyListeners();
   }
 
   void loadThemeSharedPreferences() async {
     final prefs = await SharedPreferences.getInstance();
-    themeName = prefs.getString('themeName') ?? 'Green';
-    pieceTheme = prefs.getString('pieceTheme') ?? 'Classic';
+    themeName = prefs.getString(APP_THEME_PREF) ?? DEFAULT_APP_THEME;
+    pieceTheme = prefs.getString(PIECE_THEME_PREF) ?? DEFAULT_PIECE_THEME;
     notifyListeners();
   }
 }
