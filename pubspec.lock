@@ -98,14 +98,14 @@ packages:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.1"
+    version: "6.1.2"
   flame:
     dependency: "direct main"
     description:
       name: flame
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0-releasecandidate.11"
+    version: "1.0.0-releasecandidate.12"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -232,7 +232,7 @@ packages:
       name: pedantic
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.11.0"
+    version: "1.11.1"
   petitparser:
     dependency: transitive
     description:
@@ -370,7 +370,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.6"
+    version: "6.0.8"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -426,7 +426,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.2.4"
   xdg_directories:
     dependency: transitive
     description:
@@ -449,5 +449,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.12.0 <3.0.0"
+  dart: ">=2.13.0 <3.0.0"
   flutter: ">=2.0.0"
