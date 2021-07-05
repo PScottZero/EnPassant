@@ -5,7 +5,7 @@ import 'package:en_passant/logic/board_renderer.dart';
 import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
 import 'package:en_passant/logic/move_calculation/move_calculation.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/model/player.dart';
+import 'package:en_passant/logic/player.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'chess_board.dart';
 import 'chess_piece.dart';
 import 'move_calculation/move_classes.dart';
+import 'constants.dart';
 
 class ChessGame extends Game with TapDetector {
   AppModel model;
@@ -22,6 +23,8 @@ class ChessGame extends Game with TapDetector {
 
   CancelableOperation aiOperation;
   List<int> validMoves = [];
+
+  bool get noPieceSelected => renderer.selectedPiece == null;
 
   ChessGame(this.model, BuildContext context) {
     renderer = BoardRenderer(this, context);
@@ -33,20 +36,18 @@ class ChessGame extends Game with TapDetector {
     if (model.gameData.gameOver || !(model.gameData.isAIsTurn)) {
       var tile = _vector2ToTile(details.eventPosition.widget);
       var touchedPiece = board.tiles[tile];
-      if (touchedPiece == renderer.selectedPiece) {
+      if (_touchedSamePiece(touchedPiece)) {
         validMoves = [];
         renderer.selectedPiece = null;
       } else {
-        if (renderer.selectedPiece != null &&
-            touchedPiece != null &&
-            touchedPiece.player == renderer.selectedPiece.player) {
+        if (_touchedAnotherPiece(touchedPiece)) {
           if (validMoves.contains(tile)) {
             _movePiece(tile);
           } else {
             validMoves = [];
             _selectPiece(touchedPiece);
           }
-        } else if (renderer.selectedPiece == null) {
+        } else if (noPieceSelected) {
           _selectPiece(touchedPiece);
         } else {
           _movePiece(tile);
@@ -54,6 +55,14 @@ class ChessGame extends Game with TapDetector {
       }
     }
   }
+
+  bool _touchedSamePiece(ChessPiece touchedPiece) =>
+      touchedPiece == renderer.selectedPiece;
+
+  bool _touchedAnotherPiece(ChessPiece touchedPiece) =>
+      !noPieceSelected &&
+      touchedPiece != null &&
+      touchedPiece.player == renderer.selectedPiece.player;
 
   void _selectPiece(ChessPiece piece) {
     if (piece != null) {
@@ -84,9 +93,9 @@ class ChessGame extends Game with TapDetector {
   void _aiMove() async {
     await Future.delayed(Duration(milliseconds: 500));
     var args = Map();
-    args['aiPlayer'] = model.gameData.aiTurn;
-    args['aiDifficulty'] = model.gameData.aiDifficulty;
-    args['board'] = board;
+    args[AI_PLAYER_ARG] = model.gameData.aiTurn;
+    args[AI_DIFFICULTY_ARG] = model.gameData.aiDifficulty;
+    args[AI_BOARD_ARG] = board;
     aiOperation = CancelableOperation.fromFuture(
       compute(calculateAIMove, args),
     );
@@ -167,9 +176,7 @@ class ChessGame extends Game with TapDetector {
     bool changeTurn = true,
     bool updateMetaList = true,
   }) {
-    if (clearRedo) {
-      board.redoStack = [];
-    }
+    if (clearRedo) board.redoStack = [];
     validMoves = [];
     renderer.latestMove = move;
     renderer.checkHintTile = null;
@@ -193,19 +200,15 @@ class ChessGame extends Game with TapDetector {
     } else if (updateMetaList) {
       model.gameData.jumpToEndOfMoveList();
     }
-    if (changeTurn) {
-      model.gameData.changeTurn();
-    }
     renderer.selectedPiece = null;
-    if (model.gameData.isAIsTurn && clearRedo && changeTurn) {
-      _aiMove();
-    }
+    if (changeTurn) model.gameData.changeTurn();
+    if (model.gameData.isAIsTurn && clearRedo && changeTurn) _aiMove();
   }
 
   int _vector2ToTile(Vector2 vector2) {
     if (model.flip &&
         model.gameData.playingWithAI &&
-        model.gameData.playerSide == Player.player2) {
+        model.gameData.playerSide.isP2) {
       return (7 - (vector2.y / renderer.tileSize).floor()) * 8 +
           (7 - (vector2.x / renderer.tileSize).floor());
     } else {
@@ -215,12 +218,8 @@ class ChessGame extends Game with TapDetector {
   }
 
   @override
-  void render(Canvas canvas) {
-    renderer.render(canvas);
-  }
+  void render(Canvas canvas) => renderer.render(canvas);
 
   @override
-  void update(double t) {
-    renderer.updateSpritePositions();
-  }
+  void update(double t) => renderer.updateSpritePositions();
 }

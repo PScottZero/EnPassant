@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:en_passant/logic/chess_game.dart';
-import 'package:en_passant/model/player.dart';
+import 'package:en_passant/logic/player.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'app_model.dart';
@@ -25,17 +25,11 @@ class GameData extends ChangeNotifier {
   Duration player2TimeLeft = Duration.zero;
   int timeLimit = 0;
 
-  Player get aiTurn {
-    return playerSide.opposite;
-  }
-
-  bool get isAIsTurn {
-    return playingWithAI && (turn == aiTurn);
-  }
-
-  bool get playingWithAI {
-    return playerCount == 1;
-  }
+  Player get aiTurn => playerSide.opposite;
+  bool get isP1Turn => playerSide == Player.player1;
+  bool get isP2Turn => playerSide == Player.player2;
+  bool get isAIsTurn => playingWithAI && (turn == aiTurn);
+  bool get playingWithAI => playerCount == 1;
 
   void newGame(AppModel model, BuildContext context, {bool notify = true}) {
     if (game != null) {
@@ -49,15 +43,13 @@ class GameData extends ChangeNotifier {
     turn = Player.player1;
     player1TimeLeft = Duration(minutes: timeLimit);
     player2TimeLeft = Duration(minutes: timeLimit);
-    if (selectedSide == Player.random) {
+    if (selectedSide.isRandom) {
       playerSide =
           Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
     }
     game = ChessGame(model, context);
     timer = Timer.periodic(Duration(milliseconds: TIMER_ACCURACY_MS), (timer) {
-      turn == Player.player1
-          ? decrementPlayer1Timer()
-          : decrementPlayer2Timer();
+      turn.isP1 ? decrementPlayer1Timer() : decrementPlayer2Timer();
       if ((player1TimeLeft == Duration.zero ||
               player2TimeLeft == Duration.zero) &&
           timeLimit != 0) {

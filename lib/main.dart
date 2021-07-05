@@ -1,12 +1,12 @@
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'logic/shared_functions.dart';
+import 'logic/constants.dart';
 import 'model/theme_preferences.dart';
 import 'views/main_menu_view/main_menu_view.dart';
 
@@ -48,7 +48,8 @@ void _cachePieceImages() async {
   for (var theme in PIECE_THEMES) {
     for (var color in ['black', 'white']) {
       for (var piece in ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']) {
-        pieceImages.add('pieces/${themeNameToDir(theme)}/${piece}_$color.png');
+        pieceImages
+            .add('pieces/${themeNameToAssetDir(theme)}/${piece}_$color.png');
       }
     }
   }

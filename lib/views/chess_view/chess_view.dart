@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/bottom_padding.dart';
 import 'package:en_passant/views/components/gap.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
 import 'components/chess_board_widget.dart';
 import 'components/game_info_and_controls.dart';
-import 'components/game_info_and_controls/game_status.dart';
+import 'components/game_status.dart';
 import 'components/promotion_dialog.dart';
 
 class ChessView extends StatefulWidget {
@@ -58,19 +58,15 @@ class _ChessViewState extends State<ChessView> {
     );
   }
 
-  void _showPromotionDialog(AppModel appModel) {
-    showCupertinoDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return PromotionDialog(appModel);
-      },
-    );
-  }
+  void _showPromotionDialog(AppModel appModel) => showCupertinoDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return PromotionDialog(appModel);
+        },
+      );
 
   Future<bool> _willPopCallback() async {
-    if (appModel != null) {
-      appModel.exitChessView();
-    }
+    if (appModel != null) appModel.exitChessView();
     return true;
   }
 }

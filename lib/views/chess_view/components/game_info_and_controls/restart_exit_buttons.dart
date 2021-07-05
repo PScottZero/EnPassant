@@ -1,7 +1,7 @@
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/chess_view/components/game_info_and_controls/rounded_alert_button.dart';
+import 'package:en_passant/views/components/rounded_alert_button.dart';
 import 'package:en_passant/views/components/gap.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class RestartExitButtons extends StatelessWidget {

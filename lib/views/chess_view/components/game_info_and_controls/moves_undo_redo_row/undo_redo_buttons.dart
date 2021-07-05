@@ -2,7 +2,7 @@ import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/gap.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'rounded_icon_button.dart';
+import '../../../../components/rounded_icon_button.dart';
 
 class UndoRedoButtons extends StatelessWidget {
   final AppModel appModel;

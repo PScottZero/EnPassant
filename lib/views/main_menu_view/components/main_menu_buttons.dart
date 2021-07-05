@@ -3,7 +3,7 @@ import 'package:en_passant/views/chess_view/chess_view.dart';
 import 'package:en_passant/views/components/gap.dart';
 import 'package:en_passant/views/components/rounded_button.dart';
 import 'package:en_passant/views/settings_view/settings_view.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 

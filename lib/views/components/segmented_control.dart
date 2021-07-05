@@ -1,6 +1,6 @@
 import 'package:en_passant/views/components/gap.dart';
 import 'package:en_passant/views/components/text_variable.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class SegmentedControl<T> extends StatelessWidget {

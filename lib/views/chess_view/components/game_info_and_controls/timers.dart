@@ -1,10 +1,10 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/gap.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'timer_widget.dart';
+import 'timers/timer_widget.dart';
 
 class Timers extends StatelessWidget {
   final AppModel appModel;

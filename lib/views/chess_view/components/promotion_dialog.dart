@@ -1,6 +1,6 @@
 import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'promotion_option.dart';

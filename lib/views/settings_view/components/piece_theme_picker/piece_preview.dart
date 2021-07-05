@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:en_passant/logic/shared_functions.dart';
+import 'package:en_passant/logic/constants.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/sprite.dart';
@@ -13,12 +13,12 @@ class PiecePreview extends Game {
 
   Map<int, String> get imageMap {
     return {
-      0: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/king_black.png',
-      1: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/queen_white.png',
-      2: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/rook_white.png',
-      3: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/bishop_black.png',
-      4: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/knight_black.png',
-      5: 'pieces/${themeNameToDir(appModel.themePrefs.pieceTheme)}/pawn_white.png',
+      0: 'pieces/${themeNameToAssetDir(appModel.themePrefs.pieceTheme)}/king_black.png',
+      1: 'pieces/${themeNameToAssetDir(appModel.themePrefs.pieceTheme)}/queen_white.png',
+      2: 'pieces/${themeNameToAssetDir(appModel.themePrefs.pieceTheme)}/rook_white.png',
+      3: 'pieces/${themeNameToAssetDir(appModel.themePrefs.pieceTheme)}/bishop_black.png',
+      4: 'pieces/${themeNameToAssetDir(appModel.themePrefs.pieceTheme)}/knight_black.png',
+      5: 'pieces/${themeNameToAssetDir(appModel.themePrefs.pieceTheme)}/pawn_white.png',
     };
   }
 

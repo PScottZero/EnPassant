@@ -2,7 +2,7 @@ import 'package:en_passant/views/components/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/view_constants.dart';
+import '../view_constants.dart';
 
 class RoundedButton extends StatelessWidget {
   final String label;

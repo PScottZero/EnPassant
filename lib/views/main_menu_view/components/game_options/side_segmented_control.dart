@@ -1,5 +1,5 @@
-import 'package:en_passant/model/player.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/logic/player.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../components/segmented_control.dart';

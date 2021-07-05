@@ -1,12 +1,12 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/model/player.dart';
+import 'package:en_passant/logic/player.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/sprite.dart';
 
 import 'chess_piece.dart';
-import 'shared_functions.dart';
+import 'constants.dart';
 
 const ACCURACY = 0.1;
 
@@ -61,9 +61,7 @@ class ChessPieceSprite {
     }
   }
 
-  bool _isApproxZero(double value) {
-    return value <= ACCURACY;
-  }
+  bool _isApproxZero(double value) => value <= ACCURACY;
 
   void _playSound() async {
     final bytes = await (await _audioCache.loadAsFile('audio/piece_moved.mp3'))
@@ -72,13 +70,11 @@ class ChessPieceSprite {
   }
 
   void initSprite(ChessPiece piece) async {
-    String color = piece.player == Player.player1 ? 'white' : 'black';
+    String color = piece.player.isP1 ? 'white' : 'black';
     String pieceName = pieceTypeToString(piece.type);
-    if (piece.type == ChessPieceType.promotion) {
-      pieceName = 'pawn';
-    }
-    sprite = Sprite(await Flame.images
-        .load('pieces/${themeNameToDir(pieceTheme)}/${pieceName}_$color.png'));
+    if (piece.needsPromotion) pieceName = 'pawn';
+    sprite = Sprite(await Flame.images.load(
+        'pieces/${themeNameToAssetDir(pieceTheme)}/${pieceName}_$color.png'));
   }
 
   void initSpritePosition(double tileSize, AppModel appModel) {

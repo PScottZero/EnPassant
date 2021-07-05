@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../constants/view_constants.dart';
+import '../../view_constants.dart';
 
 class AppLogo extends StatelessWidget {
   @override

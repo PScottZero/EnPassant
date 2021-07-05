@@ -1,5 +1,8 @@
 import 'move_classes.dart';
 
+int tileToInt(String tile) =>
+    (8 - int.tryParse(tile[1])) * 8 + (tile.codeUnitAt(0) - 97);
+
 var openings = [
   [
     // Ruy Lopez
@@ -57,9 +60,3 @@ var openings = [
     Move(tileToInt('g1'), tileToInt('f3')),
   ]
 ];
-
-int tileToInt(String tile) {
-  var file = tile.codeUnitAt(0) - 97;
-  var rank = 8 - int.tryParse(tile[1]);
-  return rank * 8 + file;
-}

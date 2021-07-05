@@ -1,8 +1,8 @@
 import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/logic/move_calculation/move_classes.dart';
-import 'package:en_passant/logic/shared_functions.dart';
+import 'package:en_passant/logic/constants.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/model/player.dart';
+import 'package:en_passant/logic/player.dart';
 import 'package:en_passant/views/components/text_variable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -34,14 +34,13 @@ class MoveList extends StatelessWidget {
       }
     });
     if (appModel.gameData.gameOver) {
-      if (appModel.gameData.turn == Player.player1) {
+      if (appModel.gameData.turn.isP1) {
         moveString += ' ';
       }
       if (appModel.gameData.stalemate) {
         moveString += '  ½-½';
       } else {
-        moveString +=
-            appModel.gameData.turn == Player.player2 ? '  1-0' : '  0-1';
+        moveString += appModel.gameData.turn.isP2 ? '  1-0' : '  0-1';
       }
     }
     return moveString;

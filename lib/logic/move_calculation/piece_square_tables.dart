@@ -1,5 +1,5 @@
 import 'package:en_passant/logic/chess_piece.dart';
-import 'package:en_passant/model/player.dart';
+import 'package:en_passant/logic/player.dart';
 
 const KING_TABLE = [
   -30, -40, -40, -50, -50, -40, -40, -30,
@@ -79,26 +79,16 @@ const PAWN_TABLE = [
 ];
 
 int squareValue(ChessPiece piece, bool inEndGame) {
-  var tile = piece.player == Player.player1 ?
-    piece.tile : piece.tile + 56 - 16 * (piece.tile / 8).floor();
-  int value;
-  switch (piece.type) {
-    case ChessPieceType.pawn: { value = PAWN_TABLE[tile]; }
-    break;
-    case ChessPieceType.knight: { value = KNIGHT_TABLE[tile]; }
-    break;
-    case ChessPieceType.bishop: { value = BISHOP_TABLE[tile]; }
-    break;
-    case ChessPieceType.rook: { value = ROOK_TABLE[tile]; }
-    break;
-    case ChessPieceType.queen: { value = QUEEN_TABLE[tile]; }
-    break;
-    case ChessPieceType.king: { 
-      value = inEndGame ? KING_ENDGAME_TABLE[tile] : KING_TABLE[tile];
-    }
-    break;
-    default: { value = 0; }
-    break;
-  }
-  return piece.player == Player.player1 ? value : -value;
+  var tile = piece.player.isP1
+      ? piece.tile
+      : piece.tile + 56 - 16 * (piece.tile / 8).floor();
+  var tableFromType = <ChessPieceType, List<int>>{
+    ChessPieceType.pawn: PAWN_TABLE,
+    ChessPieceType.knight: KNIGHT_TABLE,
+    ChessPieceType.bishop: BISHOP_TABLE,
+    ChessPieceType.rook: ROOK_TABLE,
+    ChessPieceType.queen: QUEEN_TABLE,
+    ChessPieceType.king: inEndGame ? KING_ENDGAME_TABLE : KING_TABLE
+  };
+  return piece.player.isP1 ? tableFromType[piece.type][tile] : -tableFromType[piece.type][tile];
 }

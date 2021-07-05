@@ -2,7 +2,7 @@ import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/rounded_background.dart';
 import 'package:en_passant/views/components/text_variable.dart';
 import 'package:en_passant/views/components/picker.dart';
-import 'package:en_passant/views/constants/view_constants.dart';
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
