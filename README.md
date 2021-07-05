@@ -2,7 +2,7 @@
 
 This branch contains the WIP code for version 2 of En Passant.
 
-# New Features
+## New Features
 
 Version 2 will contain the following features:
 * New UI
@@ -12,6 +12,6 @@ Version 2 will contain the following features:
 * New piece themes
 * Cleaner Code
 
-# Screenshots
+## Screenshots
 
 <img width="200" src="https://i.imgur.com/m5Unz1j.png"> <img width="200" src="https://i.imgur.com/iPrzoas.png"> <img width="200" src="https://i.imgur.com/Ym9sZKo.png">
