@@ -30,14 +30,14 @@ class PiecePreview extends Game {
   }
 
   loadSpriteImages() async {
-    for (var index = 0; index < 6; index++) {
+    for (var index = 0; index < imageMap.length; index++) {
       spriteMap[index] = Sprite(await Flame.images.load(imageMap[index]));
     }
   }
 
   @override
   void render(Canvas canvas) {
-    for (var index = 0; index < 6; index++) {
+    for (var index = 0; index < spriteMap.length; index++) {
       canvas.drawRect(
         Rect.fromLTWH(
           (index % 2) * ViewConstants.PIECE_PREVIEW_TILE_WIDTH,
@@ -53,12 +53,16 @@ class PiecePreview extends Game {
       spriteMap[index].render(
         canvas,
         size: Vector2(
-          ViewConstants.PIECE_PREVIEW_TILE_WIDTH - 16,
-          ViewConstants.PIECE_PREVIEW_TILE_WIDTH - 16,
+          ViewConstants.PIECE_PREVIEW_TILE_WIDTH -
+              ViewConstants.PIECE_PREVIEW_SPRITE_ADJUST,
+          ViewConstants.PIECE_PREVIEW_TILE_WIDTH -
+              ViewConstants.PIECE_PREVIEW_SPRITE_ADJUST,
         ),
         position: Vector2(
-          (index % 2) * ViewConstants.PIECE_PREVIEW_TILE_WIDTH + 8,
-          (index / 2).floor() * ViewConstants.PIECE_PREVIEW_TILE_WIDTH + 8,
+          (index % 2) * ViewConstants.PIECE_PREVIEW_TILE_WIDTH +
+              ViewConstants.PIECE_PREVIEW_SPRITE_OFFSET,
+          (index / 2).floor() * ViewConstants.PIECE_PREVIEW_TILE_WIDTH +
+              ViewConstants.PIECE_PREVIEW_SPRITE_OFFSET,
         ),
       );
     }

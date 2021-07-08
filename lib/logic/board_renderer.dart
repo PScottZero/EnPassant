@@ -6,12 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'chess_game.dart';
 import 'chess_piece.dart';
 import 'chess_piece_sprite.dart';
-import 'move_calculation/move_classes.dart';
+import 'move_classes.dart';
 import 'constants.dart';
 
 const BOARD_SIZE_ADJUST = 68;
 const SPRITE_OFFSET = 6;
 const SPRITE_SIZE_ADJUST = SPRITE_OFFSET * 2;
+const CIRCLE_RADIUS_DIVISOR = 5;
 
 class BoardRenderer {
   ChessGame _game;
@@ -99,7 +100,7 @@ class BoardRenderer {
           getXFromTile(tile, tileSize, _game.model) + (tileSize / 2),
           getYFromTile(tile, tileSize, _game.model) + (tileSize / 2),
         ),
-        tileSize / 5,
+        tileSize / CIRCLE_RADIUS_DIVISOR,
         Paint()..color = _game.model.themePrefs.theme.moveHint,
       );
     }
@@ -136,6 +137,12 @@ class BoardRenderer {
         tileSize,
       ),
       Paint()..color = color,
+    );
+  }
+
+  void refreshSprites() {
+    _spriteMap.forEach(
+      (_, value) => value.initSprite(_game.model.themePrefs.pieceTheme),
     );
   }
 }

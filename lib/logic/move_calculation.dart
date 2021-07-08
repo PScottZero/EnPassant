@@ -1,10 +1,10 @@
-import 'package:en_passant/logic/constants.dart';
-import 'package:en_passant/logic/player.dart';
 import 'package:en_passant/views/chess_view/components/promotion_dialog.dart';
 
-import '../chess_board.dart';
-import '../chess_piece.dart';
+import 'chess_board.dart';
+import 'chess_piece.dart';
+import 'constants.dart';
 import 'move_classes.dart';
+import 'player.dart';
 
 const CASTLE_PIECES = [ChessPieceType.rook, ChessPieceType.king];
 const _MOVE_FUNCTIONS = <ChessPieceType, Function>{
@@ -74,6 +74,7 @@ List<int> movesForPiece(
   ChessBoard board, {
   bool legal = true,
 }) {
+  if (piece.type == ChessPieceType.promotion) return [];
   List<int> moves = equalToAny<ChessPieceType>(piece.type, CASTLE_PIECES)
       ? _MOVE_FUNCTIONS[piece.type](piece, board, legal)
       : _MOVE_FUNCTIONS[piece.type](piece, board);

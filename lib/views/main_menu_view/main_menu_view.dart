@@ -1,6 +1,7 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/bottom_padding.dart';
 import 'package:en_passant/views/components/gap.dart';
+import 'package:en_passant/views/components/settings_button.dart';
 import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -20,19 +21,23 @@ class _MainMenuViewState extends State<MainMenuView> {
     return Consumer<AppModel>(
       builder: (context, appModel, child) {
         return Container(
-          decoration:
-              BoxDecoration(gradient: appModel.themePrefs.theme.background),
-          padding: EdgeInsets.all(ViewConstants.PADDING_LARGE),
-          child: Column(
-            children: [
-              AppLogo(),
-              GapColumnSmall(),
-              GameOptions(appModel),
-              GapColumnSmall(),
-              MainMenuButtons(appModel),
-              BottomPadding(),
-            ],
+          decoration: BoxDecoration(
+            gradient: appModel.themePrefs.theme.background,
           ),
+          padding: EdgeInsets.all(ViewConstants.PADDING_LARGE),
+          child: Stack(children: [
+            Column(
+              children: [
+                AppLogo(),
+                GapColumnSmall(),
+                GameOptions(appModel),
+                GapColumnSmall(),
+                MainMenuButtons(appModel),
+                BottomPadding(),
+              ],
+            ),
+            SettingsButton(),
+          ]),
         );
       },
     );

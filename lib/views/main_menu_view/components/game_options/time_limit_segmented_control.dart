@@ -1,4 +1,3 @@
-import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../components/segmented_control.dart';
@@ -21,7 +20,7 @@ class TimeLimitPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SegmentedControl<int>(
-      label: ViewConstants.TIME_LIMIT_STRING,
+      label: 'Time Limit',
       options: timeOptions,
       selection: selectedTime,
       setFunc: setTime,

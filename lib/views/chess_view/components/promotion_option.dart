@@ -2,16 +2,13 @@ import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/logic/constants.dart';
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/logic/player.dart';
-import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class PromotionOption extends StatelessWidget {
   final AppModel appModel;
   final ChessPieceType promotionType;
 
-  String get _playerColor => appModel.gameData.turn.isP1
-      ? ViewConstants.WHITE_STRING
-      : ViewConstants.BLACK_STRING;
+  String get _playerColor => appModel.gameData.turn.isP1 ? 'white' : 'black';
 
   PromotionOption(this.appModel, this.promotionType);
 

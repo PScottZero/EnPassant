@@ -14,7 +14,7 @@ class AppThemePicker extends StatelessWidget {
       builder: (context, appModel, child) => Column(
         children: [
           Container(
-            child: TextSmall(ViewConstants.APP_THEME_STRING),
+            child: TextSmall('App Theme'),
             padding: EdgeInsets.all(ViewConstants.PADDING_SMALL),
           ),
           RoundedBackground(

@@ -10,6 +10,9 @@ import 'logic/constants.dart';
 import 'model/theme_preferences.dart';
 import 'views/main_menu_view/main_menu_view.dart';
 
+const PIECE_NAMES = ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn'];
+const PIECE_COLORS = ['black', 'white'];
+
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -25,16 +28,16 @@ class EnPassantApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return CupertinoApp(
-      title: ViewConstants.APP_NAME,
+      title: 'En Passant',
       theme: CupertinoThemeData(
         brightness: Brightness.dark,
         textTheme: CupertinoTextThemeData(
           textStyle: TextStyle(
-            fontFamily: ViewConstants.FONT_NAME,
+            fontFamily: 'Jura',
             fontSize: ViewConstants.TEXT_DIALOG,
           ),
           pickerTextStyle: TextStyle(
-            fontFamily: ViewConstants.FONT_NAME,
+            fontFamily: 'Jura',
           ),
         ),
       ),
@@ -46,8 +49,8 @@ class EnPassantApp extends StatelessWidget {
 void _cachePieceImages() async {
   List<String> pieceImages = [];
   for (var theme in PIECE_THEMES) {
-    for (var color in ['black', 'white']) {
-      for (var piece in ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn']) {
+    for (var color in PIECE_COLORS) {
+      for (var piece in PIECE_NAMES) {
         pieceImages
             .add('pieces/${themeNameToAssetDir(theme)}/${piece}_$color.png');
       }

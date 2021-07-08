@@ -1,3 +1,4 @@
+import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class RoundedIconButton extends StatelessWidget {
@@ -11,13 +12,15 @@ class RoundedIconButton extends StatelessWidget {
     return Container(
       child: CupertinoButton(
         padding: EdgeInsets.zero,
-        color: Color(0x20000000),
-        child: Icon(icon, color: Color(0xffffffff)),
-        borderRadius: BorderRadius.all(Radius.circular(30)),
+        color: ViewConstants.BACKGROUND_COLOR,
+        child: Icon(icon, color: ViewConstants.WHITE),
+        borderRadius: BorderRadius.circular(
+          ViewConstants.BORDER_RADIUS,
+        ),
         onPressed: onPressed,
       ),
       width: double.infinity,
-      height: 60,
+      height: ViewConstants.BUTTON_HEIGHT,
     );
   }
 }

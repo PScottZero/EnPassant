@@ -78,7 +78,5 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void update() {
-    notifyListeners();
-  }
+  void update() => notifyListeners();
 }

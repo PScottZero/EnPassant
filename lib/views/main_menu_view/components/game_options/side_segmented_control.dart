@@ -1,5 +1,4 @@
 import 'package:en_passant/logic/player.dart';
-import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../components/segmented_control.dart';
@@ -19,7 +18,7 @@ class SidePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SegmentedControl<Player>(
-      label: ViewConstants.SIDE_STRING,
+      label: 'Side',
       options: colorOptions,
       selection: playerSide,
       setFunc: setFunc,

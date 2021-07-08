@@ -1,20 +1,22 @@
 import 'dart:ui';
 
 import 'package:async/async.dart';
-import 'package:en_passant/logic/board_renderer.dart';
-import 'package:en_passant/logic/move_calculation/ai_move_calculation.dart';
-import 'package:en_passant/logic/move_calculation/move_calculation.dart';
 import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/logic/player.dart';
 import 'package:flame/game.dart';
 import 'package:flame/gestures.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
+import 'ai_move_calculation.dart';
+import 'board_renderer.dart';
 import 'chess_board.dart';
 import 'chess_piece.dart';
-import 'move_calculation/move_classes.dart';
 import 'constants.dart';
+import 'move_calculation.dart';
+import 'move_classes.dart';
+import 'player.dart';
+
+const _AI_WAIT_TIME_MS = 500;
 
 class ChessGame extends Game with TapDetector {
   AppModel model;
@@ -82,7 +84,7 @@ class ChessGame extends Game with TapDetector {
     if (validMoves.contains(tile)) {
       validMoves = [];
       var move = Move(renderer.selectedPiece.tile, tile);
-      push(move, board, getMeta: true);
+      push(move, board, getExtraMeta: true);
       if (move.meta.flags.promotion) {
         model.gameData.requestPromotion();
       }
@@ -91,7 +93,7 @@ class ChessGame extends Game with TapDetector {
   }
 
   void _aiMove() async {
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(Duration(milliseconds: _AI_WAIT_TIME_MS));
     var args = Map();
     args[AI_PLAYER_ARG] = model.gameData.aiTurn;
     args[AI_DIFFICULTY_ARG] = model.gameData.aiDifficulty;
@@ -104,7 +106,7 @@ class ChessGame extends Game with TapDetector {
         model.gameData.endGame();
       } else {
         validMoves = [];
-        push(move, board, getMeta: true);
+        push(move, board, getExtraMeta: true);
         _moveCompletion(move, changeTurn: !move.meta.flags.promotion);
         if (move.meta.flags.promotion) {
           promote(move.meta.promotionType);
@@ -114,16 +116,17 @@ class ChessGame extends Game with TapDetector {
   }
 
   void cancelAIMove() {
-    if (aiOperation != null) {
-      aiOperation.cancel();
-    }
+    if (aiOperation != null) aiOperation.cancel();
   }
 
   void undoMove() {
     board.redoStack.add(pop(board));
-    if (board.moveStack.length > 1) {
-      _moveCompletion(board.moveStack[board.moveStack.length - 2],
-          clearRedo: false, undoing: true);
+    if (board.moveStack.isNotEmpty) {
+      _moveCompletion(
+        board.moveStack.last,
+        clearRedo: false,
+        undoing: true,
+      );
     } else {
       _undoOpeningMove();
       model.gameData.changeTurn();
@@ -134,9 +137,13 @@ class ChessGame extends Game with TapDetector {
     board.redoStack.add(pop(board));
     board.redoStack.add(pop(board));
     model.gameData.jumpToEndOfMoveList();
-    if (board.moveStack.length > 1) {
-      _moveCompletion(board.moveStack[board.moveStack.length - 2],
-          clearRedo: false, undoing: true, changeTurn: false);
+    if (board.moveStack.isNotEmpty) {
+      _moveCompletion(
+        board.moveStack.last,
+        clearRedo: false,
+        undoing: true,
+        changeTurn: false,
+      );
     } else {
       _undoOpeningMove();
     }
@@ -151,22 +158,21 @@ class ChessGame extends Game with TapDetector {
   }
 
   void redoMove() {
-    _moveCompletion(push(board.redoStack.removeLast(), board),
-        clearRedo: false);
+    var move = board.redoStack.removeLast();
+    push(move, board);
+    _moveCompletion(move, clearRedo: false, updateMoveList: true);
   }
 
   void redoTwoMoves() {
-    _moveCompletion(push(board.redoStack.removeLast(), board),
-        clearRedo: false, updateMetaList: true);
-    _moveCompletion(push(board.redoStack.removeLast(), board),
-        clearRedo: false, updateMetaList: true);
+    redoMove();
+    redoMove();
   }
 
   void promote(ChessPieceType type) {
     board.moveStack.last.meta.movedPiece.type = type;
     board.moveStack.last.meta.promotionType = type;
     addPromotedPiece(board, board.moveStack.last);
-    _moveCompletion(board.moveStack.last, updateMetaList: false);
+    _moveCompletion(board.moveStack.last, updateMoveList: false);
   }
 
   void _moveCompletion(
@@ -174,7 +180,7 @@ class ChessGame extends Game with TapDetector {
     bool clearRedo = true,
     bool undoing = false,
     bool changeTurn = true,
-    bool updateMetaList = true,
+    bool updateMoveList = true,
   }) {
     if (clearRedo) board.redoStack = [];
     validMoves = [];
@@ -197,7 +203,7 @@ class ChessGame extends Game with TapDetector {
     if (undoing) {
       model.gameData.jumpToEndOfMoveList();
       model.gameData.undoEndGame();
-    } else if (updateMetaList) {
+    } else if (updateMoveList) {
       model.gameData.jumpToEndOfMoveList();
     }
     renderer.selectedPiece = null;
@@ -209,10 +215,12 @@ class ChessGame extends Game with TapDetector {
     if (model.flip &&
         model.gameData.playingWithAI &&
         model.gameData.playerSide.isP2) {
-      return (7 - (vector2.y / renderer.tileSize).floor()) * 8 +
-          (7 - (vector2.x / renderer.tileSize).floor());
+      return ((TILE_COUNT_PER_ROW - 1) -
+                  (vector2.y / renderer.tileSize).floor()) *
+              TILE_COUNT_PER_ROW +
+          ((TILE_COUNT_PER_ROW - 1) - (vector2.x / renderer.tileSize).floor());
     } else {
-      return (vector2.y / renderer.tileSize).floor() * 8 +
+      return (vector2.y / renderer.tileSize).floor() * TILE_COUNT_PER_ROW +
           (vector2.x / renderer.tileSize).floor();
     }
   }

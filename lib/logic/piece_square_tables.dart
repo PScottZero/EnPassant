@@ -1,5 +1,5 @@
-import 'package:en_passant/logic/chess_piece.dart';
-import 'package:en_passant/logic/player.dart';
+import 'chess_piece.dart';
+import 'player.dart';
 
 const KING_TABLE = [
   -30, -40, -40, -50, -50, -40, -40, -30,

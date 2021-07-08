@@ -11,27 +11,25 @@ class ChessBoardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:
-          appModel.themePrefs.theme.name != ViewConstants.VIDEO_CHESS_THEME_NAME
-              ? BoxDecoration(
-                  border: Border.all(
-                    color: appModel.themePrefs.theme.border,
-                    width: ViewConstants.BORDER_WIDTH_LARGE,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    ViewConstants.BORDER_RADIUS,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: ViewConstants.BLUR_RADIUS,
-                      color: ViewConstants.SHADOW_COLOR,
-                    ),
-                  ],
-                )
-              : BoxDecoration(),
+      decoration: appModel.themePrefs.theme.name != 'Video Chess'
+          ? BoxDecoration(
+              border: Border.all(
+                color: appModel.themePrefs.theme.border,
+                width: ViewConstants.BORDER_WIDTH_LARGE,
+              ),
+              borderRadius: BorderRadius.circular(
+                ViewConstants.BORDER_RADIUS,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: ViewConstants.BLUR_RADIUS,
+                  color: ViewConstants.SHADOW_COLOR,
+                ),
+              ],
+            )
+          : BoxDecoration(),
       child: ClipRRect(
-        borderRadius: appModel.themePrefs.theme.name !=
-                ViewConstants.VIDEO_CHESS_THEME_NAME
+        borderRadius: appModel.themePrefs.theme.name != 'Video Chess'
             ? BorderRadius.circular(
                 ViewConstants.BORDER_RADIUS - ViewConstants.BORDER_WIDTH_LARGE,
               )

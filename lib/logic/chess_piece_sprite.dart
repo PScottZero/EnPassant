@@ -13,6 +13,7 @@ const ACCURACY = 0.1;
 class ChessPieceSprite {
   ChessPieceType type;
   String pieceTheme;
+  String color;
   int tile;
   Sprite sprite;
   Vector2 spritePosition;
@@ -24,14 +25,14 @@ class ChessPieceSprite {
   ChessPieceSprite(ChessPiece piece, String pieceTheme) {
     this.tile = piece.tile;
     this.type = piece.type;
-    this.pieceTheme = pieceTheme;
-    initSprite(piece);
+    this.color = piece.player.isP1 ? 'white' : 'black';
+    initSprite(pieceTheme);
   }
 
   void update(double tileSize, AppModel appModel, ChessPiece piece) {
     if (piece.type != this.type) {
       this.type = piece.type;
-      initSprite(piece);
+      initSprite(appModel.themePrefs.pieceTheme);
     }
     if (piece.tile != this.tile) {
       this.tile = piece.tile;
@@ -69,13 +70,14 @@ class ChessPieceSprite {
     _audioPlayer.playBytes(bytes);
   }
 
-  void initSprite(ChessPiece piece) async {
-    String color = piece.player.isP1 ? 'white' : 'black';
-    String pieceName = pieceTypeToString(piece.type);
-    if (piece.needsPromotion) pieceName = 'pawn';
+  void initSprite(String pieceTheme) async {
+    String pieceName = pieceTypeToString(type);
+    if (type == ChessPieceType.promotion) pieceName = 'pawn';
     sprite = Sprite(await Flame.images.load(
         'pieces/${themeNameToAssetDir(pieceTheme)}/${pieceName}_$color.png'));
   }
+
+  void refreshSprite() async {}
 
   void initSpritePosition(double tileSize, AppModel appModel) {
     spritePosition = Vector2(

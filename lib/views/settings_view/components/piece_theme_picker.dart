@@ -16,9 +16,7 @@ class PieceThemePicker extends StatelessWidget {
       builder: (context, appModel, child) => Column(
         children: [
           Container(
-            child: TextSmall(
-              ViewConstants.PIECE_THEME_STRING,
-            ),
+            child: TextSmall('Piece Theme'),
             padding: EdgeInsets.all(
               ViewConstants.PADDING_SMALL,
             ),

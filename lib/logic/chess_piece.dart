@@ -1,4 +1,4 @@
-import 'package:en_passant/logic/player.dart';
+import 'player.dart';
 
 enum ChessPieceType { pawn, rook, knight, bishop, king, queen, promotion }
 

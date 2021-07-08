@@ -1,11 +1,10 @@
 import 'dart:math';
 
-import 'package:en_passant/logic/constants.dart';
-import 'package:en_passant/logic/move_calculation/move_classes.dart';
-import 'package:en_passant/logic/player.dart';
-
-import '../chess_board.dart';
+import 'chess_board.dart';
+import 'constants.dart';
 import 'move_calculation.dart';
+import 'move_classes.dart';
+import 'player.dart';
 
 const _INITIAL_ALPHA = -_INITIAL_BETA;
 const _INITIAL_BETA = 40000;

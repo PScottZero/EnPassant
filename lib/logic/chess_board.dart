@@ -1,11 +1,10 @@
-import 'package:en_passant/logic/move_calculation/openings.dart';
-import 'package:en_passant/logic/constants.dart';
-import 'package:en_passant/logic/player.dart';
-
 import 'chess_piece.dart';
-import 'move_calculation/move_calculation.dart';
-import 'move_calculation/move_classes.dart';
-import 'move_calculation/piece_square_tables.dart';
+import 'constants.dart';
+import 'move_calculation.dart';
+import 'move_classes.dart';
+import 'openings.dart';
+import 'piece_square_tables.dart';
+import 'player.dart';
 
 const KING_ROW_PIECES = [
   ChessPieceType.rook,
@@ -19,7 +18,7 @@ const KING_ROW_PIECES = [
 ];
 
 class ChessBoard {
-  List<ChessPiece> tiles = List.filled(64, null);
+  List<ChessPiece> tiles = List.filled(TILE_COUNT, null);
   List<Move> moveStack = [];
   List<Move> redoStack = [];
   List<ChessPiece> player1Pieces = [];
@@ -42,8 +41,8 @@ class ChessBoard {
   }
 
   void _addPiecesForPlayer(Player player) {
-    var kingRowOffset = player.isP1 ? 56 : 0;
-    var pawnRowOffset = player.isP1 ? -8 : 8;
+    var kingRowOffset = player.isP1 ? TILE_COUNT - TILE_COUNT_PER_ROW : 0;
+    var pawnRowOffset = player.isP1 ? -TILE_COUNT_PER_ROW : TILE_COUNT_PER_ROW;
     var index = 0;
     for (var pieceType in KING_ROW_PIECES) {
       var piece = ChessPiece(pieceType, player, kingRowOffset + index);
@@ -75,33 +74,24 @@ int boardValue(ChessBoard board) {
   return value;
 }
 
-push(Move move, ChessBoard board, {bool getMeta = false}) {
+void push(Move move, ChessBoard board, {bool getExtraMeta = false}) {
   move.meta.movedPiece = board.tiles[move.from];
   move.meta.takenPiece = board.tiles[move.to];
   move.meta.enPassantPiece = board.enPassantPiece;
   move.meta.possibleOpenings = board.possibleOpenings;
-  if (board.possibleOpenings.isNotEmpty) {
-    _filterPossibleOpenings(board, move);
-  }
-  if (getMeta) {
-    _checkMoveAmbiguity(move, board);
-  }
+  if (board.possibleOpenings.isNotEmpty) _filterPossibleOpenings(board, move);
+  if (getExtraMeta) _checkMoveAmbiguity(move, board);
   if (_castled(move.meta.movedPiece, move.meta.takenPiece)) {
     _castle(board, move);
   } else {
     _standardMove(board, move);
     if (move.meta.movedPiece.isPawn) {
-      if (_promotion(move.meta.movedPiece)) {
-        _promote(board, move);
-      }
+      if (_canBePromoted(move.meta.movedPiece)) _promote(board, move);
       _checkEnPassant(board, move);
     }
   }
-  if (_canTakeEnPassant(move.meta.movedPiece)) {
-    board.enPassantPiece = move.meta.movedPiece;
-  } else {
-    board.enPassantPiece = null;
-  }
+  board.enPassantPiece =
+      _canTakeEnPassant(move.meta.movedPiece) ? move.meta.movedPiece : null;
   if ((move.meta.movedPiece.isPawn || move.meta.movedPiece.needsPromotion) &&
       move.meta.flags.took) {
     move.meta.flags.rowIsAmbiguous = true;
@@ -177,8 +167,8 @@ void _undoCastle(ChessBoard board, Move move) {
   _setTile(king.tile, null, board);
   _setTile(rook.tile, null, board);
   var rookCol = tileToCol(rook.tile) == 3 ? 0 : 7;
-  _setTile(tileToRow(king.tile) * 8 + 4, king, board);
-  _setTile(tileToRow(rook.tile) * 8 + rookCol, rook, board);
+  _setTile(tileToRow(king.tile) * TILE_COUNT_PER_ROW + 4, king, board);
+  _setTile(tileToRow(rook.tile) * TILE_COUNT_PER_ROW + rookCol, rook, board);
   king.moveCount--;
   rook.moveCount--;
 }
@@ -231,7 +221,9 @@ void _undoPromote(ChessBoard board, Move move) {
 }
 
 void _checkEnPassant(ChessBoard board, Move move) {
-  var offset = move.meta.movedPiece.player.isP1 ? 8 : -8;
+  var offset = move.meta.movedPiece.player.isP1
+      ? TILE_COUNT_PER_ROW
+      : -TILE_COUNT_PER_ROW;
   var tile = move.meta.movedPiece.tile + offset;
   var takenPiece = board.tiles[tile];
   if (takenPiece != null && takenPiece == board.enPassantPiece) {
@@ -320,8 +312,9 @@ List<ChessPiece> _piecesOfTypeForPlayer(
 bool _castled(ChessPiece movedPiece, ChessPiece takenPiece) =>
     takenPiece != null && takenPiece.player == movedPiece.player;
 
-bool _promotion(ChessPiece movedPiece) =>
-    movedPiece.isPawn && equalToAny<int>(movedPiece.tile, END_TILE_INDICES);
+bool _canBePromoted(ChessPiece movedPiece) =>
+    movedPiece.isPawn &&
+    equalToAny<int>(tileToRow(movedPiece.tile), END_TILE_INDICES);
 
 bool _canTakeEnPassant(ChessPiece movedPiece) =>
     movedPiece.moveCount == 1 &&

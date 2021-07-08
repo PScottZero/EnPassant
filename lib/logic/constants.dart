@@ -1,5 +1,6 @@
-import 'package:en_passant/logic/chess_piece.dart';
 import 'package:en_passant/model/app_model.dart';
+
+import 'chess_piece.dart';
 
 const AI_PLAYER_ARG = 'aiPlayer';
 const AI_DIFFICULTY_ARG = 'aiDifficulty';

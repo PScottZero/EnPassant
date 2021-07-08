@@ -1,4 +1,4 @@
-import '../chess_piece.dart';
+import 'chess_piece.dart';
 
 class Move {
   int from;

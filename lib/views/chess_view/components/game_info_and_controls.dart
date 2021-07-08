@@ -33,11 +33,14 @@ class GameInfoAndControls extends StatelessWidget {
     );
   }
 
-  double _maxHeight(BuildContext context) =>
-      MediaQuery.of(context).size.height > ViewConstants.SMALL_SCREEN_CUTOFF
-          ? ViewConstants.GAME_INFO_MAX_HEIGHT
-          : ViewConstants.GAME_INFO_MIN_HEIGHT;
+  double _maxHeight(BuildContext context) {
+    return MediaQuery.of(context).size.height >
+            ViewConstants.SMALL_SCREEN_CUTOFF
+        ? ViewConstants.GAME_INFO_MAX_HEIGHT
+        : ViewConstants.GAME_INFO_MIN_HEIGHT;
+  }
 
-  void _scrollToBottom() =>
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+  void _scrollToBottom() {
+    scrollController.jumpTo(scrollController.position.maxScrollExtent);
+  }
 }

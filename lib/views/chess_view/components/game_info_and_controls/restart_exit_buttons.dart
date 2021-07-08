@@ -1,7 +1,6 @@
 import 'package:en_passant/model/app_model.dart';
 import 'package:en_passant/views/components/rounded_alert_button.dart';
 import 'package:en_passant/views/components/gap.dart';
-import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 class RestartExitButtons extends StatelessWidget {
@@ -15,7 +14,7 @@ class RestartExitButtons extends StatelessWidget {
       children: [
         Expanded(
           child: RoundedAlertButton(
-            ViewConstants.RESTART_STRING,
+            'Restart',
             onConfirm: () {
               appModel.gameData.newGame(appModel, context);
             },
@@ -24,7 +23,7 @@ class RestartExitButtons extends StatelessWidget {
         GapRowSmall(),
         Expanded(
           child: RoundedAlertButton(
-            ViewConstants.EXIT_STRING,
+            'Exit',
             onConfirm: () {
               appModel.exitChessView();
               Navigator.pop(context);

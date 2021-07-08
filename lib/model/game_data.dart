@@ -24,6 +24,7 @@ class GameData extends ChangeNotifier {
   Duration player1TimeLeft = Duration.zero;
   Duration player2TimeLeft = Duration.zero;
   int timeLimit = 0;
+  bool timersPaused = false;
 
   Player get aiTurn => playerSide.opposite;
   bool get isP1Turn => playerSide == Player.player1;
@@ -40,6 +41,7 @@ class GameData extends ChangeNotifier {
     }
     gameOver = false;
     stalemate = false;
+    timersPaused = false;
     turn = Player.player1;
     player1TimeLeft = Duration(minutes: timeLimit);
     player2TimeLeft = Duration(minutes: timeLimit);
@@ -62,17 +64,19 @@ class GameData extends ChangeNotifier {
   }
 
   void decrementPlayer1Timer() {
-    if (player1TimeLeft.inMilliseconds > 0 && !gameOver) {
+    if (player1TimeLeft.inMilliseconds > 0 && !gameOver && !timersPaused) {
       player1TimeLeft = Duration(
-          milliseconds: player1TimeLeft.inMilliseconds - TIMER_ACCURACY_MS);
+        milliseconds: player1TimeLeft.inMilliseconds - TIMER_ACCURACY_MS,
+      );
       notifyListeners();
     }
   }
 
   void decrementPlayer2Timer() {
-    if (player2TimeLeft.inMilliseconds > 0 && !gameOver) {
+    if (player2TimeLeft.inMilliseconds > 0 && !gameOver && !timersPaused) {
       player2TimeLeft = Duration(
-          milliseconds: player2TimeLeft.inMilliseconds - TIMER_ACCURACY_MS);
+        milliseconds: player2TimeLeft.inMilliseconds - TIMER_ACCURACY_MS,
+      );
       notifyListeners();
     }
   }
@@ -126,4 +130,8 @@ class GameData extends ChangeNotifier {
     moveListUpdated = true;
     notifyListeners();
   }
+
+  void pauseTimers() => timersPaused = true;
+
+  void resumeTimers() => timersPaused = false;
 }

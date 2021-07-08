@@ -1,4 +1,3 @@
-import 'package:en_passant/views/view_constants.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../components/segmented_control.dart';
@@ -21,7 +20,7 @@ class AIDifficultyPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SegmentedControl<int>(
-      label: ViewConstants.AI_DIFFICULTY_STRING,
+      label: 'AI Difficulty',
       options: difficultyOptions,
       selection: aiDifficulty,
       setFunc: setFunc,

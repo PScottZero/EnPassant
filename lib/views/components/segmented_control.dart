@@ -26,7 +26,7 @@ class SegmentedControl<T> extends StatelessWidget {
               data: CupertinoThemeData(
                 textTheme: CupertinoTextThemeData(
                   textStyle: TextStyle(
-                    fontFamily: ViewConstants.FONT_NAME,
+                    fontFamily: 'Jura',
                     fontSize: ViewConstants.TEXT_SEGMENTED_CONTROL,
                   ),
                 ),

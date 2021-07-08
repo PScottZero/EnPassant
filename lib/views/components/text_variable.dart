@@ -19,7 +19,7 @@ class TextDefault extends StatelessWidget {
       text,
       style: TextStyle(
         fontSize: fontSize,
-        fontFamily: ViewConstants.FONT_NAME,
+        fontFamily: 'Jura',
         color: color,
       ),
     );
