@@ -13,7 +13,7 @@ En Passant is a chess app written in Flutter using Flame engine. It is a remake 
 
 ## AI Description
 
-The chess AI I developed for this app uses the minimax algorithm with alpha-beta pruning to calculate which moves to make. This source is what helped me code the actual AI as it has a pseudo-code example of the algorithm which I adapted for my app. There are six difficulty levels in the app, each level corresponding to the depth of the search used in the minimax algorithm. The highest difficulty is 6, which corresponds to 3 full chess moves. To learn more about how this algorithm works, use the following link: https://en.wikipedia.org/wiki/Alpha–beta_pruning.
+The chess AI I developed for this app uses the minimax algorithm with alpha-beta pruning to calculate which moves to make. There are six difficulty levels in the app, each level corresponding to the depth of the search used in the minimax algorithm. The highest difficulty is 6, which corresponds to 3 full chess moves. To learn more about how this algorithm works, use the following link: https://en.wikipedia.org/wiki/Alpha–beta_pruning.
 
 ## Screenshots
 
