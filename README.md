@@ -3,7 +3,6 @@
 En Passant is a chess app written in Flutter using Flame engine. It is a remake of [Checkmate](https://github.com/PScottZero/Checkmate), a SwiftUI project which I submitted as my final project for an application development course I took at Penn State (CMPSC 475) during the fall of 2020.
 
 <a href='https://play.google.com/store/apps/details?id=com.pscottzero.en_passant&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width='300'/></a>
-<a href='https://apps.apple.com/app/en-passant-chess-app/id1560929429'><img alt='Download on the App Store' src='https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg' width='300'/></a>
 
 ## Features
 - 1 or 2 player gameplay (2 player is offline)
