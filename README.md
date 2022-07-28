@@ -6,7 +6,7 @@ This branch contains the WIP code for version 2 of En Passant.
 
 Version 2 will contain the following features:
 * New UI
-* New logo
+* Stockfish AI
 * Ability to save and load games
 * New app themes
 * New piece themes
