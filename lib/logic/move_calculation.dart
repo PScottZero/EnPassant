@@ -1,5 +1,3 @@
-import 'package:en_passant/views/chess_view/components/promotion_dialog.dart';
-
 import 'chess_board.dart';
 import 'chess_piece.dart';
 import 'constants.dart';

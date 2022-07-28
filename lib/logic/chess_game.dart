@@ -1,12 +1,12 @@
 import 'dart:ui';
 
 import 'package:async/async.dart';
-import 'package:en_passant/model/app_model.dart';
 import 'package:flame/game.dart';
-import 'package:flame/gestures.dart';
+import 'package:flame/input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
+import '../model/app_model.dart';
 import 'ai_move_calculation.dart';
 import 'board_renderer.dart';
 import 'chess_board.dart';
@@ -14,7 +14,6 @@ import 'chess_piece.dart';
 import 'constants.dart';
 import 'move_calculation.dart';
 import 'move_classes.dart';
-import 'player.dart';
 
 const _AI_WAIT_TIME_MS = 500;
 

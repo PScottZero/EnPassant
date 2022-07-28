@@ -38,8 +38,8 @@ class AppModel extends ChangeNotifier {
   }
 
   void exitChessView() {
-    gameData.game.cancelAIMove();
-    gameData.timer.cancel();
+    gameData.game!.cancelAIMove();
+    gameData.timer!.cancel();
     notifyListeners();
   }
 

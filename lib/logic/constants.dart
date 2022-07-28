@@ -1,5 +1,4 @@
-import 'package:en_passant/model/app_model.dart';
-
+import '../model/app_model.dart';
 import 'chess_piece.dart';
 
 const AI_PLAYER_ARG = 'aiPlayer';

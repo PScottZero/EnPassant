@@ -10,7 +10,7 @@
         android:largeScreens="false"
         android:xlargeScreens="false"/>
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="En Passant"
         android:icon="@mipmap/ic_launcher">
         <activity

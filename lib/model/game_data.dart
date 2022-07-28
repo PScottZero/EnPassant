@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:en_passant/logic/chess_game.dart';
-import 'package:en_passant/logic/player.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../logic/chess_game.dart';
+import '../logic/player.dart';
 import 'app_model.dart';
 
-const TIMER_ACCURACY_MS = 100;
+const timerAccuracyMS = 100;
 
 class GameData extends ChangeNotifier {
-  ChessGame game;
-  Timer timer;
+  ChessGame? game;
+  Timer? timer;
   bool gameOver = false;
   bool stalemate = false;
   bool promotionRequested = false;
@@ -34,10 +34,10 @@ class GameData extends ChangeNotifier {
 
   void newGame(AppModel model, BuildContext context, {bool notify = true}) {
     if (game != null) {
-      game.cancelAIMove();
+      game!.cancelAIMove();
     }
     if (timer != null) {
-      timer.cancel();
+      timer!.cancel();
     }
     gameOver = false;
     stalemate = false;
@@ -50,7 +50,7 @@ class GameData extends ChangeNotifier {
           Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
     }
     game = ChessGame(model, context);
-    timer = Timer.periodic(Duration(milliseconds: TIMER_ACCURACY_MS), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: timerAccuracyMS), (timer) {
       turn.isP1 ? decrementPlayer1Timer() : decrementPlayer2Timer();
       if ((player1TimeLeft == Duration.zero ||
               player2TimeLeft == Duration.zero) &&
@@ -66,7 +66,7 @@ class GameData extends ChangeNotifier {
   void decrementPlayer1Timer() {
     if (player1TimeLeft.inMilliseconds > 0 && !gameOver && !timersPaused) {
       player1TimeLeft = Duration(
-        milliseconds: player1TimeLeft.inMilliseconds - TIMER_ACCURACY_MS,
+        milliseconds: player1TimeLeft.inMilliseconds - timerAccuracyMS,
       );
       notifyListeners();
     }
@@ -75,7 +75,7 @@ class GameData extends ChangeNotifier {
   void decrementPlayer2Timer() {
     if (player2TimeLeft.inMilliseconds > 0 && !gameOver && !timersPaused) {
       player2TimeLeft = Duration(
-        milliseconds: player2TimeLeft.inMilliseconds - TIMER_ACCURACY_MS,
+        milliseconds: player2TimeLeft.inMilliseconds - timerAccuracyMS,
       );
       notifyListeners();
     }

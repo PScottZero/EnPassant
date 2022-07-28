@@ -6,10 +6,10 @@ import 'move_calculation.dart';
 import 'move_classes.dart';
 import 'player.dart';
 
-const _INITIAL_ALPHA = -_INITIAL_BETA;
-const _INITIAL_BETA = 40000;
-const _STALEMATE_ALPHA = _INITIAL_ALPHA ~/ 2;
-const _STALEMATE_BETA = _INITIAL_BETA ~/ 2;
+const initialAlpha = -initialBeta;
+const initialBeta = 40000;
+const stalemateAlpha = initialAlpha ~/ 2;
+const stalemateBeta = initialBeta ~/ 2;
 
 Move _alphaBeta(
   ChessBoard board,
@@ -25,7 +25,7 @@ Move _alphaBeta(
     return move;
   }
   var bestMove = Move.invalidMove();
-  bestMove.meta.value = player.isP1 ? _INITIAL_ALPHA : _INITIAL_BETA;
+  bestMove.meta.value = player.isP1 ? initialAlpha : initialBeta;
   for (var move in allMoves(player, board, maxDepth)) {
     push(move, board);
     var result = _alphaBeta(
@@ -43,7 +43,7 @@ Move _alphaBeta(
     }
   }
   if (_isStalemate(bestMove, player, board)) {
-    bestMove.meta.value = player.isP1 ? _STALEMATE_ALPHA : _STALEMATE_BETA;
+    bestMove.meta.value = player.isP1 ? stalemateAlpha : stalemateBeta;
     if (piecesForPlayer(player, board).length == 1) bestMove.meta.value *= -1;
   }
   return bestMove;
@@ -52,7 +52,7 @@ Move _alphaBeta(
 Move calculateAIMove(Map args) => args[AI_BOARD_ARG].possibleOpenings.isNotEmpty
     ? _openingMove(args[AI_BOARD_ARG], args[AI_PLAYER_ARG])
     : _alphaBeta(args[AI_BOARD_ARG], args[AI_PLAYER_ARG], null, 0,
-        args[AI_DIFFICULTY_ARG], _INITIAL_ALPHA, _INITIAL_BETA);
+        args[AI_DIFFICULTY_ARG], initialAlpha, initialBeta);
 
 Move _openingMove(ChessBoard board, Player aiPlayer) {
   List<Move> possibleMoves = board.possibleOpenings
@@ -62,4 +62,4 @@ Move _openingMove(ChessBoard board, Player aiPlayer) {
 }
 
 bool _isStalemate(Move bestMove, Player player, ChessBoard board) =>
-    bestMove.meta.value.abs() == _INITIAL_BETA && !kingInCheck(player, board);
+    bestMove.meta.value.abs() == initialBeta && !kingInCheck(player, board);

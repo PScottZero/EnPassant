@@ -11,8 +11,8 @@ class AppTheme {
   Color border;
 
   AppTheme({
-    this.name,
-    this.background,
+    required this.name,
+    required this.background,
     this.lightTile = const Color(0xFFC9B28F),
     this.darkTile = const Color(0xFF69493b),
     this.moveHint = const Color(0xdd5c81c4),

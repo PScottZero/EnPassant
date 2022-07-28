@@ -1,10 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:en_passant/model/app_model.dart';
-import 'package:en_passant/logic/player.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
-import 'package:flame/sprite.dart';
 
+import '../model/app_model.dart';
 import 'chess_piece.dart';
 import 'constants.dart';
 
