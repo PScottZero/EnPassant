@@ -14,8 +14,8 @@ const _MOVE_FUNCTIONS = <ChessPieceType, Function>{
   ChessPieceType.king: _kingMoves
 };
 
-const PAWN_DIAGONALS_1 = [DOWN_LEFT, DOWN_RIGHT];
-const PAWN_DIAGONALS_2 = [UP_LEFT, UP_RIGHT];
+const PAWN_DIAGONALS_1 = [directionDownLeft, directionDownRight];
+const PAWN_DIAGONALS_2 = [directionUpLeft, directionUpRight];
 const KNIGHT_MOVES = [
   Direction(1, 2),
   Direction(-1, 2),
@@ -26,17 +26,22 @@ const KNIGHT_MOVES = [
   Direction(2, -1),
   Direction(-2, -1)
 ];
-const BISHOP_MOVES = [UP_RIGHT, DOWN_RIGHT, DOWN_LEFT, UP_LEFT];
-const ROOK_MOVES = [UP, RIGHT, DOWN, LEFT];
+const BISHOP_MOVES = [
+  directionUpRight,
+  directionDownRight,
+  directionDownLeft,
+  directionUpLeft
+];
+const ROOK_MOVES = [directionUp, directionRight, directionDown, directionLeft];
 const KING_QUEEN_MOVES = [
-  UP,
-  UP_RIGHT,
-  RIGHT,
-  DOWN_RIGHT,
-  DOWN,
-  DOWN_LEFT,
-  LEFT,
-  UP_LEFT
+  directionUp,
+  directionUpRight,
+  directionRight,
+  directionDownRight,
+  directionDown,
+  directionDownLeft,
+  directionLeft,
+  directionUpLeft
 ];
 
 List<Move> allMoves(Player player, ChessBoard board, int aiDifficulty) {
@@ -83,7 +88,7 @@ List<int> movesForPiece(
 
 List<int> _pawnMoves(ChessPiece pawn, ChessBoard board) {
   List<int> moves = [];
-  var offset = pawn.player.isP1 ? -TILE_COUNT_PER_ROW : TILE_COUNT_PER_ROW;
+  var offset = pawn.player.isP1 ? -tileCountPerRow : tileCountPerRow;
   var firstTile = pawn.tile + offset;
   if (board.tiles[firstTile] == null) {
     moves.add(firstTile);
@@ -115,7 +120,7 @@ List<int> _pawnDiagonalAttacks(ChessPiece pawn, ChessBoard board) {
 }
 
 bool _canTakeEnPassant(Player pawnPlayer, int diagonal, ChessBoard board) {
-  var offset = pawnPlayer.isP1 ? TILE_COUNT_PER_ROW : -TILE_COUNT_PER_ROW;
+  var offset = pawnPlayer.isP1 ? tileCountPerRow : -tileCountPerRow;
   var takenPiece = board.tiles[diagonal + offset];
   return takenPiece != null &&
       takenPiece.player != pawnPlayer &&
@@ -244,15 +249,15 @@ bool kingInCheckmate(Player player, ChessBoard board) {
 }
 
 bool _inBounds(int row, int col) =>
-    row >= MIN_DIM_INDEX &&
-    row <= MAX_DIM_INDEX &&
-    col >= MIN_DIM_INDEX &&
-    col <= MAX_DIM_INDEX;
+    row >= minDimIndex &&
+    row <= maxDimIndex &&
+    col >= minDimIndex &&
+    col <= maxDimIndex;
 
-int _rowColToTile(int row, int col) => row * TILE_COUNT_PER_ROW + col;
+int _rowColToTile(int row, int col) => row * tileCountPerRow + col;
 
 bool _canPromote(ChessPiece piece, int tile) =>
-    piece.isPawn && equalToAny<int>(tileToRow(tile), END_TILE_INDICES);
+    piece.isPawn && equalToAny<int>(tileToRow(tile), endTileIndices);
 
 int _compareMoves(Move a, Move b, Player player) => player.isP1
     ? b.meta.value.compareTo(a.meta.value)

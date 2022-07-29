@@ -93,9 +93,9 @@ class ChessGame extends Game with TapDetector {
   void _aiMove() async {
     await Future.delayed(Duration(milliseconds: _AI_WAIT_TIME_MS));
     var args = Map();
-    args[AI_PLAYER_ARG] = model.gameData.aiTurn;
-    args[AI_DIFFICULTY_ARG] = model.gameData.aiDifficulty;
-    args[AI_BOARD_ARG] = board;
+    args[aiPlayerArg] = model.gameData.aiTurn;
+    args[aiDifficultyArg] = model.gameData.aiDifficulty;
+    args[aiBoardArg] = board;
     aiOperation = CancelableOperation.fromFuture(
       compute(calculateAIMove, args),
     );
@@ -213,12 +213,11 @@ class ChessGame extends Game with TapDetector {
     if (model.flip &&
         model.gameData.playingWithAI &&
         model.gameData.playerSide.isP2) {
-      return ((TILE_COUNT_PER_ROW - 1) -
-                  (vector2.y / renderer.tileSize).floor()) *
-              TILE_COUNT_PER_ROW +
-          ((TILE_COUNT_PER_ROW - 1) - (vector2.x / renderer.tileSize).floor());
+      return ((tileCountPerRow - 1) - (vector2.y / renderer.tileSize).floor()) *
+              tileCountPerRow +
+          ((tileCountPerRow - 1) - (vector2.x / renderer.tileSize).floor());
     } else {
-      return (vector2.y / renderer.tileSize).floor() * TILE_COUNT_PER_ROW +
+      return (vector2.y / renderer.tileSize).floor() * tileCountPerRow +
           (vector2.x / renderer.tileSize).floor();
     }
   }

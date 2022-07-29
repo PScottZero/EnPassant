@@ -24,6 +24,7 @@ class GameData extends ChangeNotifier {
   Duration player2TimeLeft = Duration.zero;
   int timeLimit = 0;
   bool timersPaused = false;
+  double tileSize;
 
   Player get aiTurn => playerSide.opposite;
   bool get isP1Turn => playerSide == Player.player1;

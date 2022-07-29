@@ -1,6 +1,18 @@
 import 'dart:ui';
 
 class ViewConstants {
+  // color constants
+  static const Color backgroundColor = Color(0x20000000);
+  static const Color pickerThumbColor = Color(0x50FFFFFF);
+  static const Color shadowColor = Color(0x88000000);
+
+  // font size constants
+  static const double textDialog = 16.0;
+  static const double textLarge = 36.0;
+  static const double textRegular = 24.0;
+  static const double textSmall = 20.0;
+  static const double textSegmentedControl = 8.0;
+
   // ui sizing
   static const double blurRadius = 10.0;
   static const double borderRadius = 30.0;
@@ -27,16 +39,4 @@ class ViewConstants {
   static const double segmentedControlPaddingTB = 8.0;
   static const double smallScreenCutoff = 800.0;
   static const double toggleHeight = 55.0;
-
-  // font size constants
-  static const double textDialog = 16.0;
-  static const double textLarge = 36.0;
-  static const double textRegular = 24.0;
-  static const double textSmall = 20.0;
-  static const double textSegmentedControl = 8.0;
-
-  // color constants
-  static const Color backgroundColor = Color(0x20000000);
-  static const Color pickerThumbColor = Color(0x50FFFFFF);
-  static const Color shadowColor = Color(0x88000000);
 }

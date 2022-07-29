@@ -18,15 +18,17 @@ class BoardRenderer {
   late double tileSize;
   late Map<ChessPiece, ChessPieceSprite> spriteMap;
   ChessPiece? selectedPiece;
-  int checkHintTile;
-  Move latestMove;
+  int? checkHintTile;
+  Move? latestMove;
 
   BoardRenderer(this.game, this.boardSize) {
-    tileSize = boardSize / TILE_COUNT_PER_ROW;
-    for (var piece in game.board.player1Pieces + game.board.player2Pieces) {
-      spriteMap[piece] =
-          ChessPieceSprite(piece, game.model.themePrefs.pieceTheme);
-    }
+    tileSize = boardSize / tileCountPerRow;
+    (game.board.player1Pieces + game.board.player2Pieces).forEach(
+      (piece) => spriteMap[piece] = ChessPieceSprite(
+        piece,
+        game.model.themePrefs.pieceTheme,
+      ),
+    );
     _initSpritePositions();
   }
 
@@ -41,93 +43,87 @@ class BoardRenderer {
     if (game.model.showHints) _drawMoveHints(canvas);
   }
 
-  void _initSpritePositions() {
-    for (var piece in game.board.player1Pieces + game.board.player2Pieces) {
-      spriteMap[piece].initSpritePosition(tileSize, game.model);
-    }
-  }
+  void _initSpritePositions() => spriteMap.forEach(
+        (_, sprite) => sprite.initSpritePosition(tileSize, game.model),
+      );
 
-  void updateSpritePositions() {
-    if (game.model != null) {
-      for (var piece in game.board.player1Pieces + game.board.player2Pieces) {
-        spriteMap[piece].update(tileSize, game.model, piece);
-      }
-    }
-  }
+  void updateSpritePositions() => spriteMap.forEach(
+        (piece, sprite) => sprite.update(tileSize, game.model, piece),
+      );
 
   void _drawBoard(Canvas canvas) {
-    for (int tileNo = 0; tileNo < TILE_COUNT; tileNo++) {
+    for (int tileNo = 0; tileNo < tileCount; tileNo++) {
       canvas.drawRect(
         Rect.fromLTWH(
-          (tileNo % TILE_COUNT_PER_ROW) * tileSize,
-          (tileNo / TILE_COUNT_PER_ROW).floor() * tileSize,
+          (tileNo % tileCountPerRow) * tileSize,
+          (tileNo / tileCountPerRow).floor() * tileSize,
           tileSize,
           tileSize,
         ),
         Paint()
-          ..color = (tileNo + (tileNo / TILE_COUNT_PER_ROW).floor()) % 2 == 0
-              ? _game.model.themePrefs.theme.lightTile
-              : _game.model.themePrefs.theme.darkTile,
+          ..color = (tileNo + (tileNo / tileCountPerRow).floor()) % 2 == 0
+              ? game.model.themePrefs.theme.lightTile
+              : game.model.themePrefs.theme.darkTile,
       );
     }
   }
 
   void _drawPieces(Canvas canvas) {
-    for (var piece in _game.board.player1Pieces + _game.board.player2Pieces) {
-      _spriteMap[piece].sprite.render(
-            canvas,
-            size: Vector2(
-              tileSize - spriteSizeAdjust,
-              tileSize - spriteSizeAdjust,
-            ),
-            position: Vector2(
-              _spriteMap[piece].spritePosition.x + spriteOffset,
-              _spriteMap[piece].spritePosition.y + spriteOffset,
-            ),
-          );
-    }
+    spriteMap.forEach(
+      (_, sprite) => sprite.render(
+        canvas,
+        size: Vector2(
+          tileSize - spriteSizeAdjust,
+          tileSize - spriteSizeAdjust,
+        ),
+        position: Vector2(
+          sprite.spritePosition.x + spriteOffset,
+          sprite.spritePosition.y + spriteOffset,
+        ),
+      ),
+    );
   }
 
   void _drawMoveHints(Canvas canvas) {
-    for (var tile in _game.validMoves) {
+    for (var tile in game.validMoves) {
       canvas.drawCircle(
         Offset(
-          getXFromTile(tile, tileSize, _game.model) + (tileSize / 2),
-          getYFromTile(tile, tileSize, _game.model) + (tileSize / 2),
+          getXFromTile(tile, tileSize, game.model) + (tileSize / 2),
+          getYFromTile(tile, tileSize, game.model) + (tileSize / 2),
         ),
         tileSize / circleRadiusDivisor,
-        Paint()..color = _game.model.themePrefs.theme.moveHint,
+        Paint()..color = game.model.themePrefs.theme.moveHint,
       );
     }
   }
 
   void _drawLatestMove(Canvas canvas) {
-    for (int tile in [latestMove.from, latestMove.to]) {
-      _drawTileRect(canvas, tile, _game.model.themePrefs.theme.latestMove);
+    for (int tile in [latestMove!.from, latestMove!.to]) {
+      _drawTileRect(canvas, tile, game.model.themePrefs.theme.latestMove);
     }
   }
 
   void _drawCheckHint(Canvas canvas) {
     _drawTileRect(
       canvas,
-      checkHintTile,
-      _game.model.themePrefs.theme.checkHint,
+      checkHintTile!,
+      game.model.themePrefs.theme.checkHint,
     );
   }
 
   void _drawSelectedPieceHint(Canvas canvas) {
     _drawTileRect(
       canvas,
-      selectedPiece.tile,
-      _game.model.themePrefs.theme.moveHint,
+      selectedPiece!.tile,
+      game.model.themePrefs.theme.moveHint,
     );
   }
 
   void _drawTileRect(Canvas canvas, int tile, Color color) {
     canvas.drawRect(
       Rect.fromLTWH(
-        getXFromTile(tile, tileSize, _game.model),
-        getYFromTile(tile, tileSize, _game.model),
+        getXFromTile(tile, tileSize, game.model),
+        getYFromTile(tile, tileSize, game.model),
         tileSize,
         tileSize,
       ),
@@ -136,8 +132,8 @@ class BoardRenderer {
   }
 
   void refreshSprites() {
-    _spriteMap.forEach(
-      (_, value) => value.initSprite(_game.model.themePrefs.pieceTheme),
+    spriteMap.forEach(
+      (_, value) => value.initSprite(game.model.themePrefs.pieceTheme),
     );
   }
 }

@@ -56,14 +56,14 @@ Move? _alphaBeta(
   return bestMove;
 }
 
-Move calculateAIMove(Map args) => args[AI_BOARD_ARG].possibleOpenings.isNotEmpty
-    ? _openingMove(args[AI_BOARD_ARG], args[AI_PLAYER_ARG])
+Move calculateAIMove(Map args) => args[aiBoardArg].possibleOpenings.isNotEmpty
+    ? _openingMove(args[aiBoardArg], args[aiPlayerArg])
     : _alphaBeta(
-        args[AI_BOARD_ARG],
-        args[AI_PLAYER_ARG],
+        args[aiBoardArg],
+        args[aiPlayerArg],
         null,
         0,
-        args[AI_DIFFICULTY_ARG],
+        args[aiDifficultyArg],
         initialAlpha,
         initialBeta,
       )!;

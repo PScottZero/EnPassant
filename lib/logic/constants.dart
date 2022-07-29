@@ -1,28 +1,49 @@
-import '../model/app_model.dart';
 import 'chess_piece.dart';
+import 'move_classes.dart';
 
-const AI_PLAYER_ARG = 'aiPlayer';
-const AI_DIFFICULTY_ARG = 'aiDifficulty';
-const AI_BOARD_ARG = 'board';
-const TILE_COUNT = 64;
-const TILE_COUNT_PER_ROW = TILE_COUNT ~/ 8;
-const MIN_DIM_INDEX = 0;
-const MAX_DIM_INDEX = 7;
-const MIDDLE_TILE_INDICES = [3, 4];
-const END_TILE_INDICES = [MIN_DIM_INDEX, MAX_DIM_INDEX];
+const aiPlayerArg = 'aiPlayer';
+const aiDifficultyArg = 'aiDifficulty';
+const aiBoardArg = 'board';
+const tileCount = 64;
+const tileCountPerRow = tileCount ~/ 8;
+const minDimIndex = 0;
+const maxDimIndex = 7;
+const middleTileIndices = [3, 4];
+const endTileIndices = [minDimIndex, maxDimIndex];
 
-int tileToRow(int tile) => (tile / TILE_COUNT_PER_ROW).floor();
+const directionUp = Direction(1, 0);
+const directionUpRight = Direction(1, 1);
+const directionRight = Direction(0, 1);
+const directionDownRight = Direction(-1, 1);
+const directionDown = Direction(-1, 0);
+const directionDownLeft = Direction(-1, -1);
+const directionLeft = Direction(0, -1);
+const directionUpLeft = Direction(1, -1);
 
-int tileToCol(int tile) => tile % TILE_COUNT_PER_ROW;
+int tileToRow(int tile) => (tile / tileCountPerRow).floor();
 
-double getXFromTile(int tile, double tileSize, AppModel model) =>
-    model.flip && model.gameData.playingWithAI && model.gameData.isP2Turn
-        ? ((TILE_COUNT_PER_ROW - 1) - tileToCol(tile)) * tileSize
+int tileToCol(int tile) => tile % tileCountPerRow;
+
+double getXFromTile(
+  int tile,
+  double tileSize,
+  bool flip,
+  bool playingWithAI,
+  bool isP2Turn,
+) =>
+    flip && playingWithAI && isP2Turn
+        ? ((tileCountPerRow - 1) - tileToCol(tile)) * tileSize
         : tileToCol(tile) * tileSize;
 
-double getYFromTile(int tile, double tileSize, AppModel model) =>
-    model.flip && model.gameData.playingWithAI && model.gameData.isP2Turn
-        ? ((TILE_COUNT_PER_ROW - 1) - tileToRow(tile)) * tileSize
+double getYFromTile(
+  int tile,
+  double tileSize,
+  bool flip,
+  bool playingWithAI,
+  bool isP2Turn,
+) =>
+    flip && playingWithAI && isP2Turn
+        ? ((tileCountPerRow - 1) - tileToRow(tile)) * tileSize
         : tileToRow(tile) * tileSize;
 
 String themeNameToAssetDir(String themeName) =>

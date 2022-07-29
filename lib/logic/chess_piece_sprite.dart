@@ -1,33 +1,36 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:en_passant/model/theme_preferences.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
+import 'package:flame_audio/flame_audio.dart';
 
-import '../model/app_model.dart';
 import 'chess_piece.dart';
 import 'constants.dart';
+import 'player.dart';
 
-const ACCURACY = 0.1;
+const zeroAccuracy = 0.1;
 
 class ChessPieceSprite {
-  ChessPieceType type;
-  String pieceTheme;
-  String color;
-  int tile;
-  Sprite sprite;
+  ChessPiece piece;
+  ThemePreferences themePreferences;
+  double tileSize;
+  late String color;
+  late int tile;
+  late Sprite sprite;
   Vector2 spritePosition;
   Vector2 _offset = Vector2(0, 0);
 
-  AudioCache _audioCache = AudioCache();
-  AudioPlayer _audioPlayer = AudioPlayer();
-
-  ChessPieceSprite(ChessPiece piece, String pieceTheme) {
-    this.tile = piece.tile;
-    this.type = piece.type;
-    this.color = piece.player.isP1 ? 'white' : 'black';
-    initSprite(pieceTheme);
+  ChessPieceSprite(this.piece, this.themePreferences, this.tileSize) {
+    this.color = piece.player == Player.player1 ? 'white' : 'black';
+    initSprite();
   }
 
-  void update(double tileSize, AppModel appModel, ChessPiece piece) {
+  void update(
+    double tileSize,
+    ChessPiece piece,
+    bool flip,
+    bool playingWithAi,
+    bool isP2Turn,
+  ) {
     if (piece.type != this.type) {
       this.type = piece.type;
       initSprite(appModel.themePrefs.pieceTheme);
@@ -37,8 +40,8 @@ class ChessPieceSprite {
       _offset = Vector2(0, 0);
     }
     var destination = Vector2(
-      getXFromTile(tile, tileSize, appModel),
-      getYFromTile(tile, tileSize, appModel),
+      getXFromTile(tile, tileSize, flip, playingWithAi, isP2Turn),
+      getYFromTile(tile, tileSize, flip, playingWithAi, isP2Turn),
     );
     var difference = destination.clone();
     difference.sub(spritePosition);
@@ -56,31 +59,24 @@ class ChessPieceSprite {
         if (_offset.y == 0) _offset.y = difference.y / 10;
       }
       spritePosition.add(_offset);
-      if (_offset == Vector2.zero()) _playSound();
+      if (_offset == Vector2.zero()) FlameAudio.play('audio/piece_moved.mp3');
     }
   }
 
-  bool _isApproxZero(double value) => value <= ACCURACY;
+  bool _isApproxZero(double value) => value <= zeroAccuracy;
 
-  void _playSound() async {
-    final bytes = await (await _audioCache.loadAsFile('audio/piece_moved.mp3'))
-        .readAsBytes();
-    _audioPlayer.playBytes(bytes);
-  }
-
-  void initSprite(String pieceTheme) async {
-    String pieceName = pieceTypeToString(type);
-    if (type == ChessPieceType.promotion) pieceName = 'pawn';
+  void initSprite(
+    bool flip,
+    bool playingWithAI,
+    bool isP2Turn,
+  ) async {
+    String pieceName = pieceTypeToString(piece.type);
+    if (piece.type == ChessPieceType.promotion) pieceName = 'pawn';
     sprite = Sprite(await Flame.images.load(
         'pieces/${themeNameToAssetDir(pieceTheme)}/${pieceName}_$color.png'));
-  }
-
-  void refreshSprite() async {}
-
-  void initSpritePosition(double tileSize, AppModel appModel) {
     spritePosition = Vector2(
-      getXFromTile(tile, tileSize, appModel),
-      getYFromTile(tile, tileSize, appModel),
+      getXFromTile(piece.tile, tileSize, flip, playingWithAI, isP2Turn),
+      getYFromTile(piece.tile, tileSize, flip, playingWithAI, isP2Turn),
     );
   }
 }

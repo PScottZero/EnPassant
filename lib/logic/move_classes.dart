@@ -7,10 +7,7 @@ class Move {
 
   Move(this.from, this.to);
 
-  Move.invalidMove() {
-    from = -1;
-    to = -1;
-  }
+  Move.invalidMove() : this(-1, -1);
 
   setEqualTo(Move move) {
     this.from = move.from;
@@ -27,15 +24,15 @@ class Move {
 
 class MoveMeta {
   int value = 0;
-  _Flags flags = _Flags();
-  ChessPiece movedPiece;
-  ChessPiece takenPiece;
-  ChessPiece enPassantPiece;
-  List<List<Move>> possibleOpenings;
+  Flags flags = Flags();
+  ChessPiece? movedPiece;
+  ChessPiece? takenPiece;
+  ChessPiece? enPassantPiece;
+  List<List<Move>> possibleOpenings = [];
   ChessPieceType promotionType = ChessPieceType.promotion;
 }
 
-class _Flags {
+class Flags {
   bool took = false;
   bool kingCastle = false;
   bool queenCastle = false;
@@ -55,12 +52,3 @@ class Direction {
 
   const Direction(this.up, this.right);
 }
-
-const UP = Direction(1, 0);
-const UP_RIGHT = Direction(1, 1);
-const RIGHT = Direction(0, 1);
-const DOWN_RIGHT = Direction(-1, 1);
-const DOWN = Direction(-1, 0);
-const DOWN_LEFT = Direction(-1, -1);
-const LEFT = Direction(0, -1);
-const UP_LEFT = Direction(1, -1);

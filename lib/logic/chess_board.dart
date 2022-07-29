@@ -18,7 +18,7 @@ const KING_ROW_PIECES = [
 ];
 
 class ChessBoard {
-  List<ChessPiece> tiles = List.filled(TILE_COUNT, null);
+  List<ChessPiece?> tiles = List.filled(tileCount, null);
   List<Move> moveStack = [];
   List<Move> redoStack = [];
   List<ChessPiece> player1Pieces = [];
@@ -41,8 +41,8 @@ class ChessBoard {
   }
 
   void _addPiecesForPlayer(Player player) {
-    var kingRowOffset = player.isP1 ? TILE_COUNT - TILE_COUNT_PER_ROW : 0;
-    var pawnRowOffset = player.isP1 ? -TILE_COUNT_PER_ROW : TILE_COUNT_PER_ROW;
+    var kingRowOffset = player.isP1 ? tileCount - tileCountPerRow : 0;
+    var pawnRowOffset = player.isP1 ? -tileCountPerRow : tileCountPerRow;
     var index = 0;
     for (var pieceType in KING_ROW_PIECES) {
       var piece = ChessPiece(pieceType, player, kingRowOffset + index);
@@ -167,8 +167,8 @@ void _undoCastle(ChessBoard board, Move move) {
   _setTile(king.tile, null, board);
   _setTile(rook.tile, null, board);
   var rookCol = tileToCol(rook.tile) == 3 ? 0 : 7;
-  _setTile(tileToRow(king.tile) * TILE_COUNT_PER_ROW + 4, king, board);
-  _setTile(tileToRow(rook.tile) * TILE_COUNT_PER_ROW + rookCol, rook, board);
+  _setTile(tileToRow(king.tile) * tileCountPerRow + 4, king, board);
+  _setTile(tileToRow(rook.tile) * tileCountPerRow + rookCol, rook, board);
   king.moveCount--;
   rook.moveCount--;
 }
@@ -221,9 +221,8 @@ void _undoPromote(ChessBoard board, Move move) {
 }
 
 void _checkEnPassant(ChessBoard board, Move move) {
-  var offset = move.meta.movedPiece.player.isP1
-      ? TILE_COUNT_PER_ROW
-      : -TILE_COUNT_PER_ROW;
+  var offset =
+      move.meta.movedPiece.player.isP1 ? tileCountPerRow : -tileCountPerRow;
   var tile = move.meta.movedPiece.tile + offset;
   var takenPiece = board.tiles[tile];
   if (takenPiece != null && takenPiece == board.enPassantPiece) {
@@ -314,12 +313,12 @@ bool _castled(ChessPiece movedPiece, ChessPiece takenPiece) =>
 
 bool _canBePromoted(ChessPiece movedPiece) =>
     movedPiece.isPawn &&
-    equalToAny<int>(tileToRow(movedPiece.tile), END_TILE_INDICES);
+    equalToAny<int>(tileToRow(movedPiece.tile), endTileIndices);
 
 bool _canTakeEnPassant(ChessPiece movedPiece) =>
     movedPiece.moveCount == 1 &&
     movedPiece.isPawn &&
-    equalToAny(tileToRow(movedPiece.tile), MIDDLE_TILE_INDICES);
+    equalToAny(tileToRow(movedPiece.tile), middleTileIndices);
 
 bool _inEndGame(ChessBoard board) =>
     (_queensForPlayer(Player.player1, board).isEmpty &&
