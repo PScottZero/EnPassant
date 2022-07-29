@@ -6,7 +6,7 @@ import 'openings.dart';
 import 'piece_square_tables.dart';
 import 'player.dart';
 
-const KING_ROW_PIECES = [
+const kingRowPieces = [
   ChessPieceType.rook,
   ChessPieceType.knight,
   ChessPieceType.bishop,
@@ -44,7 +44,7 @@ class ChessBoard {
     var kingRowOffset = player.isP1 ? tileCount - tileCountPerRow : 0;
     var pawnRowOffset = player.isP1 ? -tileCountPerRow : tileCountPerRow;
     var index = 0;
-    for (var pieceType in KING_ROW_PIECES) {
+    for (var pieceType in kingRowPieces) {
       var piece = ChessPiece(pieceType, player, kingRowOffset + index);
       var pawn = ChessPiece(
         ChessPieceType.pawn,

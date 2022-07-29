@@ -1,3 +1,4 @@
+import 'package:en_passant/model/game_data.dart';
 import 'package:en_passant/model/theme_preferences.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
@@ -5,12 +6,12 @@ import 'package:flame_audio/flame_audio.dart';
 
 import 'chess_piece.dart';
 import 'constants.dart';
-import 'player.dart';
 
 const zeroAccuracy = 0.1;
 
 class ChessPieceSprite {
-  ChessPiece piece;
+  GameData gameData;
+  ChessPieceType pieceType;
   ThemePreferences themePreferences;
   double tileSize;
   late String color;
@@ -19,8 +20,9 @@ class ChessPieceSprite {
   Vector2 spritePosition;
   Vector2 _offset = Vector2(0, 0);
 
-  ChessPieceSprite(this.piece, this.themePreferences, this.tileSize) {
-    this.color = piece.player == Player.player1 ? 'white' : 'black';
+  ChessPieceSprite(
+      this.gameData, this.pieceType, this.themePreferences, this.tileSize) {
+    this.color = gameData.isP1Turn ? 'white' : 'black';
     initSprite();
   }
 
@@ -31,7 +33,7 @@ class ChessPieceSprite {
     bool playingWithAi,
     bool isP2Turn,
   ) {
-    if (piece.type != this.type) {
+    if (piece.type != type) {
       this.type = piece.type;
       initSprite(appModel.themePrefs.pieceTheme);
     }

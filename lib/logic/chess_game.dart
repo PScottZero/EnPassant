@@ -12,7 +12,7 @@ import 'constants.dart';
 import 'move_calculation.dart';
 import 'move_classes.dart';
 
-const _AI_WAIT_TIME_MS = 500;
+const aiWaitTimeMilliseconds = 500;
 
 class ChessGame extends Game with TapDetector {
   AppModel model;
@@ -91,7 +91,7 @@ class ChessGame extends Game with TapDetector {
   }
 
   void _aiMove() async {
-    await Future.delayed(Duration(milliseconds: _AI_WAIT_TIME_MS));
+    await Future.delayed(Duration(milliseconds: aiWaitTimeMilliseconds));
     var args = Map();
     args[aiPlayerArg] = model.gameData.aiTurn;
     args[aiDifficultyArg] = model.gameData.aiDifficulty;
