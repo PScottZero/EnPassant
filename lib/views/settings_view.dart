@@ -73,7 +73,7 @@ class _SettingsViewState extends State<SettingsView> {
 
   void _exit() {
     if (_model?.gameData.game != null)
-      _model!.gameData.game!.renderer.refreshSprites();
+      _model!.gameData.game.renderer.refreshSprites();
     _model!.gameData.resumeTimers();
   }
 

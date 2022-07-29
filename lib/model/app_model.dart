@@ -5,13 +5,14 @@ import 'game_data.dart';
 import 'theme_preferences.dart';
 
 class AppModel extends ChangeNotifier {
+  GameData gameData = GameData();
+  ThemePreferences themePrefs = ThemePreferences();
+
   bool showMoveHistory = true;
   bool allowUndoRedo = true;
   bool soundEnabled = true;
   bool showHints = true;
   bool flip = true;
-  GameData gameData = GameData();
-  ThemePreferences themePrefs = ThemePreferences();
 
   AppModel() {
     initListeners();
@@ -19,12 +20,8 @@ class AppModel extends ChangeNotifier {
   }
 
   void initListeners() {
-    gameData.addListener(() {
-      notifyListeners();
-    });
-    themePrefs.addListener(() {
-      notifyListeners();
-    });
+    gameData.addListener(() => notifyListeners());
+    themePrefs.addListener(() => notifyListeners());
   }
 
   void loadSharedPrefs() async {
@@ -38,8 +35,8 @@ class AppModel extends ChangeNotifier {
   }
 
   void exitChessView() {
-    gameData.game!.cancelAIMove();
-    gameData.timer!.cancel();
+    gameData.game.cancelAIMove();
+    gameData.timer.cancel();
     notifyListeners();
   }
 

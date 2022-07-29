@@ -11,17 +11,17 @@ const initialBeta = 40000;
 const stalemateAlpha = initialAlpha ~/ 2;
 const stalemateBeta = initialBeta ~/ 2;
 
-Move _alphaBeta(
+Move? _alphaBeta(
   ChessBoard board,
   Player player,
-  Move move,
+  Move? move,
   int depth,
   int maxDepth,
   int alpha,
   int beta,
 ) {
   if (depth == maxDepth) {
-    move.meta.value = boardValue(board);
+    move?.meta.value = boardValue(board);
     return move;
   }
   var bestMove = Move.invalidMove();
@@ -29,7 +29,14 @@ Move _alphaBeta(
   for (var move in allMoves(player, board, maxDepth)) {
     push(move, board);
     var result = _alphaBeta(
-        board, player.opposite, move, depth + 1, maxDepth, alpha, beta);
+      board,
+      player.opposite,
+      move,
+      depth + 1,
+      maxDepth,
+      alpha,
+      beta,
+    )!;
     pop(board);
     result.setEqualTo(move);
     if (player.isP1) {
@@ -51,8 +58,15 @@ Move _alphaBeta(
 
 Move calculateAIMove(Map args) => args[AI_BOARD_ARG].possibleOpenings.isNotEmpty
     ? _openingMove(args[AI_BOARD_ARG], args[AI_PLAYER_ARG])
-    : _alphaBeta(args[AI_BOARD_ARG], args[AI_PLAYER_ARG], null, 0,
-        args[AI_DIFFICULTY_ARG], initialAlpha, initialBeta);
+    : _alphaBeta(
+        args[AI_BOARD_ARG],
+        args[AI_PLAYER_ARG],
+        null,
+        0,
+        args[AI_DIFFICULTY_ARG],
+        initialAlpha,
+        initialBeta,
+      )!;
 
 Move _openingMove(ChessBoard board, Player aiPlayer) {
   List<Move> possibleMoves = board.possibleOpenings

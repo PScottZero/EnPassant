@@ -17,7 +17,7 @@ class Toggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: ViewConstants.TOGGLE_HEIGHT,
+      height: ViewConstants.toggleHeight,
       child: Row(
         children: [
           TextRegular(label),

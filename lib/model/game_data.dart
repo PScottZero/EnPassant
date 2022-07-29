@@ -5,13 +5,12 @@ import 'package:flutter/cupertino.dart';
 
 import '../logic/chess_game.dart';
 import '../logic/player.dart';
-import 'app_model.dart';
 
-const timerAccuracyMS = 100;
+const timerAccuracyMilliseconds = 100;
 
 class GameData extends ChangeNotifier {
-  ChessGame? game;
-  Timer? timer;
+  late ChessGame game;
+  late Timer timer;
   bool gameOver = false;
   bool stalemate = false;
   bool promotionRequested = false;
@@ -32,25 +31,29 @@ class GameData extends ChangeNotifier {
   bool get isAIsTurn => playingWithAI && (turn == aiTurn);
   bool get playingWithAI => playerCount == 1;
 
-  void newGame(AppModel model, BuildContext context, {bool notify = true}) {
-    if (game != null) {
-      game!.cancelAIMove();
-    }
-    if (timer != null) {
-      timer!.cancel();
-    }
+  GameData() {
+    newGame();
+  }
+
+  void newGame({bool notify = true}) {
+    game.cancelAIMove();
+    timer.cancel();
+
     gameOver = false;
     stalemate = false;
     timersPaused = false;
     turn = Player.player1;
     player1TimeLeft = Duration(minutes: timeLimit);
     player2TimeLeft = Duration(minutes: timeLimit);
+
     if (selectedSide.isRandom) {
       playerSide =
           Random.secure().nextInt(2) == 0 ? Player.player1 : Player.player2;
     }
-    game = ChessGame(model, context);
-    timer = Timer.periodic(Duration(milliseconds: timerAccuracyMS), (timer) {
+
+    game = ChessGame();
+    timer = Timer.periodic(Duration(milliseconds: timerAccuracyMilliseconds),
+        (timer) {
       turn.isP1 ? decrementPlayer1Timer() : decrementPlayer2Timer();
       if ((player1TimeLeft == Duration.zero ||
               player2TimeLeft == Duration.zero) &&
@@ -58,15 +61,14 @@ class GameData extends ChangeNotifier {
         endGame();
       }
     });
-    if (notify) {
-      notifyListeners();
-    }
+    if (notify) notifyListeners();
   }
 
   void decrementPlayer1Timer() {
     if (player1TimeLeft.inMilliseconds > 0 && !gameOver && !timersPaused) {
       player1TimeLeft = Duration(
-        milliseconds: player1TimeLeft.inMilliseconds - timerAccuracyMS,
+        milliseconds:
+            player1TimeLeft.inMilliseconds - timerAccuracyMilliseconds,
       );
       notifyListeners();
     }
@@ -75,7 +77,8 @@ class GameData extends ChangeNotifier {
   void decrementPlayer2Timer() {
     if (player2TimeLeft.inMilliseconds > 0 && !gameOver && !timersPaused) {
       player2TimeLeft = Duration(
-        milliseconds: player2TimeLeft.inMilliseconds - timerAccuracyMS,
+        milliseconds:
+            player2TimeLeft.inMilliseconds - timerAccuracyMilliseconds,
       );
       notifyListeners();
     }

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import '../../../components/segmented_control.dart';
 
 class AIDifficultyPicker extends StatelessWidget {
-  final Map<int, Text> difficultyOptions = {
+  final Map<int, Text> difficultyOptions = const {
     1: Text('1'),
     2: Text('2'),
     3: Text('3'),
@@ -13,9 +13,13 @@ class AIDifficultyPicker extends StatelessWidget {
   };
 
   final int aiDifficulty;
-  final Function setFunc;
+  final Function(int) setFunc;
 
-  AIDifficultyPicker(this.aiDifficulty, this.setFunc);
+  const AIDifficultyPicker({
+    Key? key,
+    required this.aiDifficulty,
+    required this.setFunc,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

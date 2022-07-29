@@ -9,7 +9,7 @@ class TextDefault extends StatelessWidget {
 
   TextDefault(
     this.text, {
-    this.fontSize = ViewConstants.TEXT_DIALOG,
+    this.fontSize = ViewConstants.textDialog,
     this.color = CupertinoColors.white,
   });
 
@@ -28,15 +28,15 @@ class TextDefault extends StatelessWidget {
 
 class TextSmall extends TextDefault {
   TextSmall(String text, {Color color = CupertinoColors.white})
-      : super(text, fontSize: ViewConstants.TEXT_SMALL, color: color);
+      : super(text, fontSize: ViewConstants.textSmall, color: color);
 }
 
 class TextRegular extends TextDefault {
   TextRegular(String text, {Color color = CupertinoColors.white})
-      : super(text, fontSize: ViewConstants.TEXT_REGULAR, color: color);
+      : super(text, fontSize: ViewConstants.textRegular, color: color);
 }
 
 class TextLarge extends TextDefault {
   TextLarge(String text, {Color color = CupertinoColors.white})
-      : super(text, fontSize: ViewConstants.TEXT_LARGE, color: color);
+      : super(text, fontSize: ViewConstants.textLarge, color: color);
 }

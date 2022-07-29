@@ -16,7 +16,7 @@ class RoundedBackground extends StatelessWidget {
         borderRadius: BorderRadius.circular(
           ViewConstants.borderRadius,
         ),
-        color: ViewConstants.BACKGROUND_COLOR,
+        color: ViewConstants.backgroundColor,
       ),
       child: child,
     );

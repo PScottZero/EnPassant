@@ -14,17 +14,17 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.3
-  flame: ^1.0.0-releasecandidate.12
-  url_launcher: ^6.0.2
-  audioplayers: ^1.0.1
+  flame: ^1.2.1
+  url_launcher: ^6.1.5
   shared_preferences: ^2.0.15
-  async: ^2.8.2
-  cupertino_icons: ^1.0.0
+  cupertino_icons: ^1.0.5
+  google_fonts: ^3.0.1
+  stockfish: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.9.0
+  flutter_launcher_icons: ^0.9.3
 
 flutter_icons:
   android: true
@@ -35,12 +35,9 @@ flutter_icons:
   adaptive_icon_background: "assets/icons/icon_background.png"
 
 flutter:
-  fonts:
-    - family: Jura
-      fonts:
-        - asset: assets/font/Jura-VariableFont_wght.ttf
   uses-material-design: true
   assets:
+    - assets/font/
     - assets/images/
     - assets/images/pieces/classic/
     - assets/images/pieces/letters/

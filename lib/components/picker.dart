@@ -21,7 +21,7 @@ class Picker extends StatelessWidget {
         initialItem: selectionIndex,
       ),
       selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-        background: ViewConstants.BACKGROUND_COLOR,
+        background: ViewConstants.backgroundColor,
       ),
       itemExtent: ViewConstants.pickerItemExtent,
       onSelectedItemChanged: setFunc,

@@ -34,13 +34,13 @@ class MoveList extends StatelessWidget {
       }
     });
     if (appModel.gameData.gameOver) {
-      if (appModel.gameData.turn.isP1) {
+      if (appModel.gameData.isP1Turn) {
         moveString += ' ';
       }
       if (appModel.gameData.stalemate) {
         moveString += '  ½-½';
       } else {
-        moveString += appModel.gameData.turn.isP2 ? '  1-0' : '  0-1';
+        moveString += appModel.gameData.isP2Turn ? '  1-0' : '  0-1';
       }
     }
     return moveString;

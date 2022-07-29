@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -9,53 +7,50 @@ import 'chess_piece_sprite.dart';
 import 'move_classes.dart';
 import 'constants.dart';
 
-const BOARD_SIZE_ADJUST = 68;
-const SPRITE_OFFSET = 6;
-const SPRITE_SIZE_ADJUST = SPRITE_OFFSET * 2;
-const CIRCLE_RADIUS_DIVISOR = 5;
+const boardSizeAdjust = 68;
+const spriteOffset = 6;
+const spriteSizeAdjust = spriteOffset * 2;
+const circleRadiusDivisor = 5;
 
 class BoardRenderer {
-  ChessGame _game;
-  double _boardSize;
-  double tileSize;
-  Map<ChessPiece, ChessPieceSprite> _spriteMap = Map();
-  ChessPiece selectedPiece;
+  ChessGame game;
+  double boardSize;
+  late double tileSize;
+  late Map<ChessPiece, ChessPieceSprite> spriteMap;
+  ChessPiece? selectedPiece;
   int checkHintTile;
   Move latestMove;
 
-  BoardRenderer(this._game, BuildContext context) {
-    _boardSize = MediaQuery.of(context).size.width - BOARD_SIZE_ADJUST;
-    tileSize = _boardSize / TILE_COUNT_PER_ROW;
-    for (var piece in _game.board.player1Pieces + _game.board.player2Pieces) {
-      _spriteMap[piece] =
-          ChessPieceSprite(piece, _game.model.themePrefs.pieceTheme);
+  BoardRenderer(this.game, this.boardSize) {
+    tileSize = boardSize / TILE_COUNT_PER_ROW;
+    for (var piece in game.board.player1Pieces + game.board.player2Pieces) {
+      spriteMap[piece] =
+          ChessPieceSprite(piece, game.model.themePrefs.pieceTheme);
     }
     _initSpritePositions();
   }
 
   void render(Canvas canvas) {
-    if (_game.model != null) {
-      _drawBoard(canvas);
-      if (_game.model.showHints) {
-        if (checkHintTile != null) _drawCheckHint(canvas);
-        if (latestMove != null) _drawLatestMove(canvas);
-      }
-      if (selectedPiece != null) _drawSelectedPieceHint(canvas);
-      _drawPieces(canvas);
-      if (_game.model.showHints) _drawMoveHints(canvas);
+    _drawBoard(canvas);
+    if (game.model.showHints) {
+      _drawCheckHint(canvas);
+      _drawLatestMove(canvas);
     }
+    _drawSelectedPieceHint(canvas);
+    _drawPieces(canvas);
+    if (game.model.showHints) _drawMoveHints(canvas);
   }
 
   void _initSpritePositions() {
-    for (var piece in _game.board.player1Pieces + _game.board.player2Pieces) {
-      _spriteMap[piece].initSpritePosition(tileSize, _game.model);
+    for (var piece in game.board.player1Pieces + game.board.player2Pieces) {
+      spriteMap[piece].initSpritePosition(tileSize, game.model);
     }
   }
 
   void updateSpritePositions() {
-    if (_game.model != null) {
-      for (var piece in _game.board.player1Pieces + _game.board.player2Pieces) {
-        _spriteMap[piece].update(tileSize, _game.model, piece);
+    if (game.model != null) {
+      for (var piece in game.board.player1Pieces + game.board.player2Pieces) {
+        spriteMap[piece].update(tileSize, game.model, piece);
       }
     }
   }
@@ -82,12 +77,12 @@ class BoardRenderer {
       _spriteMap[piece].sprite.render(
             canvas,
             size: Vector2(
-              tileSize - SPRITE_SIZE_ADJUST,
-              tileSize - SPRITE_SIZE_ADJUST,
+              tileSize - spriteSizeAdjust,
+              tileSize - spriteSizeAdjust,
             ),
             position: Vector2(
-              _spriteMap[piece].spritePosition.x + SPRITE_OFFSET,
-              _spriteMap[piece].spritePosition.y + SPRITE_OFFSET,
+              _spriteMap[piece].spritePosition.x + spriteOffset,
+              _spriteMap[piece].spritePosition.y + spriteOffset,
             ),
           );
     }
@@ -100,7 +95,7 @@ class BoardRenderer {
           getXFromTile(tile, tileSize, _game.model) + (tileSize / 2),
           getYFromTile(tile, tileSize, _game.model) + (tileSize / 2),
         ),
-        tileSize / CIRCLE_RADIUS_DIVISOR,
+        tileSize / circleRadiusDivisor,
         Paint()..color = _game.model.themePrefs.theme.moveHint,
       );
     }

@@ -14,7 +14,7 @@ class RoundedButton extends StatelessWidget {
     return Container(
       child: CupertinoButton(
         padding: EdgeInsets.zero,
-        color: ViewConstants.BACKGROUND_COLOR,
+        color: ViewConstants.backgroundColor,
         child: TextRegular(label),
         borderRadius: BorderRadius.circular(
           ViewConstants.borderRadius,

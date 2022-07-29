@@ -33,7 +33,7 @@ class EnPassantApp extends StatelessWidget {
         textTheme: CupertinoTextThemeData(
           textStyle: TextStyle(
             fontFamily: 'Jura',
-            fontSize: ViewConstants.TEXT_DIALOG,
+            fontSize: ViewConstants.textDialog,
           ),
           pickerTextStyle: TextStyle(
             fontFamily: 'Jura',

@@ -33,7 +33,7 @@ class GameStatus extends StatelessWidget {
           return 'Your turn';
         }
       } else {
-        if (appModel.gameData.turn.isP1) {
+        if (appModel.gameData.isP1Turn) {
           return 'White\'s turn';
         } else {
           return 'Black\'s turn';
@@ -50,7 +50,7 @@ class GameStatus extends StatelessWidget {
             return 'You Lose :(';
           }
         } else {
-          if (appModel.gameData.turn.isP1) {
+          if (appModel.gameData.isP1Turn) {
             return 'Black wins!';
           } else {
             return 'White wins!';

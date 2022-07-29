@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:async/async.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +16,7 @@ const _AI_WAIT_TIME_MS = 500;
 
 class ChessGame extends Game with TapDetector {
   AppModel model;
+  BuildContext context;
   BoardRenderer renderer;
   ChessBoard board = ChessBoard();
 
@@ -27,8 +25,9 @@ class ChessGame extends Game with TapDetector {
 
   bool get noPieceSelected => renderer.selectedPiece == null;
 
-  ChessGame(this.model, BuildContext context) {
-    renderer = BoardRenderer(this, context);
+  ChessGame(this.model) {
+    renderer = BoardRenderer(
+        this, MediaQuery.of(context).size.width - boardSizeAdjust);
     if (model.gameData.isAIsTurn) _aiMove();
   }
 

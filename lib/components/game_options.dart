@@ -28,8 +28,8 @@ class GameOptions extends StatelessWidget {
               ? Column(
                   children: [
                     AIDifficultyPicker(
-                      appModel.gameData.aiDifficulty,
-                      appModel.gameData.setAIDifficulty,
+                      aiDifficulty: appModel.gameData.aiDifficulty,
+                      setFunc: appModel.gameData.setAIDifficulty,
                     ),
                     GapColumnSmall(),
                     SidePicker(

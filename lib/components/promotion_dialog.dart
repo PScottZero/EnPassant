@@ -22,13 +22,12 @@ class PromotionDialog extends StatelessWidget {
     return CupertinoAlertDialog(
       actions: [
         Container(
-          height: ViewConstants.PROMOTION_DIALOG_HEIGHT,
+          height: ViewConstants.promotionDialogHeight,
           child: Row(
             children: PROMOTIONS
                 .map(
                   (promotionType) => PromotionOption(
-                    appModel,
-                    promotionType,
+                    promotionType: promotionType,
                   ),
                 )
                 .toList(),

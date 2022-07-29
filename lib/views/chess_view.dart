@@ -47,7 +47,10 @@ class _ChessViewState extends State<ChessView> {
                     Column(
                       children: [
                         Spacer(),
-                        ChessBoardWidget(model),
+                        ChessBoardWidget(
+                          game: model.gameData.game,
+                          themePreferences: model.themePrefs,
+                        ),
                         GapColumnLarge(),
                         GameStatus(),
                         Spacer(),

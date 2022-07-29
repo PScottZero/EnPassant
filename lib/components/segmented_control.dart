@@ -33,7 +33,7 @@ class SegmentedControl<T> extends StatelessWidget {
                 textTheme: CupertinoTextThemeData(
                   textStyle: TextStyle(
                     fontFamily: 'Jura',
-                    fontSize: ViewConstants.TEXT_SEGMENTED_CONTROL,
+                    fontSize: ViewConstants.textSegmentedControl,
                   ),
                 ),
               ),
@@ -42,13 +42,13 @@ class SegmentedControl<T> extends StatelessWidget {
                 groupValue: selection,
                 onValueChanged: (T? val) => setFunc(val),
                 padding: EdgeInsets.fromLTRB(
-                  ViewConstants.SEGMENTED_CONTROL_PADDING_LR,
-                  ViewConstants.SEGMENTED_CONTROL_PADDING_TB,
-                  ViewConstants.SEGMENTED_CONTROL_PADDING_LR,
-                  ViewConstants.SEGMENTED_CONTROL_PADDING_TB,
+                  ViewConstants.segmentedControlPaddingLR,
+                  ViewConstants.segmentedControlPaddingTB,
+                  ViewConstants.segmentedControlPaddingLR,
+                  ViewConstants.segmentedControlPaddingTB,
                 ),
-                thumbColor: ViewConstants.PICKER_THUMB_COLOR,
-                backgroundColor: ViewConstants.BACKGROUND_COLOR,
+                thumbColor: ViewConstants.pickerThumbColor,
+                backgroundColor: ViewConstants.backgroundColor,
               ),
             ),
             width: double.infinity,

@@ -13,7 +13,7 @@ class PieceThemePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppModel>(
-      builder: (context, appModel, child) => Column(
+      builder: (context, model, child) => Column(
         children: [
           Container(
             child: TextSmall('Piece Theme'),
@@ -26,20 +26,20 @@ class PieceThemePicker extends StatelessWidget {
               ViewConstants.borderRadius,
             ),
             child: RoundedBackground(
-              Row(
+              child: Row(
                 children: [
                   Expanded(
                     child: Picker(
-                      options: appModel.themePrefs.pieceThemes,
-                      selectionIndex: appModel.themePrefs.pieceThemeIndex,
-                      setFunc: appModel.themePrefs.setPieceTheme,
+                      options: model.themePrefs.pieceThemes,
+                      selectionIndex: model.themePrefs.pieceThemeIndex,
+                      setFunc: model.themePrefs.setPieceTheme,
                     ),
                   ),
                   Container(
                     height: ViewConstants.pickerHeight,
-                    width: ViewConstants.PIECE_PREVIEW_WIDTH,
+                    width: ViewConstants.piecePreviewWidth,
                     child: GameWidget(
-                      game: PiecePreview(appModel),
+                      game: PiecePreview(model.themePrefs),
                     ),
                   ),
                 ],
