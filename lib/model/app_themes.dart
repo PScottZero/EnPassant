@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  String name;
-  LinearGradient background;
+  String? name;
+  LinearGradient? background;
   Color lightTile;
   Color darkTile;
   Color moveHint;
@@ -342,6 +342,6 @@ List<AppTheme> get themeList {
       border: Color(0xff434783),
     ),
   ];
-  themeList.sort((a, b) => a.name.compareTo(b.name));
+  themeList.sort((a, b) => a.name?.compareTo(b.name ?? "") ?? 0);
   return themeList;
 }

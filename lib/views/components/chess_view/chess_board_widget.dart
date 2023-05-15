@@ -30,7 +30,7 @@ class ChessBoardWidget extends StatelessWidget {
             ? BorderRadius.circular(10)
             : BorderRadius.zero,
         child: Container(
-          child: GameWidget(game: appModel.game),
+          child: GameWidget(game: appModel.game!),
           width: MediaQuery.of(context).size.width - 68,
           height: MediaQuery.of(context).size.width - 68,
         ),

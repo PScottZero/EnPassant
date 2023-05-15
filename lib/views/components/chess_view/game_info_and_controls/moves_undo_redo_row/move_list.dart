@@ -69,17 +69,20 @@ class MoveList extends StatelessWidget {
     } else if (meta.queenCastle) {
       move = 'O-O-O';
     } else {
-      String ambiguity =
-          meta.rowIsAmbiguous ? '${_colToChar(tileToCol(meta.move.from))}' : '';
+      String ambiguity = meta.rowIsAmbiguous
+          ? '${_colToChar(tileToCol(meta.move?.from ?? 0))}'
+          : '';
       ambiguity +=
-          meta.colIsAmbiguous ? '${8 - tileToRow(meta.move.from)}' : '';
+          meta.colIsAmbiguous ? '${8 - tileToRow(meta.move?.from ?? 0)}' : '';
       String takeString = meta.took ? 'x' : '';
-      String promotion =
-          meta.promotion ? '=${_pieceToChar(meta.promotionType)}' : '';
-      String row = '${8 - tileToRow(meta.move.to)}';
-      String col = '${_colToChar(tileToCol(meta.move.to))}';
-      move = '${_pieceToChar(meta.type)}$ambiguity$takeString' +
-          '$col$row$promotion';
+      String promotion = meta.promotion
+          ? '=${_pieceToChar(meta.promotionType ?? ChessPieceType.promotion)}'
+          : '';
+      String row = '${8 - tileToRow(meta.move?.to ?? 0)}';
+      String col = '${_colToChar(tileToCol(meta.move?.to ?? 0))}';
+      move =
+          '${_pieceToChar(meta.type ?? ChessPieceType.promotion)}$ambiguity$takeString' +
+              '$col$row$promotion';
     }
     String check = meta.isCheck ? '+' : '';
     String checkmate = meta.isCheckmate && !meta.isStalemate ? '#' : '';

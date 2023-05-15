@@ -5,7 +5,7 @@ class TimerWidget extends StatelessWidget {
   final Duration timeLeft;
   final Color color;
 
-  TimerWidget({@required this.timeLeft, @required this.color});
+  TimerWidget({required this.timeLeft, required this.color});
 
   @override
   Widget build(BuildContext context) {

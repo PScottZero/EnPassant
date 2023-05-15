@@ -8,7 +8,8 @@ class Move {
   Move(this.from, this.to, {this.promotionType = ChessPieceType.promotion});
 
   @override
-  bool operator ==(move) => this.from == move.from && this.to == move.to;
+  bool operator ==(move) =>
+      this.from == (move as Move).from && (this as Move).to == move.to;
 
   @override
   int get hashCode => super.hashCode;

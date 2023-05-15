@@ -30,7 +30,7 @@ class PiecePreview extends Game {
 
   loadSpriteImages() async {
     for (var index = 0; index < 6; index++) {
-      spriteMap[index] = Sprite(await Flame.images.load(imageMap[index]));
+      spriteMap[index] = Sprite(await Flame.images.load(imageMap[index] ?? ""));
     }
   }
 
@@ -44,7 +44,7 @@ class PiecePreview extends Game {
               ? appModel.theme.lightTile
               : appModel.theme.darkTile,
       );
-      spriteMap[index].render(
+      spriteMap[index]?.render(
         canvas,
         size: Vector2(30, 30),
         position: Vector2(

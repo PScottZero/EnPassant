@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import '../../shared/text_variable.dart';
 
 class Picker<T> extends StatelessWidget {
-  final String label;
-  final Map<T, Text> options;
-  final T selection;
-  final Function setFunc;
+  final String? label;
+  final Map<T, Text>? options;
+  final T? selection;
+  final Function(T?)? setFunc;
 
   Picker({this.label, this.options, this.selection, this.setFunc});
 
@@ -14,7 +14,7 @@ class Picker<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextSmall(label),
+        TextSmall(label ?? ""),
         SizedBox(height: 10),
         Container(
           child: CupertinoTheme(
@@ -24,10 +24,12 @@ class Picker<T> extends StatelessWidget {
               ),
             ),
             child: CupertinoSlidingSegmentedControl<T>(
-              children: options,
+              children: options ?? {},
               groupValue: selection,
-              onValueChanged: (T val) {
-                setFunc(val);
+              onValueChanged: (T? val) {
+                if (setFunc != null) {
+                  setFunc!(val);
+                }
               },
               thumbColor: Color(0x88FFFFFF),
               backgroundColor: Color(0x20000000),

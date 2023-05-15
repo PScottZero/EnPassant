@@ -13,7 +13,7 @@ class AIDifficultyPicker extends StatelessWidget {
   };
 
   final int aiDifficulty;
-  final Function setFunc;
+  final Function(int?) setFunc;
 
   AIDifficultyPicker(this.aiDifficulty, this.setFunc);
 

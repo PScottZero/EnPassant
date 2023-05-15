@@ -12,7 +12,7 @@ class SidePicker extends StatelessWidget {
   };
 
   final Player playerSide;
-  final Function setFunc;
+  final Function(Player?) setFunc;
 
   SidePicker(this.playerSide, this.setFunc);
 

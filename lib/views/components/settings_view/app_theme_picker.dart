@@ -33,7 +33,7 @@ class AppThemePicker extends StatelessWidget {
                   .map(
                     (theme) => Container(
                       padding: EdgeInsets.all(10),
-                      child: TextRegular(theme.name),
+                      child: TextRegular(theme.name ?? ""),
                     ),
                   )
                   .toList(),

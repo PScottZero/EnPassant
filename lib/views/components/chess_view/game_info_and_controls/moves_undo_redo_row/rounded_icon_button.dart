@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 
 class RoundedIconButton extends StatelessWidget {
   final IconData icon;
-  final Function onPressed;
+  final void Function()? onPressed;
 
-  RoundedIconButton(this.icon, {@required this.onPressed});
+  RoundedIconButton(this.icon, {this.onPressed});
 
   @override
   Widget build(BuildContext context) {

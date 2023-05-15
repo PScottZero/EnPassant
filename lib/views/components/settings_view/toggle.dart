@@ -4,8 +4,8 @@ import '../shared/text_variable.dart';
 
 class Toggle extends StatelessWidget {
   final String label;
-  final bool toggle;
-  final Function setFunc;
+  final bool? toggle;
+  final Function(bool)? setFunc;
 
   Toggle(this.label, {this.toggle, this.setFunc});
 
@@ -18,7 +18,7 @@ class Toggle extends StatelessWidget {
           TextRegular(label),
           Spacer(),
           CupertinoSwitch(
-            value: toggle,
+            value: toggle ?? false,
             onChanged: setFunc,
           ),
         ],

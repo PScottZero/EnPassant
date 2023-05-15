@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import '../../shared/rounded_button.dart';
 import '../../shared/text_variable.dart';
@@ -8,7 +7,7 @@ class RoundedAlertButton extends StatelessWidget {
   final String label;
   final Function onConfirm;
 
-  RoundedAlertButton(this.label, {@required this.onConfirm});
+  RoundedAlertButton(this.label, {required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {

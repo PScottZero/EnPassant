@@ -20,7 +20,7 @@ class PromotionOption extends StatelessWidget {
         ),
       ),
       onPressed: () {
-        appModel.game.promote(promotionType);
+        appModel.game?.promote(promotionType);
         appModel.update();
         Navigator.pop(context);
       },

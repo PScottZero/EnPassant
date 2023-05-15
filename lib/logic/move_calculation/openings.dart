@@ -60,6 +60,6 @@ var openings = [
 
 int tileToInt(String tile) {
   var file = tile.codeUnitAt(0) - 97;
-  var rank = 8 - int.tryParse(tile[1]);
+  var rank = 8 - (int.tryParse(tile[1]) ?? 0);
   return rank * 8 + file;
 }

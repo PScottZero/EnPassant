@@ -18,8 +18,8 @@ Move calculateAIMove(Map args) {
   if (board.possibleOpenings.isNotEmpty) {
     return _openingMove(board, args['aiPlayer']);
   } else {
-    return _alphaBeta(board, args['aiPlayer'], null, 0, args['aiDifficulty'],
-            INITIAL_ALPHA, INITIAL_BETA)
+    return _alphaBeta(board, args['aiPlayer'], Move(0, 0), 0,
+            args['aiDifficulty'], INITIAL_ALPHA, INITIAL_BETA)
         .move;
   }
 }
@@ -30,7 +30,7 @@ MoveAndValue _alphaBeta(ChessBoard board, Player player, Move move, int depth,
     return MoveAndValue(move, boardValue(board));
   }
   var bestMove = MoveAndValue(
-      null, player == Player.player1 ? INITIAL_ALPHA : INITIAL_BETA);
+      Move(0, 0), player == Player.player1 ? INITIAL_ALPHA : INITIAL_BETA);
   for (var move in allMoves(player, board, maxDepth)) {
     push(move, board, promotionType: move.promotionType);
     var result = _alphaBeta(

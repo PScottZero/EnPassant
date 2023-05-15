@@ -9,7 +9,7 @@ class GameModePicker extends StatelessWidget {
   };
 
   final int playerCount;
-  final Function setFunc;
+  final Function(int?) setFunc;
 
   GameModePicker(this.playerCount, this.setFunc);
 

@@ -65,9 +65,7 @@ class _ChessViewState extends State<ChessView> {
   }
 
   Future<bool> _willPopCallback() async {
-    if (appModel != null) {
-      appModel.exitChessView();
-    }
+    appModel.exitChessView();
     return true;
   }
 }
